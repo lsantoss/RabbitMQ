@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ.Publisher", "RabbitMQ.Publisher\RabbitMQ.Publisher.csproj", "{813BC62A-0488-4321-9B26-104D46D98482}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Domain", "02 - Domain", "{EDAAE3DE-F3F3-4BB2-96B2-9F99A65A1213}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Application", "01 - Application", "{BD7E97B2-51AD-4982-83CE-931A8059A5EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Infra", "03 - Infra", "{1477995A-423C-47C8-92B6-A9E1E0AEDD54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ.Infra.Crosscutting", "RabbitMQ.Infra.Crosscutting\RabbitMQ.Infra.Crosscutting.csproj", "{BBC5085F-4A5F-473F-A712-21C6397B92F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ.Domain.Core", "RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj", "{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ.Domain", "RabbitMQ.Domain\RabbitMQ.Domain.csproj", "{73271466-D0D9-4101-B6AB-CD2704B8D329}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ.Infra.Data", "RabbitMQ.Infra.Data\RabbitMQ.Infra.Data.csproj", "{101F2A2C-CD22-45CA-9765-99DEAA500F7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{813BC62A-0488-4321-9B26-104D46D98482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{813BC62A-0488-4321-9B26-104D46D98482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{813BC62A-0488-4321-9B26-104D46D98482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{813BC62A-0488-4321-9B26-104D46D98482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBC5085F-4A5F-473F-A712-21C6397B92F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBC5085F-4A5F-473F-A712-21C6397B92F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBC5085F-4A5F-473F-A712-21C6397B92F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBC5085F-4A5F-473F-A712-21C6397B92F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73271466-D0D9-4101-B6AB-CD2704B8D329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73271466-D0D9-4101-B6AB-CD2704B8D329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73271466-D0D9-4101-B6AB-CD2704B8D329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73271466-D0D9-4101-B6AB-CD2704B8D329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{101F2A2C-CD22-45CA-9765-99DEAA500F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{101F2A2C-CD22-45CA-9765-99DEAA500F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{101F2A2C-CD22-45CA-9765-99DEAA500F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{101F2A2C-CD22-45CA-9765-99DEAA500F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{813BC62A-0488-4321-9B26-104D46D98482} = {BD7E97B2-51AD-4982-83CE-931A8059A5EC}
+		{BBC5085F-4A5F-473F-A712-21C6397B92F5} = {1477995A-423C-47C8-92B6-A9E1E0AEDD54}
+		{E6E319BB-7E2C-4780-BE5C-9D79B0188C5C} = {EDAAE3DE-F3F3-4BB2-96B2-9F99A65A1213}
+		{73271466-D0D9-4101-B6AB-CD2704B8D329} = {EDAAE3DE-F3F3-4BB2-96B2-9F99A65A1213}
+		{101F2A2C-CD22-45CA-9765-99DEAA500F7A} = {1477995A-423C-47C8-92B6-A9E1E0AEDD54}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03F884EA-962F-4EC6-9946-5CE1EE9F07A5}
+	EndGlobalSection
+EndGlobal
