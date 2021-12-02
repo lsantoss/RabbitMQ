@@ -8,11 +8,11 @@ namespace RabbitMQ.Infra.Data.Repositories
 {
     public class ElmahRepository : IElmahRepository
     {
-        private readonly ErrorLog _errorLog;
+        private readonly ErrorLog _elmahLog;
 
         public ElmahRepository(Settings settings)
         {
-            _errorLog = new SqlErrorLog(settings.ConnectionString)
+            _elmahLog = new SqlErrorLog(settings.ConnectionString)
             {
                 ApplicationName = settings.ApplicationName
             };
@@ -22,7 +22,7 @@ namespace RabbitMQ.Infra.Data.Repositories
         {
             try
             {
-                return _errorLog.Log(erro);
+                return _elmahLog.Log(erro);
             }
             catch (Exception ex)
             {

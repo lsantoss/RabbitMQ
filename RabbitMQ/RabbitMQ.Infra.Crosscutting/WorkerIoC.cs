@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
+using RabbitMQ.Domain.Core.LogsFilas.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
 using RabbitMQ.Infra.Data.Repositories;
@@ -11,7 +12,7 @@ namespace RabbitMQ.Infra.Crosscutting
 {
     public static class WorkerIoC
     {
-        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration, EFila worker)
+        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration, EFila fila)
         {
             #region AppSettings
 
@@ -31,14 +32,14 @@ namespace RabbitMQ.Infra.Crosscutting
 
             #region Repositories
 
-            services.AddTransient<IElmahRepository, ElmahRepository>();
-            //services.AddScoped<ILogFilaRepository, LogFilaRepository>();
+            services.AddScoped<IElmahRepository, ElmahRepository>();
+            services.AddScoped<ILogFilaRepository, LogFilaRepository>();
 
             #endregion Repositories
 
             #region Handlers
 
-            if (worker == EFila.ConsumirPagamento)
+            if (fila == EFila.ConsumirPagamento)
                 //services.AddScoped<IConsumirPagamentoHandler, ConsumirPagamentoHandler>();
 
             #endregion Handlers

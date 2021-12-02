@@ -24,7 +24,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             _elmahRepository = elmahRepository;
         }
 
-        public void Publicar<T>(T @event, string nomeFila, bool duravel = true, bool exclusiva = false, bool apagaAutomaticamente = false)
+        public void Publicar<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                 {
                     canal.ConfirmSelect();
 
-                    canal.QueueDeclare(nomeFila, duravel, exclusiva, apagaAutomaticamente, null);
+                    canal.QueueDeclare(nomeFila, duravel, excluivel, apagaAutomaticamente, null);
 
                     var mensagem = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
 
@@ -49,12 +49,11 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
             catch (Exception ex)
             {
-                _elmahRepository.LogarErro(new Error(ex));
                 throw new Exception("Falha ao publicar na fila do RabbitMQ:", ex);
             }
         }
 
-        public void PublicarComAtraso<T>(T @event, string nomeFila, bool duravel = true, bool exclusiva = false, bool apagaAutomaticamente = false, int tempoAtraso = 15000)
+        public void PublicarComAtraso<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false, int tempoAtraso = 15000)
         {
             try
             {
@@ -72,7 +71,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                         { "type-queue", Encoding.UTF8.GetBytes(@event.GetType().AssemblyQualifiedName) }
                     };
 
-                    canal.QueueDeclare(nomeFilaComAtraso, duravel, exclusiva, apagaAutomaticamente, arguments);
+                    canal.QueueDeclare(nomeFilaComAtraso, duravel, excluivel, apagaAutomaticamente, arguments);
 
                     var mensagem = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
 
@@ -88,17 +87,16 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
             catch (Exception ex)
             {
-                _elmahRepository.LogarErro(new Error(ex));
                 throw new Exception("Falha ao publicar na fila com delay do RabbitMQ:", ex);
             }
         }
 
-        public void Consumir(object handler, string nomeFila, bool duravel = true, bool exclusiva = false, bool apagaAutomaticamente = false)
+        public void Consumir(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
         {
             using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
             using (var canal = conexao.CreateModel())
             {
-                canal.QueueDeclare(nomeFila, duravel, exclusiva, apagaAutomaticamente, null);
+                canal.QueueDeclare(nomeFila, duravel, excluivel, apagaAutomaticamente, null);
 
                 var consumidor = new EventingBasicConsumer(canal);
                 consumidor.Received += (sender, e) =>
@@ -125,8 +123,6 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                     catch (Exception ex)
                     {
                         canal.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: false);
-
-                        _elmahRepository.LogarErro(new Error(ex));
                         throw new Exception("Falha ao consumir a fila do RabbitMQ:", ex);
                     }
                 };
@@ -146,7 +142,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
         }
 
-        public void Consumir<T>(object handler, string nomeFila, bool duravel = true, bool exclusiva = false, bool apagaAutomaticamente = false)
+        public void Consumir<T>(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
         {
             using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
             using (var canal = conexao.CreateModel())
@@ -176,8 +172,6 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                     catch (Exception ex)
                     {
                         canal.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: false);
-
-                        _elmahRepository.LogarErro(new Error(ex));
                         throw new Exception("Falha ao consumir a fila do RabbitMQ:", ex);
                     }
                 };
