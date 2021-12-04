@@ -9,5 +9,6 @@
         public string VirtualHost { get; set; }
         public uint PrefetchSize { get; set; }
         public ushort PrefetchCount { get; set; }
+        public string URL { get; set; }
     }
 }

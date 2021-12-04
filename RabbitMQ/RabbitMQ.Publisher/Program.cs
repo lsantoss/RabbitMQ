@@ -13,18 +13,26 @@ namespace RabbitMQ.Publisher
 {
     class Program
     {
+        private static readonly WorkerBase _workerBase;
+        private static readonly Settings _settings;
+        private static readonly FilasWorkersSettings _filasWorkers;
+        private static readonly IElmahRepository _elmahRepository;
+        private static readonly IRabbitMQBus _rabbitMQBus;
+
+        static Program()
+        {
+            _workerBase = new WorkerBase(EFila.PublicarPagamento);
+            _settings = _workerBase.GetService<Settings>();
+            _filasWorkers = _workerBase.GetService<FilasWorkersSettings>();
+            _elmahRepository = _workerBase.GetService<IElmahRepository>();
+            _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();
+        }
+
         static void Main(string[] args)
         {
-            var workerBase = new WorkerBase(EFila.PublicarPagamento);
-            var elmahRepository = workerBase.GetService<IElmahRepository>();
-
             try
             {
-                var settings = workerBase.GetService<Settings>();
-                var filasWorkers = workerBase.GetService<FilasWorkersSettings>();
-                var rabbit = workerBase.GetService<IRabbitMQBus>();
-
-                Console.WriteLine($"Iniciando Worker {settings.ApplicationName} \n");
+                Console.WriteLine($"Iniciando Worker {_settings.ApplicationName} \n");
 
                 var jsonParaEnvioPath = $@"{AppDomain.CurrentDomain.BaseDirectory}\payload.json";
                 var json = "";
@@ -38,14 +46,14 @@ namespace RabbitMQ.Publisher
 
                 var payload = JsonConvert.DeserializeObject<PublicarPagamentoCommand>(json);
 
-                rabbit.Publicar(payload, filasWorkers.PublicarPagamento);
+                _rabbitMQBus.Publicar(payload, _filasWorkers.PublicarPagamento);
 
                 Console.WriteLine("\n\nMensagem enviada com sucesso!");
                 Console.ReadKey();
             }
             catch(Exception ex)
             {
-                elmahRepository.LogarErro(new Error(ex));
+                _elmahRepository.LogarErro(new Error(ex));
                 Console.WriteLine($"\n\nErro ao enviar mensagem! {ex.InnerException.Message}");
                 Console.ReadKey();
             }

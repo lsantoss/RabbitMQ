@@ -28,7 +28,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
         {
             try
             {
-                using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
+                using (var conexao = Factory.CreateConnection())
                 using (var canal = conexao.CreateModel())
                 {
                     canal.ConfirmSelect();
@@ -57,7 +57,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
         {
             try
             {
-                using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
+                using (var conexao = Factory.CreateConnection())
                 using (var canal = conexao.CreateModel())
                 {
                     canal.ConfirmSelect();
@@ -93,7 +93,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
 
         public void Consumir(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
         {
-            using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
+            using (var conexao = Factory.CreateConnection())
             using (var canal = conexao.CreateModel())
             {
                 canal.QueueDeclare(nomeFila, duravel, excluivel, apagaAutomaticamente, null);
@@ -144,7 +144,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
 
         public void Consumir<T>(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
         {
-            using (var conexao = Factory.CreateConnection($"{Environment.MachineName}_{nomeFila}"))
+            using (var conexao = Factory.CreateConnection())
             using (var canal = conexao.CreateModel())
             {
                 canal.QueueDeclare(nomeFila, true, false, false, null);
@@ -205,6 +205,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                         Port = _rabbitMQSettings.Port,
                         UserName = _rabbitMQSettings.UserName,
                         Password = _rabbitMQSettings.Password,
+                        Uri = new Uri(_rabbitMQSettings.URL),
                         AutomaticRecoveryEnabled = false
                     };
                 }
