@@ -6,26 +6,26 @@ namespace RabbitMQ.Infra.Crosscutting
 {
     public class WorkerBase
     {
-        private IServiceCollection _services;
-        private ServiceProvider _serviceProvider;
-        private static IConfiguration configuration;
+        private readonly IServiceCollection _services;
+        private readonly ServiceProvider _serviceProvider;
+        private readonly IConfiguration _configuration;
 
         public WorkerBase(EFila fila)
         {
             _services = new ServiceCollection();
 
-            configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, false).AddEnvironmentVariables().Build();
+            _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, false).AddEnvironmentVariables().Build();
 
-            _services.AddSingleton(configuration);
+            _services.AddSingleton(_configuration);
 
-            WorkerIoC.AddWorkerServices(_services, configuration, fila);
+            WorkerIoC.AddWorkerServices(_services, _configuration, fila);
 
             _serviceProvider = _services.BuildServiceProvider();
         }
 
         public IServiceCollection GetServices() => _services;
 
-        public IConfiguration GetConfiguration() => configuration;
+        public IConfiguration GetConfiguration() => _configuration;
 
         public T GetService<T>() => (T)_serviceProvider.GetService(typeof(T));
     }
