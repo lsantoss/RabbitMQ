@@ -2,11 +2,11 @@
 
 namespace RabbitMQ.Domain.Core.Helpers
 {
-    public static class LeitorArquivosHelper
+    public static class FileReaderHelper
     {
-        public static string Ler(string arquivoPath)
+        public static string Read(string filePath)
         {
-            using (var streamReader = new StreamReader(arquivoPath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 return streamReader.ReadToEnd();
             }

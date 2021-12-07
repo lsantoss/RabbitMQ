@@ -18,7 +18,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             };
         }
 
-        public string LogarErro(Error erro)
+        public string Log(Error erro)
         {
             try
             {

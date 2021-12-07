@@ -2,9 +2,9 @@
 {
     public interface IRabbitMQBus
     {
-        void Publicar<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false);
-        void PublicarComAtraso<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false, int tempoAtraso = 15000);
-        void Consumir(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false);
-        void Consumir<T>(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false);
+        void Publish<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false);
+        void PublishDelayed<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false, int delayTime = 15000);
+        void Consume(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false);
+        void Consume<T>(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false);
     }
 }

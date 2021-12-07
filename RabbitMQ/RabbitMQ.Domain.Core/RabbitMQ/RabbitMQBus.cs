@@ -24,116 +24,116 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             _elmahRepository = elmahRepository;
         }
 
-        public void Publicar<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
+        public void Publish<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
             try
             {
-                using (var conexao = Factory.CreateConnection())
-                using (var canal = conexao.CreateModel())
+                using (var connection = Factory.CreateConnection())
+                using (var channel = connection.CreateModel())
                 {
-                    canal.ConfirmSelect();
+                    channel.ConfirmSelect();
 
-                    canal.QueueDeclare(nomeFila, duravel, excluivel, apagaAutomaticamente, null);
+                    channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
 
-                    var mensagem = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
+                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                    var propriedades = canal.CreateBasicProperties();
-                    propriedades.Persistent = true;
-                    propriedades.Headers = new Dictionary<string, object>();
-                    propriedades.Headers.Add("type-queue", Encoding.UTF8.GetBytes(@event.GetType().AssemblyQualifiedName));
+                    var properties = channel.CreateBasicProperties();
+                    properties.Persistent = true;
+                    properties.Headers = new Dictionary<string, object>();
+                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    canal.BasicPublish(string.Empty, nomeFila, propriedades, mensagem);
+                    channel.BasicPublish(string.Empty, queueName, properties, body);
 
-                    canal.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
+                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Falha ao publicar na fila do RabbitMQ:", ex);
+                throw new Exception("Failed to publish to RabbitMQ queue:", ex);
             }
         }
 
-        public void PublicarComAtraso<T>(T @event, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false, int tempoAtraso = 15000)
+        public void PublishDelayed<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false, int delayTime = 15000)
         {
             try
             {
-                using (var conexao = Factory.CreateConnection())
-                using (var canal = conexao.CreateModel())
+                using (var connection = Factory.CreateConnection())
+                using (var channel = connection.CreateModel())
                 {
-                    canal.ConfirmSelect();
+                    channel.ConfirmSelect();
 
-                    var nomeFilaComAtraso = $"{nomeFila}_DELAYED";
+                    var queueNameDelayed = $"{queueName}_DELAYED";
                     var arguments = new Dictionary<string, object>
                     {
                         { "x-dead-letter-exchange", "" },
-                        { "x-dead-letter-routing-key", nomeFila },
-                        { "x-message-ttl", tempoAtraso },
-                        { "type-queue", Encoding.UTF8.GetBytes(@event.GetType().AssemblyQualifiedName) }
+                        { "x-dead-letter-routing-key", queueName },
+                        { "x-message-ttl", delayTime },
+                        { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
                     };
 
-                    canal.QueueDeclare(nomeFilaComAtraso, duravel, excluivel, apagaAutomaticamente, arguments);
+                    channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
 
-                    var mensagem = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
+                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                    var propriedades = canal.CreateBasicProperties();
-                    propriedades.Persistent = true;
-                    propriedades.Headers = new Dictionary<string, object>();
-                    propriedades.Headers.Add("type-queue", Encoding.UTF8.GetBytes(@event.GetType().AssemblyQualifiedName));
+                    var properties = channel.CreateBasicProperties();
+                    properties.Persistent = true;
+                    properties.Headers = new Dictionary<string, object>();
+                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    canal.BasicPublish("", nomeFilaComAtraso, propriedades, mensagem);
+                    channel.BasicPublish("", queueNameDelayed, properties, body);
 
-                    canal.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
+                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Falha ao publicar na fila com delay do RabbitMQ:", ex);
+                throw new Exception("Failed to publish to the RabbitMQ delayed queue:", ex);
             }
         }
 
-        public void Consumir(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
+        public void Consume(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using (var conexao = Factory.CreateConnection())
-            using (var canal = conexao.CreateModel())
+            using (var connection = Factory.CreateConnection())
+            using (var channel = connection.CreateModel())
             {
-                canal.QueueDeclare(nomeFila, duravel, excluivel, apagaAutomaticamente, null);
+                channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
 
-                var consumidor = new EventingBasicConsumer(canal);
-                consumidor.Received += (sender, e) =>
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (sender, e) =>
                 {
                     try
                     {
-                        var mensagem = Encoding.UTF8.GetString(e.Body.ToArray());
+                        var body = Encoding.UTF8.GetString(e.Body.ToArray());
 
-                        var propriedadesBasicas = e.BasicProperties;
+                        var basicProperties = e.BasicProperties;
 
-                        var cabecalho = propriedadesBasicas.Headers["type-queue"];
+                        var header = basicProperties.Headers["type-queue"];
 
-                        if (cabecalho != null)
+                        if (header != null)
                         {
-                            var tipoEvento = Type.GetType(Encoding.UTF8.GetString(cabecalho as byte[]));
+                            var eventType = Type.GetType(Encoding.UTF8.GetString(header as byte[]));
 
-                            var @event = JsonConvert.DeserializeObject(mensagem, tipoEvento);
+                            var message = JsonConvert.DeserializeObject(body, eventType);
 
-                            ((dynamic)handler).Handle((dynamic)@event).GetAwaiter().GetResult();
+                            ((dynamic)handler).Handle((dynamic)message).GetAwaiter().GetResult();
 
-                            canal.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+                            channel.BasicAck(e.DeliveryTag, false);
                         }
                     }
                     catch (Exception ex)
                     {
-                        canal.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: false);
-                        throw new Exception("Falha ao consumir a fila do RabbitMQ:", ex);
+                        channel.BasicNack(e.DeliveryTag, false, false);
+                        throw new Exception("Failed to consume RabbitMQ queue:", ex);
                     }
                 };
 
-                canal.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
-                canal.BasicConsume(nomeFila, false, Environment.MachineName, consumidor);
+                channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
+                channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
 
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.LogarErro(new Error(new Exception("Encerrando consumo de fila do RabbitMQ (ctrl+C)")));
+                        _elmahRepository.Log(new Error(new Exception("Closing RabbitMQ queue consumption (ctrl+C)")));
 
                     waitHandle.Set();
                 };
@@ -142,47 +142,47 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
         }
 
-        public void Consumir<T>(object handler, string nomeFila, bool duravel = true, bool excluivel = false, bool apagaAutomaticamente = false)
+        public void Consume<T>(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using (var conexao = Factory.CreateConnection())
-            using (var canal = conexao.CreateModel())
+            using (var connection = Factory.CreateConnection())
+            using (var channel = connection.CreateModel())
             {
-                canal.QueueDeclare(nomeFila, true, false, false, null);
+                channel.QueueDeclare(queueName, true, false, false, null);
 
-                var consumidor = new EventingBasicConsumer(canal);
-                consumidor.Received += (sender, e) =>
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (sender, e) =>
                 {
                     try
                     {
-                        var mensagem = Encoding.UTF8.GetString(e.Body.ToArray());
+                        var body = Encoding.UTF8.GetString(e.Body.ToArray());
 
-                        var propriedadesBasicas = e.BasicProperties;
+                        var basicProperties = e.BasicProperties;
 
-                        var cabecalho = propriedadesBasicas.Headers["type-queue"];
+                        var header = basicProperties.Headers["type-queue"];
 
-                        if (cabecalho != null)
+                        if (header != null)
                         {
-                            var @event = JsonConvert.DeserializeObject(mensagem, typeof(T));
+                            var message = JsonConvert.DeserializeObject(body, typeof(T));
 
-                            ((dynamic)handler).Handle((dynamic)@event).GetAwaiter().GetResult();
+                            ((dynamic)handler).Handle((dynamic)message).GetAwaiter().GetResult();
 
-                            canal.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+                            channel.BasicAck(e.DeliveryTag, false);
                         }
                     }
                     catch (Exception ex)
                     {
-                        canal.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: false);
-                        throw new Exception("Falha ao consumir a fila do RabbitMQ:", ex);
+                        channel.BasicNack(e.DeliveryTag, false, false);
+                        throw new Exception("Failed to consume RabbitMQ queue:", ex);
                     }
                 };
 
-                canal.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
-                canal.BasicConsume(nomeFila, false, Environment.MachineName, consumidor);
+                channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
+                channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
 
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.LogarErro(new Error(new Exception("Encerrando consumo de fila do RabbitMQ (ctrl+C)")));
+                        _elmahRepository.Log(new Error(new Exception("Closing RabbitMQ queue consumption (ctrl+C)")));
 
                     waitHandle.Set();
                 };
