@@ -67,9 +67,9 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 {
                     //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
                 }
-            }
 
-            return true;
+                return false;
+            }
         }
     }
 }

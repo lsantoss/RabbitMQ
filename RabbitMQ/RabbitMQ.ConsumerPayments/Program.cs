@@ -11,14 +11,14 @@ namespace RabbitMQ.ConsumerPayments
     class Program
     {
         private static readonly WorkerBase _workerBase;
-        private static readonly IPaymentHandler _handler;
         private static readonly IRabbitMQBus _rabbitMQBus;
+        private static readonly IPaymentHandler _handler;
 
         static Program()
         {
             _workerBase = new WorkerBase(EQueue.ConsumerPayments);
-            _handler = _workerBase.GetService<IPaymentHandler>();
             _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();
+            _handler = _workerBase.GetService<IPaymentHandler>();
         }
 
         static void Main(string[] args)
