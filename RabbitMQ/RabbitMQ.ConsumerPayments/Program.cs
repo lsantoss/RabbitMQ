@@ -26,9 +26,6 @@ namespace RabbitMQ.ConsumerPayments
             Console.WriteLine($"Starting Worker {ApplicationName.ConsumerPayments}\n");
 
             _rabbitMQBus.Consume<PublishPaymentCommand>(_handler, QueueName.Payments);
-
-            Console.WriteLine($"Worker {ApplicationName.ConsumerPayments} started with success!");
-            Console.ReadKey();
         }
     }
 }

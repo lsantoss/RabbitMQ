@@ -35,20 +35,19 @@ namespace RabbitMQ.Domain.Payments.Handlers
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<bool> Handle(PublishPaymentCommand paymentCommand)
+        public async Task Handle(PublishPaymentCommand paymentCommand)
         {         
             try
             {
                 var payment = paymentCommand.MapToPayment();
                 await _paymentRepository.Save(payment);
 
-                var emailNotification = new EmailNotificationCommand();
-                _rabbitMQBus.Publish(emailNotification, _nextQueue);
-
                 var message = JsonConvert.SerializeObject(paymentCommand);
                 var queueLog = new QueueLog(payment.Id, ApplicationName.ConsumerPayments, QueueName.Payments, message);
+                await _queueLogRepository.Log(queueLog);
 
-                return true;
+                var emailNotification = new EmailNotificationCommand();
+                _rabbitMQBus.Publish(emailNotification, _nextQueue);
             }
             catch (Exception ex)
             {
@@ -67,8 +66,6 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 {
                     //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
                 }
-
-                return false;
             }
         }
     }
