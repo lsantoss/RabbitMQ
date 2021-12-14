@@ -16,6 +16,9 @@ namespace RabbitMQ.PublisherReversals
 {
     class Program
     {
+        private static readonly string _applicationName;
+        private static readonly string _queueName;
+
         private static readonly WorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
         private static readonly IElmahRepository _elmahRepository;
@@ -23,6 +26,9 @@ namespace RabbitMQ.PublisherReversals
 
         static Program()
         {
+            _applicationName = ApplicationName.PublisherReversals;
+            _queueName = QueueName.Reversals;
+
             _workerBase = new WorkerBase(EApplication.PublisherReversals);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
@@ -33,7 +39,7 @@ namespace RabbitMQ.PublisherReversals
         {
             try
             {
-                Console.WriteLine($"Starting Worker {ApplicationName.PublisherReversals} \n");
+                Console.WriteLine($"Starting Worker {_applicationName} \n");
 
                 var filePath = $@"{AppDomain.CurrentDomain.BaseDirectory}\payload.json";
 
@@ -43,9 +49,9 @@ namespace RabbitMQ.PublisherReversals
 
                 var reversal = JsonConvert.DeserializeObject<PublishReversalCommand>(reversalJson);
 
-                _rabbitMQBus.Publish(reversal, QueueName.Reversals);
+                _rabbitMQBus.Publish(reversal, _queueName);
 
-                var queueLog = new QueueLog(reversal.Id, ApplicationName.PublisherReversals, QueueName.Reversals, reversalJson);
+                var queueLog = new QueueLog(reversal.Id, _applicationName, _queueName, reversalJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");
