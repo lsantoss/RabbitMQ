@@ -1,4 +1,6 @@
-﻿namespace RabbitMQ.Domain.Core.RabbitMQ.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace RabbitMQ.Domain.Core.RabbitMQ.Interfaces
 {
     public interface IRabbitMQBus
     {

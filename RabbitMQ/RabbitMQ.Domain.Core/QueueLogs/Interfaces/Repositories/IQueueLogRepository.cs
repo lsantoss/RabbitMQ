@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories
 {
     public interface IQueueLogRepository
     {
-        long Log(QueueLog queueLog);
-        QueueLog Get(long id);
-        List<QueueLog> List(Guid paymentId);
+        Task<long> Log(QueueLog queueLog);
+        Task<QueueLog> Get(long id);
+        Task<List<QueueLog>> List(Guid paymentId);
     }
 }

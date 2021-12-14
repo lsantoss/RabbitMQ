@@ -3,6 +3,7 @@ using ElmahCore.Sql;
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using System;
+using System.Threading.Tasks;
 
 namespace RabbitMQ.Infra.Data.Repositories
 {
@@ -12,17 +13,14 @@ namespace RabbitMQ.Infra.Data.Repositories
 
         public ElmahRepository(Settings settings)
         {
-            _elmahLog = new SqlErrorLog(settings.ConnectionString)
-            {
-                ApplicationName = settings.ApplicationName
-            };
+            _elmahLog = new SqlErrorLog(settings.ConnectionString);
         }
 
-        public string Log(Error erro)
+        public async Task<string> Log(Error erro)
         {
             try
             {
-                return _elmahLog.Log(erro);
+                return await _elmahLog.LogAsync(erro);
             }
             catch (Exception ex)
             {

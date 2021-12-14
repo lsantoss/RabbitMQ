@@ -1,9 +1,10 @@
 ﻿using ElmahCore;
+using System.Threading.Tasks;
 
 namespace RabbitMQ.Domain.Core.Elmah.Interfaces
 {
     public interface IElmahRepository
     {
-        string Log(Error error);
+        Task<string> Log(Error error);
     }
 }

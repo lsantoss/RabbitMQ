@@ -6,6 +6,9 @@ using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Payments.Handlers;
+using RabbitMQ.Domain.Payments.Interfaces.Handlers;
+using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using RabbitMQ.Infra.Data.Repositories;
 
 namespace RabbitMQ.Infra.Crosscutting
@@ -20,10 +23,6 @@ namespace RabbitMQ.Infra.Crosscutting
             configuration.GetSection("Settings").Bind(settings);
             services.AddSingleton(settings);
 
-            var queuesWorkersSettings = new QueuesWorkersSettings();
-            configuration.GetSection("QueuesWorkersSettings").Bind(queuesWorkersSettings);
-            services.AddSingleton(queuesWorkersSettings);
-
             var rabbitMQSettings = new RabbitMQSettings();
             configuration.GetSection("RabbitMQSettings").Bind(rabbitMQSettings);
             services.AddSingleton(rabbitMQSettings);
@@ -34,21 +33,16 @@ namespace RabbitMQ.Infra.Crosscutting
 
             services.AddScoped<IElmahRepository, ElmahRepository>();
             services.AddScoped<IQueueLogRepository, QueueLogRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
 
             #endregion Repositories
 
             #region Handlers
 
             if (queue == EQueue.ConsumerPayments)
-                //services.AddScoped<IConsumerPaymentHandler, ConsumerPaymentHandler>();
+                services.AddScoped<IPaymentHandler, PaymentHandler>();
 
             #endregion Handlers
-
-            #region MemoryCache
-
-            services.AddMemoryCache();
-
-            #endregion MemoryCache
 
             #region RabbitMQ
 

@@ -39,5 +39,15 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             NumberAttempts = numberAttempts;
             Error = error;
         }
+
+        public void SetId(ulong id) => Id = id;
+        public void SetPaymentId(Guid paymentId) => PaymentId = paymentId;
+        public void SetWorker(string worker) => Worker = worker;
+        public void SetQueue(string queue) => Queue = queue;
+        public void SetMessage(string message) => Message = message;
+        public void SetDate(DateTime date) => Date = date;
+        public void SetSuccess(bool success) => Success = success;
+        public void SetNumberAttempts(byte numberAttempts) => NumberAttempts = numberAttempts;
+        public void SetError(string error) => Error = error;
     }
 }
