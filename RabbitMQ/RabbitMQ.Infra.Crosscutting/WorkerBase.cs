@@ -10,7 +10,7 @@ namespace RabbitMQ.Infra.Crosscutting
         private readonly IConfiguration _configuration;
         private readonly ServiceProvider _serviceProvider;
 
-        public WorkerBase(EQueue fila)
+        public WorkerBase(EApplication application)
         {
             _services = new ServiceCollection();
 
@@ -18,7 +18,7 @@ namespace RabbitMQ.Infra.Crosscutting
 
             _services.AddSingleton(_configuration);
 
-            WorkerIoC.AddWorkerServices(_services, _configuration, fila);
+            WorkerIoC.AddWorkerServices(_services, _configuration, application);
 
             _serviceProvider = _services.BuildServiceProvider();
         }

@@ -23,7 +23,7 @@ namespace RabbitMQ.PublisherReversals
 
         static Program()
         {
-            _workerBase = new WorkerBase(EQueue.PublisherReversals);
+            _workerBase = new WorkerBase(EApplication.PublisherReversals);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
             _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();

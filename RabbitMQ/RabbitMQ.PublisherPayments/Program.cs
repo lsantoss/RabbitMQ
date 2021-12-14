@@ -23,7 +23,7 @@ namespace RabbitMQ.PublisherPayments
 
         static Program()
         {
-            _workerBase = new WorkerBase(EQueue.PublisherPayments);
+            _workerBase = new WorkerBase(EApplication.PublisherPayments);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
             _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();

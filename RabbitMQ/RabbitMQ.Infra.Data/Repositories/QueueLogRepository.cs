@@ -3,11 +3,8 @@ using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Infra.Data.Repositories.Queries;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.Infra.Data.Repositories
@@ -36,24 +33,6 @@ namespace RabbitMQ.Infra.Data.Repositories
             using (var connection = new SqlConnection(_settings.ConnectionString))
             {
                 return await connection.ExecuteScalarAsync<long>(QueueLogQueries.Log, _parameters);
-            }
-        }
-
-        public async Task<QueueLog> Get(long id)
-        {
-            _parameters.Add("Id", id, DbType.Int64);
-
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                return (await connection.QueryAsync<QueueLog>(QueueLogQueries.Get, _parameters)).FirstOrDefault();
-            }
-        }
-
-        public async Task<List<QueueLog>> List(Guid idPagamento)
-        {
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                return (await connection.QueryAsync<QueueLog>(QueueLogQueries.List)).ToList();
             }
         }
     }

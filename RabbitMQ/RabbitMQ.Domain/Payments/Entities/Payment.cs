@@ -25,18 +25,6 @@ namespace RabbitMQ.Domain.Payments.Entities
             ChangeDate = null;
         }
 
-        public Payment(Guid id, string barCode, decimal value, DateTime date, string email, DateTime creationDate, DateTime changeDate)
-        {
-            Id = id;
-            BarCode = barCode;
-            Value = value;
-            Date = date;
-            Email = email;
-            Reversed = true;
-            CreationDate = creationDate;
-            ChangeDate = changeDate;
-        }
-
         public Payment(Guid id, string barCode, decimal value, DateTime date, string email, bool reversed, DateTime creationDate, DateTime? changeDate)
         {
             Id = id;

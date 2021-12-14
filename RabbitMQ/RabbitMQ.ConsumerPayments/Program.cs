@@ -16,7 +16,7 @@ namespace RabbitMQ.ConsumerPayments
 
         static Program()
         {
-            _workerBase = new WorkerBase(EQueue.ConsumerPayments);
+            _workerBase = new WorkerBase(EApplication.ConsumerPayments);
             _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();
             _handler = _workerBase.GetService<IPaymentHandler>();
         }

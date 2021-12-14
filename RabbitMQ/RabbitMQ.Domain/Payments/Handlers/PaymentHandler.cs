@@ -16,6 +16,7 @@ namespace RabbitMQ.Domain.Payments.Handlers
 {
     public class PaymentHandler : IPaymentHandler
     {
+        private static readonly string _applicationName = ApplicationName.ConsumerPayments;
         private static readonly string _currentQueue = QueueName.Payments;
         private static readonly string _nextQueue = QueueName.EmailNotifier;
 
@@ -43,16 +44,17 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 await _paymentRepository.Save(payment);
 
                 var message = JsonConvert.SerializeObject(paymentCommand);
-                var queueLog = new QueueLog(payment.Id, ApplicationName.ConsumerPayments, QueueName.Payments, message);
+                var queueLog = new QueueLog(payment.Id, _applicationName, _currentQueue, message);
                 await _queueLogRepository.Log(queueLog);
 
+                //TODO: Publicar na fila de email, enviar email notificando que o pagamento foi efetuado com sucesso
                 var emailNotification = new EmailNotificationCommand();
                 _rabbitMQBus.Publish(emailNotification, _nextQueue);
             }
             catch (Exception ex)
             {
                 var message = JsonConvert.SerializeObject(paymentCommand);
-                var queueLog = new QueueLog(paymentCommand.Id, ApplicationName.ConsumerPayments, QueueName.Payments, message, paymentCommand.NumberAttempts, ex.Message);
+                var queueLog = new QueueLog(paymentCommand.Id, _applicationName, _currentQueue, message, paymentCommand.NumberAttempts, ex.Message);
 
                 await _queueLogRepository.Log(queueLog);
                 await _elmahRepository.Log(new Error(ex));

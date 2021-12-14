@@ -1,6 +1,6 @@
 ﻿namespace RabbitMQ.Domain.Core.Enums
 {
-    public enum EQueue
+    public enum EApplication
     {
         PublisherPayments = 1,
         PublisherReversals = 2,

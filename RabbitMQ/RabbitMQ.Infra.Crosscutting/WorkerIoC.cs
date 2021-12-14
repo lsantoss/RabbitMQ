@@ -9,13 +9,15 @@ using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
 using RabbitMQ.Domain.Payments.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
+using RabbitMQ.Domain.Reversals.Handlers;
+using RabbitMQ.Domain.Reversals.Interfaces.Handlers;
 using RabbitMQ.Infra.Data.Repositories;
 
 namespace RabbitMQ.Infra.Crosscutting
 {
     public static class WorkerIoC
     {
-        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration, EQueue queue)
+        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration, EApplication application)
         {
             #region AppSettings
 
@@ -39,8 +41,11 @@ namespace RabbitMQ.Infra.Crosscutting
 
             #region Handlers
 
-            if (queue == EQueue.ConsumerPayments)
+            if (application == EApplication.ConsumerPayments)
                 services.AddScoped<IPaymentHandler, PaymentHandler>();
+
+            if (application == EApplication.ConsumerReversals)
+                services.AddScoped<IReversalHandler, ReversalHandler>();            
 
             #endregion Handlers
 
