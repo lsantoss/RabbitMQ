@@ -53,6 +53,38 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
         }
 
+        public void Publish(string message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
+        {
+            try
+            {
+                using (var connection = Factory.CreateConnection())
+                using (var channel = connection.CreateModel())
+                {
+                    channel.ConfirmSelect();
+
+                    channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
+
+                    var obj = JsonConvert.DeserializeObject(message);
+                    message = JsonConvert.SerializeObject(obj);
+
+                    var body = Encoding.UTF8.GetBytes(message);
+
+                    var properties = channel.CreateBasicProperties();
+                    properties.Persistent = true;
+                    properties.Headers = new Dictionary<string, object>();
+                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+
+                    channel.BasicPublish(string.Empty, queueName, properties, body);
+
+                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to publish to RabbitMQ queue:", ex);
+            }
+        }
+
         public void PublishDelayed<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false, int delayTime = 15000)
         {
             try

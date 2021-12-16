@@ -1,5 +1,6 @@
 ﻿using ElmahCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
@@ -11,6 +12,7 @@ using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Infra.Crosscutting;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.PublisherEmails
@@ -44,18 +46,19 @@ namespace RabbitMQ.PublisherEmails
 
                 PrintMenu();
 
-                Console.Write("Digite template desejado: ");
+                Console.Write("Enter the desired template: ");
                 var emailTemplate = (EEmailTemplate)Convert.ToInt16(Console.ReadLine());
 
                 var emailJson = GetPayload(emailTemplate);
 
+                Console.WriteLine();
                 Console.WriteLine(emailJson);
 
-                var emailNotification = JsonConvert.DeserializeObject<EmailNotificationCommand>(emailJson);
+                var paymentId = Guid.Parse(JObject.Parse(emailJson)["Payment"]["Id"].ToString());
 
-                _rabbitMQBus.Publish(emailNotification, _queueName);
+                _rabbitMQBus.Publish(emailJson, _queueName);
 
-                var queueLog = new QueueLog(emailNotification.Payment.Id, _applicationName, _queueName, emailJson);
+                var queueLog = new QueueLog(paymentId, _applicationName, _queueName, emailJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");
