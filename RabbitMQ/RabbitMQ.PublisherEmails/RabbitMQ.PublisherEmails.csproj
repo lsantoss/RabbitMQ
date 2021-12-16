@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="payload-payment-already-reversed.json" />
+    <None Remove="payload-payment-success.json" />
+    <None Remove="payload-reversal-success.json.json" />
+    <None Remove="payload-support-payment-maximum-attempts.json" />
+    <None Remove="payload-support-payment-not-found-for-reversal.json" />
+    <None Remove="payload-support-reversal-maximum-attempts.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-payment-already-reversed.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-payment-success.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-reversal-success.json.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-support-payment-maximum-attempts.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-support-payment-not-found-for-reversal.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="payload-support-reversal-maximum-attempts.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RabbitMQ.Infra.Crosscutting\RabbitMQ.Infra.Crosscutting.csproj" />
+  </ItemGroup>
+
+</Project>

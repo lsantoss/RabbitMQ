@@ -40,6 +40,19 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             Error = error;
         }
 
+        public QueueLog(ulong id, Guid paymentId, string worker, string queue, string message, DateTime date, bool success, byte numberAttempts, string error)
+        {
+            Id = id;
+            PaymentId = paymentId;
+            Worker = worker;
+            Queue = queue;
+            Message = message;
+            Date = date;
+            Success = success;
+            NumberAttempts = numberAttempts;
+            Error = error;
+        }
+
         public void SetId(ulong id) => Id = id;
         public void SetPaymentId(Guid paymentId) => PaymentId = paymentId;
         public void SetWorker(string worker) => Worker = worker;

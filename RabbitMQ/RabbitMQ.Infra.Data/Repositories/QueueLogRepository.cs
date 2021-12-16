@@ -2,9 +2,13 @@
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
+using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
 using RabbitMQ.Infra.Data.Repositories.Queries;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.Infra.Data.Repositories
@@ -19,7 +23,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _settings = settings;
         }
 
-        public async Task<long> Log(QueueLog queueLog)
+        public async Task<ulong> Log(QueueLog queueLog)
         {
             _parameters.Add("PaymentId", queueLog.PaymentId, DbType.Guid);
             _parameters.Add("Worker", queueLog.Worker, DbType.String);
@@ -32,7 +36,17 @@ namespace RabbitMQ.Infra.Data.Repositories
 
             using (var connection = new SqlConnection(_settings.ConnectionString))
             {
-                return await connection.ExecuteScalarAsync<long>(QueueLogQueries.Log, _parameters);
+                return await connection.ExecuteScalarAsync<ulong>(QueueLogQueries.Log, _parameters);
+            }
+        }
+
+        public async Task<List<QueueLogQueryResult>> List(Guid paymentId)
+        {
+            _parameters.Add("PaymentId", paymentId, DbType.Guid);
+
+            using (var connection = new SqlConnection(_settings.ConnectionString))
+            {
+                return (await connection.QueryAsync<QueueLogQueryResult>(QueueLogQueries.List, _parameters)).ToList();
             }
         }
     }

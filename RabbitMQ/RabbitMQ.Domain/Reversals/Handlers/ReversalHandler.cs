@@ -70,11 +70,11 @@ namespace RabbitMQ.Domain.Reversals.Handlers
             }
             catch (Exception ex)
             {
+                await _elmahRepository.Log(new Error(ex));
+
                 var message = JsonConvert.SerializeObject(reversalCommand);
                 var queueLog = new QueueLog(reversalCommand.Id, _applicationName, _currentQueue, message, reversalCommand.NumberAttempts, ex.Message);
-
                 await _queueLogRepository.Log(queueLog);
-                await _elmahRepository.Log(new Error(ex));
 
                 if (reversalCommand.NumberAttempts < 3)
                 {
@@ -84,6 +84,8 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                 else
                 {
                     //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
+                    var emailNotification = new EmailNotificationCommand();
+                    _rabbitMQBus.Publish(emailNotification, _nextQueue);
                 }
             }
         }

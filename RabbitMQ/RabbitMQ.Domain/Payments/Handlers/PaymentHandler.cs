@@ -6,6 +6,7 @@ using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
+using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Commands.Inputs;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
@@ -47,17 +48,16 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 var queueLog = new QueueLog(payment.Id, _applicationName, _currentQueue, message);
                 await _queueLogRepository.Log(queueLog);
 
-                //TODO: Publicar na fila de email, enviar email notificando que o pagamento foi efetuado com sucesso
-                var emailNotification = new EmailNotificationCommand();
+                var emailNotification = new EmailNotificationCommand(payment, EEmailTemplate.PaymentSuccess);
                 _rabbitMQBus.Publish(emailNotification, _nextQueue);
             }
             catch (Exception ex)
             {
+                await _elmahRepository.Log(new Error(ex));
+
                 var message = JsonConvert.SerializeObject(paymentCommand);
                 var queueLog = new QueueLog(paymentCommand.Id, _applicationName, _currentQueue, message, paymentCommand.NumberAttempts, ex.Message);
-
                 await _queueLogRepository.Log(queueLog);
-                await _elmahRepository.Log(new Error(ex));
 
                 if (paymentCommand.NumberAttempts < 3)
                 {
@@ -66,7 +66,9 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 }
                 else
                 {
-                    //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
+                    var queueLogsQueryResult = await _queueLogRepository.List(paymentCommand.Id);
+                    var emailNotification = new EmailNotificationCommand(paymentCommand, EEmailTemplate.SupportPaymentMaximumAttempts, queueLogsQueryResult);
+                    _rabbitMQBus.Publish(emailNotification, _nextQueue);
                 }
             }
         }
