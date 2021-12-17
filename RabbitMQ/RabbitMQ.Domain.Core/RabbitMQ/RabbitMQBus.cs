@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Extensions;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -64,8 +65,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
 
                     channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
 
-                    var obj = JsonConvert.DeserializeObject(message);
-                    message = JsonConvert.SerializeObject(obj);
+                    message = message.RemoveJsonFormatting();
 
                     var body = Encoding.UTF8.GetBytes(message);
 
@@ -106,6 +106,46 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                     channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
 
                     var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+
+                    var properties = channel.CreateBasicProperties();
+                    properties.Persistent = true;
+                    properties.Headers = new Dictionary<string, object>();
+                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+
+                    channel.BasicPublish("", queueNameDelayed, properties, body);
+
+                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to publish to the RabbitMQ delayed queue:", ex);
+            }
+        }
+
+        public void PublishDelayed(string message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false, int delayTime = 15000)
+        {
+            try
+            {
+                using (var connection = Factory.CreateConnection())
+                using (var channel = connection.CreateModel())
+                {
+                    channel.ConfirmSelect();
+
+                    var queueNameDelayed = $"{queueName}_DELAYED";
+                    var arguments = new Dictionary<string, object>
+                    {
+                        { "x-dead-letter-exchange", "" },
+                        { "x-dead-letter-routing-key", queueName },
+                        { "x-message-ttl", delayTime },
+                        { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
+                    };
+
+                    channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
+
+                    message = message.RemoveJsonFormatting();
+
+                    var body = Encoding.UTF8.GetBytes(message);
 
                     var properties = channel.CreateBasicProperties();
                     properties.Persistent = true;

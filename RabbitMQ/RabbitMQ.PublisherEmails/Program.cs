@@ -1,5 +1,4 @@
 ﻿using ElmahCore;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
@@ -8,11 +7,9 @@ using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
-using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Infra.Crosscutting;
 using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.PublisherEmails

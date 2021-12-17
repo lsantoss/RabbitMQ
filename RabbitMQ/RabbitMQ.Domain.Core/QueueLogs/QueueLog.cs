@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RabbitMQ.Domain.Core.Extensions;
+using System;
 
 namespace RabbitMQ.Domain.Core.QueueLogs
 {
@@ -20,7 +21,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             PaymentId = paymentId;
             Worker = worker;
             Queue = queue;
-            Message = message;
+            Message = message.RemoveJsonFormatting();
             Date = DateTime.Now;
             Success = true;
             NumberAttempts = 1;
@@ -33,7 +34,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             PaymentId = paymentId;
             Worker = worker;
             Queue = queue;
-            Message = message;
+            Message = message.RemoveJsonFormatting();
             Date = DateTime.Now;
             Success = false;
             NumberAttempts = numberAttempts;
@@ -46,7 +47,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             PaymentId = paymentId;
             Worker = worker;
             Queue = queue;
-            Message = message;
+            Message = message.RemoveJsonFormatting();
             Date = date;
             Success = success;
             NumberAttempts = numberAttempts;
@@ -57,7 +58,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs
         public void SetPaymentId(Guid paymentId) => PaymentId = paymentId;
         public void SetWorker(string worker) => Worker = worker;
         public void SetQueue(string queue) => Queue = queue;
-        public void SetMessage(string message) => Message = message;
+        public void SetMessage(string message) => Message = message.RemoveJsonFormatting();
         public void SetDate(DateTime date) => Date = date;
         public void SetSuccess(bool success) => Success = success;
         public void SetNumberAttempts(byte numberAttempts) => NumberAttempts = numberAttempts;
