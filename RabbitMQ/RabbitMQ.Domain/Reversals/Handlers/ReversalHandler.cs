@@ -38,35 +38,47 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
         public async Task Handle(PublishReversalCommand reversalCommand)
         {
+            Console.WriteLine("Handle started.");
+
             try
             {
                 var paymentQueryResult = await _paymentRepository.Get(reversalCommand.Id);
 
                 if (paymentQueryResult == null)
                 {
-                    //TODO: LogFila
+                    var message = JsonConvert.SerializeObject(reversalCommand);
+                    var queueLog = new QueueLog(reversalCommand.Id, _applicationName, _currentQueue, message, reversalCommand.NumberAttempts, "Pagamento não encontrado na base de dados");
+                    await _queueLogRepository.Log(queueLog);
+
                     //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
-                    return;
-                }
+
+                    Console.WriteLine("An error has occurred. This payment is not registered in our database. An email will be sent to support.");
+                }                
                 else if (paymentQueryResult.Reversed)
                 {
-                    //TODO: LogFila
+                    var message = JsonConvert.SerializeObject(reversalCommand);
+                    var queueLog = new QueueLog(reversalCommand.Id, _applicationName, _currentQueue, message, reversalCommand.NumberAttempts, "Pagamento já foi estornado anteriormente");
+                    await _queueLogRepository.Log(queueLog);
+
                     //TODO: Publicar na fila de email, enviar email notificando que o estorno já havia sido realizado anteriormente
-                    return;
+
+                    Console.WriteLine("An error has occurred. This payment has already been reversed.");
                 }
+                else
+                {
+                    var payment = paymentQueryResult.MapToPayment();
+                    payment.Reverse();
+                    await _paymentRepository.Update(payment);
 
-                var payment = paymentQueryResult.MapToPayment();
-                payment.SetReversed(true);
-                payment.SetChangeDate(DateTime.Now);
-                await _paymentRepository.Update(payment);
+                    var message = JsonConvert.SerializeObject(reversalCommand);
+                    var queueLog = new QueueLog(payment.Id, _applicationName, _currentQueue, message);
+                    await _queueLogRepository.Log(queueLog);
 
-                var message = JsonConvert.SerializeObject(reversalCommand);
-                var queueLog = new QueueLog(payment.Id, _applicationName, _currentQueue, message);
-                await _queueLogRepository.Log(queueLog);
+                    //TODO: Publicar na fila de email, enviar email notificando que o estorno foi efetuado com sucesso
 
-                //TODO: Publicar na fila de email, enviar email notificando que o estorno foi efetuado com sucesso
-                var emailNotification = new EmailNotificationCommand();
-                _rabbitMQBus.Publish(emailNotification, _nextQueue);
+                    Console.WriteLine("Reversal registered successfully.");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -78,16 +90,20 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
                 if (reversalCommand.NumberAttempts < 3)
                 {
-                    reversalCommand.NumberAttempts++;
+                    reversalCommand.AddNumberAttempt();
                     _rabbitMQBus.PublishDelayed(reversalCommand, _currentQueue);
+
+                    Console.WriteLine("An error occurred. Reversal has been registered again in the queue.");
                 }
                 else
                 {
                     //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
-                    var emailNotification = new EmailNotificationCommand();
-                    _rabbitMQBus.Publish(emailNotification, _nextQueue);
+
+                    Console.WriteLine("An error occurred. Reversal exceeded the limit of three processing attempts. An email will be sent to support.");
                 }
             }
+
+            Console.WriteLine("Handle finished.\n");
         }
     }
 }

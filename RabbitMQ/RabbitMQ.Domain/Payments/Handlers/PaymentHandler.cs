@@ -38,7 +38,9 @@ namespace RabbitMQ.Domain.Payments.Handlers
         }
 
         public async Task Handle(PublishPaymentCommand paymentCommand)
-        {         
+        {
+            Console.WriteLine("Handle started.");
+
             try
             {
                 var payment = paymentCommand.MapToPayment();
@@ -50,6 +52,8 @@ namespace RabbitMQ.Domain.Payments.Handlers
 
                 var emailNotification = new EmailNotificationCommand(payment, EEmailTemplate.PaymentSuccess);
                 _rabbitMQBus.Publish(emailNotification, _nextQueue);
+
+                Console.WriteLine("Payment registered successfully.");
             }
             catch (Exception ex)
             {
@@ -61,16 +65,22 @@ namespace RabbitMQ.Domain.Payments.Handlers
 
                 if (paymentCommand.NumberAttempts < 3)
                 {
-                    paymentCommand.NumberAttempts++;
+                    paymentCommand.AddNumberAttempt();
                     _rabbitMQBus.PublishDelayed(paymentCommand, _currentQueue);
+
+                    Console.WriteLine("An error occurred. Payment has been registered again in the queue.");
                 }
                 else
                 {
                     var queueLogsQueryResult = await _queueLogRepository.List(paymentCommand.Id);
                     var emailNotification = new EmailNotificationCommand(paymentCommand, EEmailTemplate.SupportPaymentMaximumAttempts, queueLogsQueryResult);
                     _rabbitMQBus.Publish(emailNotification, _nextQueue);
+
+                    Console.WriteLine("An error occurred. Payment exceeded the limit of three processing attempts. An email will be sent to support.");
                 }
             }
+
+            Console.WriteLine("Handle finished.\n");
         }
     }
 }

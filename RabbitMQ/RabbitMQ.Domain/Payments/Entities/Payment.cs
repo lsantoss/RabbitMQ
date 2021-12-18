@@ -37,6 +37,12 @@ namespace RabbitMQ.Domain.Payments.Entities
             ChangeDate = changeDate;
         }
 
+        public void Reverse()
+        {
+            Reversed = true;
+            ChangeDate = DateTime.Now;
+        }
+
         public void SetId(Guid id) => Id = id;
         public void SetBarCode(string barCode) => BarCode = barCode;
         public void SetValue(decimal value) => Value = value;

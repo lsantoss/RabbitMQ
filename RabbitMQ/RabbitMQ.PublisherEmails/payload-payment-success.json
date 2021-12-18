@@ -1,4 +1,7 @@
 {
+  "EmailTemplate": 1,
+  "EmailSupport": null,
+  "NumberAttempts": 1,
   "Payment": {
     "Id": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
     "BarCode": "82620000000722400970080002614548152002112008",
@@ -6,9 +9,8 @@
     "Date": "2021-11-29T12:30:22",
     "Email": "l_santos@hotmail.com.br",
     "Reversed": false,
-    "CreationDate": "2021-12-16T18:37:51.7196623-03:00",
+    "CreationDate": "2021-12-18T11:08:03.6816298-03:00",
     "ChangeDate": null
   },
-  "EmailTemplate": 1,
   "QueueLogs": []
 }

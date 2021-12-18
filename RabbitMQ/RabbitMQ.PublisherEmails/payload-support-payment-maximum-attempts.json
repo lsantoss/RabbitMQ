@@ -1,4 +1,7 @@
 {
+  "EmailTemplate": 3,
+  "EmailSupport": "l.santosfaria7@gmail.com",
+  "NumberAttempts": 1,
   "Payment": {
     "Id": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
     "BarCode": "82620000000722400970080002614548152002112008",
@@ -6,54 +9,53 @@
     "Date": "2021-11-29T12:30:22",
     "Email": "l_santos@hotmail.com.br",
     "Reversed": false,
-    "CreationDate": "2021-12-16T10:03:36.6406665-03:00",
+    "CreationDate": "2021-12-18T10:13:05.7719802-03:00",
     "ChangeDate": null
   },
-  "EmailTemplate": 3,
   "QueueLogs": [
     {
-      "Id": 48,
+      "Id": 71,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.PublisherPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\r\n  \"Id\": \"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\r\n  \"BarCode\": \"82620000000722400970080002614548152002112008\",\r\n  \"Value\": 72.24,\r\n  \"Date\": \"2021-11-29T12:30:22\",\r\n  \"Email\": \"l_santos@hotmail.com.br\",\r\n  \"NumberAttempts\": 1\r\n}",
-      "Date": "2021-12-16T09:59:00",
+      "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
+      "Date": "2021-12-18T10:12:00",
       "Success": true,
       "NumberAttempts": 1,
       "Error": null
     },
     {
-      "Id": 49,
+      "Id": 72,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
       "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
-      "Date": "2021-12-16T10:00:00",
+      "Date": "2021-12-18T10:12:00",
       "Success": false,
       "NumberAttempts": 1,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payments' inválido."
     },
     {
-      "Id": 50,
+      "Id": 73,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
       "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":2}",
-      "Date": "2021-12-16T10:00:00",
+      "Date": "2021-12-18T10:12:00",
       "Success": false,
       "NumberAttempts": 2,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payments' inválido."
     },
     {
-      "Id": 51,
+      "Id": 74,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
       "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":3}",
-      "Date": "2021-12-16T10:03:00",
+      "Date": "2021-12-18T10:12:00",
       "Success": false,
       "NumberAttempts": 3,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payments' inválido."
     }
   ]
 }

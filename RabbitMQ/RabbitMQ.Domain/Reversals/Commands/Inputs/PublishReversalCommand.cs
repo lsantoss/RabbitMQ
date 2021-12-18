@@ -6,5 +6,7 @@ namespace RabbitMQ.Domain.Reversals.Commands.Inputs
     {
         public Guid Id { get; set; }
         public byte NumberAttempts { get; set; }
+
+        public void AddNumberAttempt() => NumberAttempts++;
     }
 }
