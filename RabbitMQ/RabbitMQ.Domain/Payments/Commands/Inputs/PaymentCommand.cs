@@ -12,7 +12,7 @@ namespace RabbitMQ.Domain.Payments.Commands.Inputs
         public string Email { get; set; }
         public byte NumberAttempts { get; set; }
 
-        public Payment MapToPayment() => new Payment(Id, BarCode, Value, Date, Email);
+        public Payment MapToPayment() => new(Id, BarCode, Value, Date, Email);
 
         public void AddNumberAttempt() => NumberAttempts++;
     }

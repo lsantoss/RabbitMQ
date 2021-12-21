@@ -36,7 +36,7 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 var payment = paymentCommand.MapToPayment();
                 await _paymentRepository.Save(payment);
 
-                await LogQueue(payment, _applicationName, _currentQueue);
+                await LogQueue(paymentCommand, _applicationName, _currentQueue);
 
                 SendToEmailQueue(paymentCommand, EEmailTemplate.PaymentSuccess);
 
