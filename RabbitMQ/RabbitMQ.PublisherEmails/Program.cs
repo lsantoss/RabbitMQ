@@ -1,5 +1,4 @@
-﻿using ElmahCore;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
@@ -7,6 +6,7 @@ using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Infra.Crosscutting;
 using System;
@@ -46,16 +46,16 @@ namespace RabbitMQ.PublisherEmails
                 Console.Write("Enter the desired template: ");
                 var emailTemplate = (EEmailTemplate)Convert.ToInt16(Console.ReadLine());
 
-                var emailJson = GetPayload(emailTemplate);
+                var emailJson = ReadPayload(emailTemplate);
 
                 Console.WriteLine();
                 Console.WriteLine(emailJson);
 
-                var paymentId = Guid.Parse(JObject.Parse(emailJson)["Payment"]["Id"].ToString());
+                var emailNotification = JsonConvert.DeserializeObject<EmailNotificationCommand>(emailJson);
 
                 _rabbitMQBus.Publish(emailJson, _queueName);
 
-                var queueLog = new QueueLog(paymentId, _applicationName, _queueName, emailJson);
+                var queueLog = new QueueLog(emailNotification.Payment.Id, _applicationName, _queueName, emailJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");
@@ -63,7 +63,7 @@ namespace RabbitMQ.PublisherEmails
             }
             catch (Exception ex)
             {
-                await _elmahRepository.Log(new Error(ex));
+                await _elmahRepository.Log(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }
@@ -82,7 +82,7 @@ namespace RabbitMQ.PublisherEmails
             Console.WriteLine();
         }
 
-        private static string GetPayload(EEmailTemplate emailTemplate)
+        private static string ReadPayload(EEmailTemplate emailTemplate)
         {
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
 

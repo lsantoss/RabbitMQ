@@ -13,7 +13,5 @@ namespace RabbitMQ.Domain.Core.QueueLogs.Queries.Results
         public bool Success { get; set; }
         public byte NumberAttempts { get; set; }
         public string Error { get; set; }
-
-        public QueueLog MapToQueueLog() => new QueueLog(Id, PaymentId, Worker, Queue, Message, Date, Success, NumberAttempts, Error);
     }
 }

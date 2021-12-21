@@ -15,7 +15,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs
         public byte NumberAttempts { get; private set; }
         public string Error { get; private set; }
 
-        public QueueLog(Guid paymentId, string worker, string queue, string message)
+        public QueueLog(Guid paymentId, string worker, string queue, string message, bool success = true, byte numberAttempts = 1, string error = null)
         {
             Id = 0;
             PaymentId = paymentId;
@@ -23,32 +23,6 @@ namespace RabbitMQ.Domain.Core.QueueLogs
             Queue = queue;
             Message = message.RemoveJsonFormatting();
             Date = DateTime.Now;
-            Success = true;
-            NumberAttempts = 1;
-            Error = null;
-        }
-
-        public QueueLog(Guid paymentId, string worker, string queue, string message, byte numberAttempts, string error)
-        {
-            Id = 0;
-            PaymentId = paymentId;
-            Worker = worker;
-            Queue = queue;
-            Message = message.RemoveJsonFormatting();
-            Date = DateTime.Now;
-            Success = false;
-            NumberAttempts = numberAttempts;
-            Error = error;
-        }
-
-        public QueueLog(ulong id, Guid paymentId, string worker, string queue, string message, DateTime date, bool success, byte numberAttempts, string error)
-        {
-            Id = id;
-            PaymentId = paymentId;
-            Worker = worker;
-            Queue = queue;
-            Message = message.RemoveJsonFormatting();
-            Date = date;
             Success = success;
             NumberAttempts = numberAttempts;
             Error = error;

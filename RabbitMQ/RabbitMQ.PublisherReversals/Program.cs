@@ -1,5 +1,4 @@
-﻿using ElmahCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
@@ -47,7 +46,7 @@ namespace RabbitMQ.PublisherReversals
 
                 Console.WriteLine(reversalJson);
 
-                var reversal = JsonConvert.DeserializeObject<PublishReversalCommand>(reversalJson);
+                var reversal = JsonConvert.DeserializeObject<ReversalCommand>(reversalJson);
 
                 _rabbitMQBus.Publish(reversal, _queueName);
 
@@ -59,7 +58,7 @@ namespace RabbitMQ.PublisherReversals
             }
             catch (Exception ex)
             {
-                await _elmahRepository.Log(new Error(ex));
+                await _elmahRepository.Log(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }

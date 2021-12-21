@@ -1,6 +1,6 @@
 {
   "EmailTemplate": 1,
-  "EmailSupport": null,
+  "EmailSupport": "l.santosfaria7@gmail.com",
   "NumberAttempts": 1,
   "Payment": {
     "Id": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
@@ -8,9 +8,7 @@
     "Value": 72.24,
     "Date": "2021-11-29T12:30:22",
     "Email": "l_santos@hotmail.com.br",
-    "Reversed": false,
-    "CreationDate": "2021-12-18T11:08:03.6816298-03:00",
-    "ChangeDate": null
+    "NumberAttempts": 1
   },
   "QueueLogs": []
 }

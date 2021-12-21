@@ -16,11 +16,11 @@ namespace RabbitMQ.Infra.Data.Repositories
             _elmahLog = new SqlErrorLog(settings.ConnectionString);
         }
 
-        public async Task<string> Log(Error erro)
-        {
+        public async Task<string> Log(Exception exception)
+        {            
             try
             {
-                return await _elmahLog.LogAsync(erro);
+                return await _elmahLog.LogAsync(new Error(exception));
             }
             catch (Exception ex)
             {

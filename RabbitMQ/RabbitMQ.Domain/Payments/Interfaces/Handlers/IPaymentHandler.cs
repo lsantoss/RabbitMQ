@@ -5,6 +5,6 @@ namespace RabbitMQ.Domain.Payments.Interfaces.Handlers
 {
     public interface IPaymentHandler
     {
-        Task Handle(PublishPaymentCommand paymentCommand);
+        Task Handle(PaymentCommand paymentCommand);
     }
 }

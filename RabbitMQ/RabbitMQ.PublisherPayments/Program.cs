@@ -1,5 +1,4 @@
-﻿using ElmahCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
@@ -47,7 +46,7 @@ namespace RabbitMQ.PublisherPayments
 
                 Console.WriteLine(paymentJson);
 
-                var payment = JsonConvert.DeserializeObject<PublishPaymentCommand>(paymentJson);
+                var payment = JsonConvert.DeserializeObject<PaymentCommand>(paymentJson);
 
                 _rabbitMQBus.Publish(payment, _queueName);
 
@@ -59,7 +58,7 @@ namespace RabbitMQ.PublisherPayments
             }
             catch (Exception ex)
             {
-                await _elmahRepository.Log(new Error(ex));
+                await _elmahRepository.Log(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }

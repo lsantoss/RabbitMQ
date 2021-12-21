@@ -3,7 +3,7 @@ using System;
 
 namespace RabbitMQ.Domain.Payments.Commands.Inputs
 {
-    public class PublishPaymentCommand
+    public class PaymentCommand
     {
         public Guid Id { get; set; }
         public string BarCode { get; set; }

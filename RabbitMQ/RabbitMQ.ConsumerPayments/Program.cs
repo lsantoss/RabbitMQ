@@ -31,7 +31,7 @@ namespace RabbitMQ.ConsumerPayments
         {
             Console.WriteLine($"Starting Worker {_applicationName}\n");
 
-            _rabbitMQBus.Consume<PublishPaymentCommand>(_handler, _queueName);
+            _rabbitMQBus.Consume<PaymentCommand>(_handler, _queueName);
         }
     }
 }

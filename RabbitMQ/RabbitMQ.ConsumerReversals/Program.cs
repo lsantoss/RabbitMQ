@@ -31,7 +31,7 @@ namespace RabbitMQ.ConsumerReversals
         {
             Console.WriteLine($"Starting Worker {_applicationName}\n");
 
-            _rabbitMQBus.Consume<PublishReversalCommand>(_handler, _queueName);
+            _rabbitMQBus.Consume<ReversalCommand>(_handler, _queueName);
         }
     }
 }

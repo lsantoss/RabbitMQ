@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.Enums;
@@ -40,6 +41,8 @@ namespace RabbitMQ.Infra.Crosscutting
             #endregion Repositories
 
             #region Handlers
+
+            services.AddScoped<BaseHandler, BaseHandler>();
 
             if (application == EApplication.ConsumerPayments)
                 services.AddScoped<IPaymentHandler, PaymentHandler>();

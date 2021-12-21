@@ -1,11 +1,8 @@
-﻿using ElmahCore;
-using Newtonsoft.Json;
+﻿using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
-using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
-using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Commands.Inputs;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
@@ -15,29 +12,22 @@ using System.Threading.Tasks;
 
 namespace RabbitMQ.Domain.Payments.Handlers
 {
-    public class PaymentHandler : IPaymentHandler
+    public class PaymentHandler : BaseHandler, IPaymentHandler
     {
         private static readonly string _applicationName = ApplicationName.ConsumerPayments;
         private static readonly string _currentQueue = QueueName.Payments;
-        private static readonly string _nextQueue = QueueName.EmailNotifier;
 
-        private readonly IRabbitMQBus _rabbitMQBus;
-        private readonly IElmahRepository _elmahRepository;
-        private readonly IQueueLogRepository _queueLogRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public PaymentHandler(IRabbitMQBus rabbitMQBus,
-                              IElmahRepository elmahRepository,
                               IQueueLogRepository queueLogRepository,
-                              IPaymentRepository paymentRepository)
+                              IElmahRepository elmahRepository,
+                              IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
-            _rabbitMQBus = rabbitMQBus;
-            _elmahRepository = elmahRepository;
-            _queueLogRepository = queueLogRepository;
             _paymentRepository = paymentRepository;
         }
 
-        public async Task Handle(PublishPaymentCommand paymentCommand)
+        public async Task Handle(PaymentCommand paymentCommand)
         {
             Console.WriteLine("Handle started.");
 
@@ -46,38 +36,15 @@ namespace RabbitMQ.Domain.Payments.Handlers
                 var payment = paymentCommand.MapToPayment();
                 await _paymentRepository.Save(payment);
 
-                var message = JsonConvert.SerializeObject(paymentCommand);
-                var queueLog = new QueueLog(payment.Id, _applicationName, _currentQueue, message);
-                await _queueLogRepository.Log(queueLog);
+                await LogQueue(payment, _applicationName, _currentQueue);
 
-                var emailNotification = new EmailNotificationCommand(payment, EEmailTemplate.PaymentSuccess);
-                _rabbitMQBus.Publish(emailNotification, _nextQueue);
+                SendToEmailQueue(paymentCommand, EEmailTemplate.PaymentSuccess);
 
                 Console.WriteLine("Payment registered successfully.");
             }
             catch (Exception ex)
             {
-                await _elmahRepository.Log(new Error(ex));
-
-                var message = JsonConvert.SerializeObject(paymentCommand);
-                var queueLog = new QueueLog(paymentCommand.Id, _applicationName, _currentQueue, message, paymentCommand.NumberAttempts, ex.Message);
-                await _queueLogRepository.Log(queueLog);
-
-                if (paymentCommand.NumberAttempts < 3)
-                {
-                    paymentCommand.AddNumberAttempt();
-                    _rabbitMQBus.PublishDelayed(paymentCommand, _currentQueue);
-
-                    Console.WriteLine("An error occurred. Payment has been registered again in the queue.");
-                }
-                else
-                {
-                    var queueLogsQueryResult = await _queueLogRepository.List(paymentCommand.Id);
-                    var emailNotification = new EmailNotificationCommand(paymentCommand, EEmailTemplate.SupportPaymentMaximumAttempts, queueLogsQueryResult);
-                    _rabbitMQBus.Publish(emailNotification, _nextQueue);
-
-                    Console.WriteLine("An error occurred. Payment exceeded the limit of three processing attempts. An email will be sent to support.");
-                }
+                await ControlMaximumAttempts(paymentCommand, _applicationName, _currentQueue, EEmailTemplate.SupportPaymentMaximumAttempts, ex);
             }
 
             Console.WriteLine("Handle finished.\n");

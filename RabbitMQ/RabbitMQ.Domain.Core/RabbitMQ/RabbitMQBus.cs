@@ -1,5 +1,4 @@
-﻿using ElmahCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Domain.Core.AppSettings;
@@ -205,7 +204,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.Log(new Error(new Exception("Closing RabbitMQ queue consumption (ctrl+C)")));
+                        _elmahRepository.Log(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
                     waitHandle.Set();
                 };
@@ -254,7 +253,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.Log(new Error(new Exception("Closing RabbitMQ queue consumption (ctrl+C)")));
+                        _elmahRepository.Log(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
                     waitHandle.Set();
                 };
