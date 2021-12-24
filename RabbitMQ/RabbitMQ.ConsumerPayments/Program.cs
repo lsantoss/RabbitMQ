@@ -19,7 +19,7 @@ namespace RabbitMQ.ConsumerPayments
 
         static Program()
         {
-            _applicationName = ApplicationName.PublisherPayments;
+            _applicationName = ApplicationName.ConsumerPayments;
             _queueName = QueueName.Payments;
 
             _workerBase = new WorkerBase(EApplication.ConsumerPayments);

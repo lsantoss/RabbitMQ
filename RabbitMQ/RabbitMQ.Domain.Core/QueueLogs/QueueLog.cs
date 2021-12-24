@@ -17,15 +17,15 @@ namespace RabbitMQ.Domain.Core.QueueLogs
 
         public QueueLog(Guid paymentId, string worker, string queue, string message, bool success = true, byte numberAttempts = 1, string error = null)
         {
-            Id = 0;
-            PaymentId = paymentId;
-            Worker = worker;
-            Queue = queue;
-            Message = message.RemoveJsonFormatting();
-            Date = DateTime.Now;
-            Success = success;
-            NumberAttempts = numberAttempts;
-            Error = error;
+            SetId(0);
+            SetPaymentId(paymentId);
+            SetWorker(worker);
+            SetQueue(queue);
+            SetMessage(message.RemoveJsonFormatting());
+            SetDate(DateTime.Now);
+            SetSuccess(success);
+            SetNumberAttempts(numberAttempts);
+            SetError(error);
         }
 
         public void SetId(ulong id) => Id = id;

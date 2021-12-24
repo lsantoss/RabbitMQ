@@ -14,8 +14,8 @@ namespace RabbitMQ.Domain.Payments.Handlers
 {
     public class PaymentHandler : BaseHandler, IPaymentHandler
     {
-        private static readonly string _applicationName = ApplicationName.ConsumerPayments;
-        private static readonly string _currentQueue = QueueName.Payments;
+        private readonly string _applicationName;
+        private readonly string _currentQueue;
 
         private readonly IPaymentRepository _paymentRepository;
 
@@ -24,6 +24,9 @@ namespace RabbitMQ.Domain.Payments.Handlers
                               IElmahRepository elmahRepository,
                               IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
+            _applicationName = ApplicationName.ConsumerPayments;
+            _currentQueue = QueueName.Payments;
+
             _paymentRepository = paymentRepository;
         }
 
