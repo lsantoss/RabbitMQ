@@ -50,7 +50,7 @@ namespace RabbitMQ.PublisherPayments
 
                 _rabbitMQBus.Publish(payment, _queueName);
 
-                var queueLog = new QueueLog(payment.Id, _applicationName, _queueName, paymentJson);
+                var queueLog = new QueueLog(payment.PaymentId, _applicationName, _queueName, paymentJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RabbitMQ.Domain.Common.Commands.Inputs;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces;
 using RabbitMQ.Domain.Core.QueueLogs;
@@ -7,7 +8,6 @@ using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
-using RabbitMQ.Domain.Payments.Commands.Inputs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,38 +31,38 @@ namespace RabbitMQ.Domain.Common.Handlers
             _elmahRepository = elmahRepository;
         }
 
-        protected void SendToEmailQueue(PaymentCommand paymentCommand, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
+        protected void SendToEmailQueue(Guid paymentId, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
         {
-            var emailNotification = new EmailNotificationCommand(paymentCommand, emailTemplate, queueLogs);
+            var emailNotification = new EmailNotificationCommand(paymentId, emailTemplate, queueLogs);
             _rabbitMQBus.Publish(emailNotification, _emailQueue);
         }
 
-        protected async Task LogQueue(dynamic data, string applicationName, string currentQueue, string error = null)
+        protected async Task LogQueue(Command command, string applicationName, string currentQueue, string error = null)
         {
             var success = error == null;
-            var message = JsonConvert.SerializeObject(data);
-            var queueLog = new QueueLog(data.Id, applicationName, currentQueue, message, success, data.NumberAttempts, error);
+            var message = JsonConvert.SerializeObject(command);
+            var queueLog = new QueueLog(command.PaymentId, applicationName, currentQueue, message, success, command.NumberAttempts, error);
             await _queueLogRepository.Log(queueLog);
         }
 
-        protected async Task ControlMaximumAttempts(dynamic data, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
+        protected async Task ControlMaximumAttempts(Command command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
         {
             await _elmahRepository.Log(exception);
 
-            await LogQueue(data, applicationName, currentQueue, exception.Message);
+            await LogQueue(command, applicationName, currentQueue, exception.Message);
 
-            if (data.NumberAttempts < 3)
+            if (command.NumberAttempts < 3)
             {
-                data.AddNumberAttempt();
-                _rabbitMQBus.PublishDelayed(data, currentQueue);
+                command.AddNumberAttempt();
+                _rabbitMQBus.PublishDelayed(command, currentQueue);
 
                 Console.WriteLine("An error occurred. Message has been registered again in the queue.");
             }
             else
             {
-                var queueLogs = await _queueLogRepository.List(data.Id);
+                var queueLogs = await _queueLogRepository.List(command.PaymentId);
 
-                SendToEmailQueue(data, emailTemplate, queueLogs);
+                SendToEmailQueue(command.PaymentId, emailTemplate, queueLogs);
 
                 Console.WriteLine("An error occurred. Message exceeded the limit of three processing attempts. An email will be sent to support.");
             }

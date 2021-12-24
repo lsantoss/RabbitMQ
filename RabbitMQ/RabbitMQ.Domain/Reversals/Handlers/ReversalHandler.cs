@@ -33,13 +33,13 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
             try
             {
-                var paymentQueryResult = await _paymentRepository.Get(reversalCommand.Id);
+                var paymentQueryResult = await _paymentRepository.Get(reversalCommand.PaymentId);
 
                 if (paymentQueryResult == null)
                 {
                     await LogQueue(reversalCommand, _applicationName, _currentQueue, "Pagamento não encontrado na base de dados");
 
-                    //TODO: Publicar na fila de email, enviar email solicitando intervenção manual
+                    SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentNotFoundForReversal);
 
                     Console.WriteLine("An error has occurred. This payment is not registered in our database. An email will be sent to support.");
                 }                

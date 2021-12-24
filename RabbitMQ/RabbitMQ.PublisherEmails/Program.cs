@@ -55,7 +55,7 @@ namespace RabbitMQ.PublisherEmails
 
                 _rabbitMQBus.Publish(emailJson, _queueName);
 
-                var queueLog = new QueueLog(emailNotification.Payment.Id, _applicationName, _queueName, emailJson);
+                var queueLog = new QueueLog(emailNotification.PaymentId, _applicationName, _queueName, emailJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");

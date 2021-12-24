@@ -50,7 +50,7 @@ namespace RabbitMQ.PublisherReversals
 
                 _rabbitMQBus.Publish(reversal, _queueName);
 
-                var queueLog = new QueueLog(reversal.Id, _applicationName, _queueName, reversalJson);
+                var queueLog = new QueueLog(reversal.PaymentId, _applicationName, _queueName, reversalJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");

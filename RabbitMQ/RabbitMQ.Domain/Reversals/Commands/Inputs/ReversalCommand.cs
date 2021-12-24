@@ -1,12 +1,13 @@
-﻿using System;
+﻿using RabbitMQ.Domain.Common.Commands.Inputs;
+using System;
 
 namespace RabbitMQ.Domain.Reversals.Commands.Inputs
 {
-    public class ReversalCommand
+    public class ReversalCommand : Command
     {
-        public Guid Id { get; set; }
-        public byte NumberAttempts { get; set; }
+        public override Guid PaymentId { get; set; }
+        public override byte NumberAttempts { get; set; }
 
-        public void AddNumberAttempt() => NumberAttempts++;
+        public override void AddNumberAttempt() => NumberAttempts++;
     }
 }

@@ -15,32 +15,32 @@ namespace RabbitMQ.Domain.Payments.Entities
 
         public Payment(Guid id, string barCode, decimal value, DateTime date, string email)
         {
-            Id = id;
-            BarCode = barCode;
-            Value = value;
-            Date = date;
-            Email = email;
-            Reversed = false;
-            CreationDate = DateTime.Now;
-            ChangeDate = null;
+            SetId(id);
+            SetBarCode(barCode);
+            SetValue(value);
+            SetDate(date);
+            SetEmail(email);
+            SetReversed(false);
+            SetCreationDate(DateTime.Now);
+            SetChangeDate(null);
         }
 
         public Payment(Guid id, string barCode, decimal value, DateTime date, string email, bool reversed, DateTime creationDate, DateTime? changeDate)
         {
-            Id = id;
-            BarCode = barCode;
-            Value = value;
-            Date = date;
-            Email = email;
-            Reversed = reversed;
-            CreationDate = creationDate;
-            ChangeDate = changeDate;
+            SetId(id);
+            SetBarCode(barCode);
+            SetValue(value);
+            SetDate(date);
+            SetEmail(email);
+            SetReversed(reversed);
+            SetCreationDate(creationDate);
+            SetChangeDate(changeDate);
         }
 
         public void Reverse()
         {
-            Reversed = true;
-            ChangeDate = DateTime.Now;
+            SetReversed(true);
+            SetChangeDate(DateTime.Now);
         }
 
         public void SetId(Guid id) => Id = id;
@@ -50,6 +50,6 @@ namespace RabbitMQ.Domain.Payments.Entities
         public void SetEmail(string email) => Email = email;
         public void SetReversed(bool reversed) => Reversed = reversed;
         public void SetCreationDate(DateTime creationDate) => CreationDate = creationDate;
-        public void SetChangeDate(DateTime changeDate) => ChangeDate = changeDate;
+        public void SetChangeDate(DateTime? changeDate) => ChangeDate = changeDate;
     }
 }
