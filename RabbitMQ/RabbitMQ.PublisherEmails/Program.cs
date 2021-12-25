@@ -18,6 +18,7 @@ namespace RabbitMQ.PublisherEmails
     {
         private static readonly string _applicationName;
         private static readonly string _queueName;
+        private static readonly string _basePath;
 
         private static readonly WorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -28,6 +29,7 @@ namespace RabbitMQ.PublisherEmails
         {
             _applicationName = ApplicationName.PublisherEmails;
             _queueName = QueueName.EmailNotifier;
+            _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
             _workerBase = new WorkerBase(EApplication.PublisherEmails);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
@@ -46,16 +48,23 @@ namespace RabbitMQ.PublisherEmails
                 Console.Write("Enter the desired template: ");
                 var emailTemplate = (EEmailTemplate)Convert.ToInt16(Console.ReadLine());
 
-                var emailJson = ReadPayload(emailTemplate);
+                var emailCommandJson = ReadPayload(emailTemplate);
+
+                if(emailCommandJson == null)
+                {
+                    Console.Write("\nAn error has occurred. This template is not defined.");
+                    Console.ReadKey();
+                    return;
+                }
 
                 Console.WriteLine();
-                Console.WriteLine(emailJson);
+                Console.WriteLine(emailCommandJson);
 
-                var emailNotification = JsonConvert.DeserializeObject<EmailNotificationCommand>(emailJson);
+                var emailCommand = JsonConvert.DeserializeObject<EmailCommand>(emailCommandJson);
 
-                _rabbitMQBus.Publish(emailJson, _queueName);
+                _rabbitMQBus.Publish(emailCommandJson, _queueName);
 
-                var queueLog = new QueueLog(emailNotification.PaymentId, _applicationName, _queueName, emailJson);
+                var queueLog = new QueueLog(emailCommand.PaymentId, _applicationName, _queueName, emailCommandJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");
@@ -84,30 +93,28 @@ namespace RabbitMQ.PublisherEmails
 
         private static string ReadPayload(EEmailTemplate emailTemplate)
         {
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
-
             switch (emailTemplate)
             {
                 case EEmailTemplate.PaymentSuccess:
-                    return FileReaderHelper.Read($@"{basePath}\payload-payment-success.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-payment-success.json");
 
                 case EEmailTemplate.ReversalSuccess:
-                    return FileReaderHelper.Read($@"{basePath}\payload-reversal-success.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-reversal-success.json");
 
                 case EEmailTemplate.SupportPaymentMaximumAttempts:
-                    return FileReaderHelper.Read($@"{basePath}\payload-support-payment-maximum-attempts.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json");
 
                 case EEmailTemplate.SupportReversalMaximumAttempts:
-                    return FileReaderHelper.Read($@"{basePath}\payload-support-reversal-maximum-attempts.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json");
 
                 case EEmailTemplate.SupportPaymentNotFoundForReversal:
-                    return FileReaderHelper.Read($@"{basePath}\payload-support-payment-not-found-for-reversal.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json");
 
                 case EEmailTemplate.SupportPaymentAlreadyReversed:
-                    return FileReaderHelper.Read($@"{basePath}\payload-payment-already-reversed.json");
+                    return FileReaderHelper.Read($@"{_basePath}\payload-payment-already-reversed.json");
 
                 default:
-                    return string.Empty;
+                    return null;
             }
         }
     }

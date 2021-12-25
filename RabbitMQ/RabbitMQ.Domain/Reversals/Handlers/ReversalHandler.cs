@@ -17,6 +17,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
         private readonly string _applicationName;
         private readonly string _currentQueue;
 
+        private readonly IQueueLogRepository _queueLogRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public ReversalHandler(IRabbitMQBus rabbitMQBus,
@@ -27,6 +28,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
             _applicationName = ApplicationName.ConsumerReversals;
             _currentQueue = QueueName.Reversals;
 
+            _queueLogRepository = queueLogRepository;
             _paymentRepository = paymentRepository;
         }
 
@@ -50,9 +52,11 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                 {
                     await LogQueue(reversalCommand, _applicationName, _currentQueue, "Pagamento já foi estornado anteriormente");
 
-                    //TODO: Publicar na fila de email, enviar email notificando que o estorno já havia sido realizado anteriormente
+                    var queueLogs = await _queueLogRepository.List(reversalCommand.PaymentId);
 
-                    Console.WriteLine("An error has occurred. This payment has already been reversed.");
+                    SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentAlreadyReversed, queueLogs);
+
+                    Console.WriteLine("An error has occurred. This payment has already been reversed. An email will be sent to support.");
                 }
                 else
                 {
@@ -62,7 +66,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
                     await LogQueue(reversalCommand, _applicationName, _currentQueue);
 
-                    //TODO: Publicar na fila de email, enviar email notificando que o estorno foi efetuado com sucesso
+                    SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.ReversalSuccess);
 
                     Console.WriteLine("Reversal registered successfully.");
                 }                

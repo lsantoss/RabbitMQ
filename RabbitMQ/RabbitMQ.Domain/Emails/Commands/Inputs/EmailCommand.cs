@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace RabbitMQ.Domain.Emails.Commands.Inputs
 {
-    public class EmailNotificationCommand : Command
+    public class EmailCommand : Command
     {        
         public string EmailSupport { get; set; }
         public override byte NumberAttempts { get; set; }
@@ -15,7 +15,7 @@ namespace RabbitMQ.Domain.Emails.Commands.Inputs
         public EEmailTemplate EmailTemplate { get; set; }
         public List<QueueLogQueryResult> QueueLogs { get; set; }
 
-        public EmailNotificationCommand(Guid paymentId, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
+        public EmailCommand(Guid paymentId, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
         {
             EmailSupport = EmailContact.Support;
             NumberAttempts = 1;

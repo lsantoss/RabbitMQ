@@ -29,7 +29,7 @@
                                                     Reversed = @Reversed,
                                                     CreationDate = @CreationDate,
                                                     ChangeDate = @ChangeDate 
-                                                WHERE Id = @Id";
+                                                 WHERE Id = @Id";
 
         public static string Get { get; } = @"SELECT 
                                                 Payment.Id AS Id, 

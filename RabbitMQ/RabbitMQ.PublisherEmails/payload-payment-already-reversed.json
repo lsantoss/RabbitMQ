@@ -1,3 +1,74 @@
 {
-
+  "EmailSupport": "l.santosfaria7@gmail.com",
+  "NumberAttempts": 1,
+  "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+  "EmailTemplate": 6,
+  "QueueLogs": [
+    {
+      "Id": 149,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.PublisherPayments",
+      "Queue": "RabbitMQ.Payments",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:38:00",
+      "Success": true,
+      "NumberAttempts": 1,
+      "Error": null
+    },
+    {
+      "Id": 150,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.ConsumerPayments",
+      "Queue": "RabbitMQ.Payments",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:39:00",
+      "Success": true,
+      "NumberAttempts": 1,
+      "Error": null
+    },
+    {
+      "Id": 151,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.PublisherReversals",
+      "Queue": "RabbitMQ.Reversals",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:39:00",
+      "Success": true,
+      "NumberAttempts": 1,
+      "Error": null
+    },
+    {
+      "Id": 152,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.ConsumerReversals",
+      "Queue": "RabbitMQ.Reversals",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:40:00",
+      "Success": true,
+      "NumberAttempts": 1,
+      "Error": null
+    },
+    {
+      "Id": 153,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.PublisherReversals",
+      "Queue": "RabbitMQ.Reversals",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:54:00",
+      "Success": true,
+      "NumberAttempts": 1,
+      "Error": null
+    },
+    {
+      "Id": 154,
+      "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+      "Worker": "RabbitMQ.ConsumerReversals",
+      "Queue": "RabbitMQ.Reversals",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
+      "Date": "2021-12-25T11:54:00",
+      "Success": false,
+      "NumberAttempts": 1,
+      "Error": "Pagamento já foi estornado anteriormente"
+    }
+  ]
 }

@@ -17,6 +17,7 @@ namespace RabbitMQ.PublisherPayments
     {
         private static readonly string _applicationName;
         private static readonly string _queueName;
+        private static readonly string _basePath;
 
         private static readonly WorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -27,6 +28,7 @@ namespace RabbitMQ.PublisherPayments
         {
             _applicationName = ApplicationName.PublisherPayments;
             _queueName = QueueName.Payments;
+            _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
             _workerBase = new WorkerBase(EApplication.PublisherPayments);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
@@ -40,17 +42,17 @@ namespace RabbitMQ.PublisherPayments
             {
                 Console.WriteLine($"Starting Worker {_applicationName} \n");
 
-                var filePath = $@"{AppDomain.CurrentDomain.BaseDirectory}\payload.json";
+                var filePath = $@"{_basePath}\payload.json";
 
-                var paymentJson = FileReaderHelper.Read(filePath);
+                var paymentCommandJson = FileReaderHelper.Read(filePath);
 
-                Console.WriteLine(paymentJson);
+                Console.WriteLine(paymentCommandJson);
 
-                var payment = JsonConvert.DeserializeObject<PaymentCommand>(paymentJson);
+                var paymentCommand = JsonConvert.DeserializeObject<PaymentCommand>(paymentCommandJson);
 
-                _rabbitMQBus.Publish(payment, _queueName);
+                _rabbitMQBus.Publish(paymentCommand, _queueName);
 
-                var queueLog = new QueueLog(payment.PaymentId, _applicationName, _queueName, paymentJson);
+                var queueLog = new QueueLog(paymentCommand.PaymentId, _applicationName, _queueName, paymentCommandJson);
                 await _queueLogRepository.Log(queueLog);
 
                 Console.Write("\nMessage send with success!");

@@ -33,8 +33,8 @@ namespace RabbitMQ.Domain.Common.Handlers
 
         protected void SendToEmailQueue(Guid paymentId, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
         {
-            var emailNotification = new EmailNotificationCommand(paymentId, emailTemplate, queueLogs);
-            _rabbitMQBus.Publish(emailNotification, _emailQueue);
+            var emailCommand = new EmailCommand(paymentId, emailTemplate, queueLogs);
+            _rabbitMQBus.Publish(emailCommand, _emailQueue);
         }
 
         protected async Task LogQueue(Command command, string applicationName, string currentQueue, string error = null)
