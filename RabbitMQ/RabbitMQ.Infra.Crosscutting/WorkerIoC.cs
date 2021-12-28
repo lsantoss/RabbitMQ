@@ -30,6 +30,10 @@ namespace RabbitMQ.Infra.Crosscutting
             configuration.GetSection("RabbitMQSettings").Bind(rabbitMQSettings);
             services.AddSingleton(rabbitMQSettings);
 
+            var smtpSettings = new SmtpSettings();
+            configuration.GetSection("SmtpSettings").Bind(smtpSettings);
+            services.AddSingleton(smtpSettings);
+
             #endregion AppSettings
 
             #region Repositories
