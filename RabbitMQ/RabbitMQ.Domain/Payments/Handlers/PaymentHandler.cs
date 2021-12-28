@@ -1,8 +1,8 @@
 ﻿using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.Constants;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Commands.Inputs;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
@@ -19,7 +19,7 @@ namespace RabbitMQ.Domain.Payments.Handlers
 
         private readonly IPaymentRepository _paymentRepository;
 
-        public PaymentHandler(IRabbitMQBus rabbitMQBus,
+        public PaymentHandler(IRabbitMQService rabbitMQBus,
                               IQueueLogRepository queueLogRepository,
                               IElmahRepository elmahRepository,
                               IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)

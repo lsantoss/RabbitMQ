@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using RabbitMQ.Domain.Core.AppSettings;
-using RabbitMQ.Domain.Core.QueueLogs;
+using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
 using RabbitMQ.Infra.Data.Repositories.Queries;

@@ -2,23 +2,25 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Domain.Core.AppSettings;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.Extensions;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace RabbitMQ.Domain.Core.RabbitMQ
+namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 {
-    public class RabbitMQBus : IRabbitMQBus
+    public class RabbitMQService : IRabbitMQService
     {
+        private ConnectionFactory _factory;
         private static AutoResetEvent waitHandle = new AutoResetEvent(false);
+
         private readonly RabbitMQSettings _rabbitMQSettings;
         private readonly IElmahRepository _elmahRepository;
 
-        public RabbitMQBus(RabbitMQSettings rabbitMQSettings, IElmahRepository elmahRepository)
+        public RabbitMQService(RabbitMQSettings rabbitMQSettings, IElmahRepository elmahRepository)
         {
             _rabbitMQSettings = rabbitMQSettings;
             _elmahRepository = elmahRepository;
@@ -262,7 +264,6 @@ namespace RabbitMQ.Domain.Core.RabbitMQ
             }
         }
 
-        private ConnectionFactory _factory;
         private ConnectionFactory Factory
         {
             get

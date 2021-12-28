@@ -1,7 +1,7 @@
 ﻿using ElmahCore;
 using ElmahCore.Sql;
 using RabbitMQ.Domain.Core.AppSettings;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using System;
 using System.Threading.Tasks;
 

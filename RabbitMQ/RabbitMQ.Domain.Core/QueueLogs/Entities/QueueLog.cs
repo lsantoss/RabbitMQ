@@ -1,7 +1,7 @@
 ﻿using RabbitMQ.Domain.Core.Extensions;
 using System;
 
-namespace RabbitMQ.Domain.Core.QueueLogs
+namespace RabbitMQ.Domain.Core.QueueLogs.Entities
 {
     public class QueueLog
     {

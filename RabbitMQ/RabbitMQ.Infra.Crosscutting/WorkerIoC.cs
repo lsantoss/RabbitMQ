@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.AppSettings;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
-using RabbitMQ.Domain.Core.RabbitMQ;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
+using RabbitMQ.Domain.Core.RabbitMQ.Services;
 using RabbitMQ.Domain.Payments.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
@@ -58,7 +58,7 @@ namespace RabbitMQ.Infra.Crosscutting
 
             #region RabbitMQ
 
-            services.AddScoped<IRabbitMQBus, RabbitMQBus>();
+            services.AddScoped<IRabbitMQService, RabbitMQService>();
 
             #endregion RabbitMQ
 

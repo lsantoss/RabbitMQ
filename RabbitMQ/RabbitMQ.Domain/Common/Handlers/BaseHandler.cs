@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Common.Commands.Inputs;
 using RabbitMQ.Domain.Core.Constants;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.QueueLogs;
+using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using System;
@@ -18,11 +19,11 @@ namespace RabbitMQ.Domain.Common.Handlers
     {
         private static readonly string _emailQueue = QueueName.EmailNotifier;
 
-        private readonly IRabbitMQBus _rabbitMQBus;
+        private readonly IRabbitMQService _rabbitMQBus;
         private readonly IQueueLogRepository _queueLogRepository;
         private readonly IElmahRepository _elmahRepository;
 
-        public BaseHandler(IRabbitMQBus rabbitMQBus,
+        public BaseHandler(IRabbitMQService rabbitMQBus,
                            IQueueLogRepository queueLogRepository,
                            IElmahRepository elmahRepository)
         {

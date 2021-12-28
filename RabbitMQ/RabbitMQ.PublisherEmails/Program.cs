@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Core.Constants;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs;
+using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Infra.Crosscutting;
@@ -23,7 +24,7 @@ namespace RabbitMQ.PublisherEmails
         private static readonly WorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
         private static readonly IElmahRepository _elmahRepository;
-        private static readonly IRabbitMQBus _rabbitMQBus;
+        private static readonly IRabbitMQService _rabbitMQBus;
 
         static Program()
         {
@@ -34,7 +35,7 @@ namespace RabbitMQ.PublisherEmails
             _workerBase = new WorkerBase(EApplication.PublisherEmails);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
-            _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();
+            _rabbitMQBus = _workerBase.GetService<IRabbitMQService>();
         }
 
         static async Task Main(string[] args)

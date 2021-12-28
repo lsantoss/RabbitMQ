@@ -1,8 +1,8 @@
 ﻿using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.Constants;
-using RabbitMQ.Domain.Core.Elmah.Interfaces;
+using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using RabbitMQ.Domain.Reversals.Commands.Inputs;
@@ -20,7 +20,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
         private readonly IQueueLogRepository _queueLogRepository;
         private readonly IPaymentRepository _paymentRepository;
 
-        public ReversalHandler(IRabbitMQBus rabbitMQBus,
+        public ReversalHandler(IRabbitMQService rabbitMQBus,
                                IQueueLogRepository queueLogRepository,
                                IElmahRepository elmahRepository,
                                IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)

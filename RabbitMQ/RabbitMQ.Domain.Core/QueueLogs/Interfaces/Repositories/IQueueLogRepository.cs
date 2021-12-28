@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
+﻿using RabbitMQ.Domain.Core.QueueLogs.Entities;
+using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

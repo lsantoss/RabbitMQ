@@ -1,6 +1,6 @@
-﻿namespace RabbitMQ.Domain.Core.RabbitMQ.Interfaces
+﻿namespace RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services
 {
-    public interface IRabbitMQBus
+    public interface IRabbitMQService
     {
         void Publish<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false);
         void Publish(string message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false);

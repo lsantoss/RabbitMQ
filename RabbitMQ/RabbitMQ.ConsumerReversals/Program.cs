@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Enums;
-using RabbitMQ.Domain.Core.RabbitMQ.Interfaces;
+using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Reversals.Commands.Inputs;
 using RabbitMQ.Domain.Reversals.Interfaces.Handlers;
 using RabbitMQ.Infra.Crosscutting;
@@ -14,7 +14,7 @@ namespace RabbitMQ.ConsumerReversals
         private static readonly string _queueName;
 
         private static readonly WorkerBase _workerBase;
-        private static readonly IRabbitMQBus _rabbitMQBus;
+        private static readonly IRabbitMQService _rabbitMQBus;
         private static readonly IReversalHandler _handler;
 
         static Program()
@@ -23,7 +23,7 @@ namespace RabbitMQ.ConsumerReversals
             _queueName = QueueName.Reversals;
 
             _workerBase = new WorkerBase(EApplication.ConsumerReversals);
-            _rabbitMQBus = _workerBase.GetService<IRabbitMQBus>();
+            _rabbitMQBus = _workerBase.GetService<IRabbitMQService>();
             _handler = _workerBase.GetService<IReversalHandler>();
         }
 
