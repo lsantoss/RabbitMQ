@@ -4,7 +4,7 @@ using RabbitMQ.Domain.Core.Enums;
 
 namespace RabbitMQ.Infra.Crosscutting
 {
-    public class WorkerBase
+    public class WorkerBase : IWorkerBase
     {
         private readonly IServiceCollection _services;
         private readonly IConfiguration _configuration;

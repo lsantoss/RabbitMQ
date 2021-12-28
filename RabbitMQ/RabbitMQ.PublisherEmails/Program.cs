@@ -20,7 +20,7 @@ namespace RabbitMQ.PublisherEmails
         private static readonly string _queueName;
         private static readonly string _basePath;
 
-        private static readonly WorkerBase _workerBase;
+        private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
         private static readonly IElmahRepository _elmahRepository;
         private static readonly IRabbitMQService _rabbitMQBus;

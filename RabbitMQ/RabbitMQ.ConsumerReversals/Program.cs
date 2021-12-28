@@ -13,7 +13,7 @@ namespace RabbitMQ.ConsumerReversals
         private static readonly string _applicationName;
         private static readonly string _queueName;
 
-        private static readonly WorkerBase _workerBase;
+        private static readonly IWorkerBase _workerBase;
         private static readonly IRabbitMQService _rabbitMQBus;
         private static readonly IReversalHandler _handler;
 
