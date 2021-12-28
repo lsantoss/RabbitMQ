@@ -206,7 +206,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.Log(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+                        _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
                     waitHandle.Set();
                 };
@@ -255,7 +255,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
                 Console.CancelKeyPress += (o, e) =>
                 {
                     if (_elmahRepository != null)
-                        _elmahRepository.Log(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+                        _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
                     waitHandle.Set();
                 };

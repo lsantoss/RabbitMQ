@@ -3,7 +3,6 @@ using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.Helpers;
-using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
@@ -66,14 +65,14 @@ namespace RabbitMQ.PublisherEmails
                 _rabbitMQBus.Publish(emailCommandJson, _queueName);
 
                 var queueLog = new QueueLog(emailCommand.PaymentId, _applicationName, _queueName, emailCommandJson);
-                await _queueLogRepository.Log(queueLog);
+                await _queueLogRepository.LogAsync(queueLog);
 
                 Console.Write("\nMessage send with success!");
                 Console.ReadKey();
             }
             catch (Exception ex)
             {
-                await _elmahRepository.Log(ex);
+                await _elmahRepository.LogAsync(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }

@@ -5,6 +5,6 @@ namespace RabbitMQ.Domain.Reversals.Interfaces.Handlers
 {
     public interface IReversalHandler
     {
-        Task Handle(ReversalCommand reversalCommand);
+        Task HandleAsync(ReversalCommand reversalCommand);
     }
 }

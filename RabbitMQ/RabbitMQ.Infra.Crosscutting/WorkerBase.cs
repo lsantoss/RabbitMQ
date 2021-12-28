@@ -23,9 +23,9 @@ namespace RabbitMQ.Infra.Crosscutting
             _serviceProvider = _services.BuildServiceProvider();
         }
 
-        public IServiceCollection GetServices() => _services;
-
         public IConfiguration GetConfiguration() => _configuration;
+
+        public IServiceCollection GetServices() => _services;
 
         public T GetService<T>() => (T)_serviceProvider.GetService(typeof(T));
     }

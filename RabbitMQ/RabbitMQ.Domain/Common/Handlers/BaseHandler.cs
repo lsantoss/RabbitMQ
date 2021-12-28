@@ -2,7 +2,6 @@
 using RabbitMQ.Domain.Common.Commands.Inputs;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
-using RabbitMQ.Domain.Core.QueueLogs;
 using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
@@ -38,19 +37,19 @@ namespace RabbitMQ.Domain.Common.Handlers
             _rabbitMQBus.Publish(emailCommand, _emailQueue);
         }
 
-        protected async Task LogQueue(Command command, string applicationName, string currentQueue, string error = null)
+        protected async Task LogQueueAsync(Command command, string applicationName, string currentQueue, string error = null)
         {
             var success = error == null;
             var message = JsonConvert.SerializeObject(command);
             var queueLog = new QueueLog(command.PaymentId, applicationName, currentQueue, message, success, command.NumberAttempts, error);
-            await _queueLogRepository.Log(queueLog);
+            await _queueLogRepository.LogAsync(queueLog);
         }
 
-        protected async Task ControlMaximumAttempts(Command command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
+        protected async Task ControlMaximumAttemptsAsync(Command command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
         {
-            await _elmahRepository.Log(exception);
+            await _elmahRepository.LogAsync(exception);
 
-            await LogQueue(command, applicationName, currentQueue, exception.Message);
+            await LogQueueAsync(command, applicationName, currentQueue, exception.Message);
 
             if (command.NumberAttempts < 3)
             {
@@ -61,7 +60,7 @@ namespace RabbitMQ.Domain.Common.Handlers
             }
             else
             {
-                var queueLogs = await _queueLogRepository.List(command.PaymentId);
+                var queueLogs = await _queueLogRepository.ListAsync(command.PaymentId);
 
                 SendToEmailQueue(command.PaymentId, emailTemplate, queueLogs);
 

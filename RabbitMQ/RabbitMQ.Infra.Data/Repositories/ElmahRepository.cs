@@ -16,7 +16,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _elmahLog = new SqlErrorLog(settings.ConnectionString);
         }
 
-        public async Task<string> Log(Exception exception)
+        public async Task<string> LogAsync(Exception exception)
         {            
             try
             {

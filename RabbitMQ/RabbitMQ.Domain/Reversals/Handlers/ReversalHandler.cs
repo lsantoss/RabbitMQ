@@ -32,17 +32,17 @@ namespace RabbitMQ.Domain.Reversals.Handlers
             _paymentRepository = paymentRepository;
         }
 
-        public async Task Handle(ReversalCommand reversalCommand)
+        public async Task HandleAsync(ReversalCommand reversalCommand)
         {
             Console.WriteLine("Handle started.");
 
             try
             {
-                var paymentQueryResult = await _paymentRepository.Get(reversalCommand.PaymentId);
+                var paymentQueryResult = await _paymentRepository.GetAsync(reversalCommand.PaymentId);
 
                 if (paymentQueryResult == null)
                 {
-                    await LogQueue(reversalCommand, _applicationName, _currentQueue, "Pagamento não encontrado na base de dados");
+                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Pagamento não encontrado na base de dados");
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentNotFoundForReversal);
 
@@ -50,9 +50,9 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                 }                
                 else if (paymentQueryResult.Reversed)
                 {
-                    await LogQueue(reversalCommand, _applicationName, _currentQueue, "Pagamento já foi estornado anteriormente");
+                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Pagamento já foi estornado anteriormente");
 
-                    var queueLogs = await _queueLogRepository.List(reversalCommand.PaymentId);
+                    var queueLogs = await _queueLogRepository.ListAsync(reversalCommand.PaymentId);
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentAlreadyReversed, queueLogs);
 
@@ -62,9 +62,9 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                 {
                     var payment = paymentQueryResult.MapToPayment();
                     payment.Reverse();
-                    await _paymentRepository.Update(payment);
+                    await _paymentRepository.UpdateAsync(payment);
 
-                    await LogQueue(reversalCommand, _applicationName, _currentQueue);
+                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue);
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.ReversalSuccess);
 
@@ -73,7 +73,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
             }
             catch (Exception ex)
             {
-                await ControlMaximumAttempts(reversalCommand, _applicationName, _currentQueue, EEmailTemplate.SupportReversalMaximumAttempts, ex);
+                await ControlMaximumAttemptsAsync(reversalCommand, _applicationName, _currentQueue, EEmailTemplate.SupportReversalMaximumAttempts, ex);
             }
 
             Console.WriteLine("Handle finished.\n");

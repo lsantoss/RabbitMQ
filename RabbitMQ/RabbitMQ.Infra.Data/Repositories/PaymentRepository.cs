@@ -22,7 +22,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _settings = settings;
         }
 
-        public async Task Save(Payment payment)
+        public async Task SaveAsync(Payment payment)
         {
             _parameters.Add("Id", payment.Id, DbType.Guid);
             _parameters.Add("BarCode", payment.BarCode, DbType.String);
@@ -39,7 +39,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             }
         }
 
-        public async Task Update(Payment payment)
+        public async Task UpdateAsync(Payment payment)
         {
             _parameters.Add("Id", payment.Id, DbType.Guid);
             _parameters.Add("BarCode", payment.BarCode, DbType.String);
@@ -56,7 +56,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             }
         }
 
-        public async Task<PaymentQueryResult> Get(Guid id)
+        public async Task<PaymentQueryResult> GetAsync(Guid id)
         {
             _parameters.Add("Id", id, DbType.Guid);
 

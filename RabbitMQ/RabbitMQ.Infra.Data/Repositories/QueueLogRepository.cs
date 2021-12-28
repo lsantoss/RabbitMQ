@@ -23,7 +23,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _settings = settings;
         }
 
-        public async Task<ulong> Log(QueueLog queueLog)
+        public async Task<ulong> LogAsync(QueueLog queueLog)
         {
             _parameters.Add("PaymentId", queueLog.PaymentId, DbType.Guid);
             _parameters.Add("Worker", queueLog.Worker, DbType.String);
@@ -40,7 +40,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             }
         }
 
-        public async Task<List<QueueLogQueryResult>> List(Guid paymentId)
+        public async Task<List<QueueLogQueryResult>> ListAsync(Guid paymentId)
         {
             _parameters.Add("PaymentId", paymentId, DbType.Guid);
 

@@ -7,8 +7,8 @@ namespace RabbitMQ.Domain.Payments.Interfaces.Repositories
 {
     public interface IPaymentRepository
     {
-        Task Save(Payment payment);
-        Task Update(Payment payment);
-        Task<PaymentQueryResult> Get(Guid id);
+        Task SaveAsync(Payment payment);
+        Task UpdateAsync(Payment payment);
+        Task<PaymentQueryResult> GetAsync(Guid id);
     }
 }

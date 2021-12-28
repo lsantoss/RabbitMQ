@@ -30,16 +30,16 @@ namespace RabbitMQ.Domain.Payments.Handlers
             _paymentRepository = paymentRepository;
         }
 
-        public async Task Handle(PaymentCommand paymentCommand)
+        public async Task HandleAsync(PaymentCommand paymentCommand)
         {
             Console.WriteLine("Handle started.");
 
             try
             {
                 var payment = paymentCommand.MapToPayment();
-                await _paymentRepository.Save(payment);
+                await _paymentRepository.SaveAsync(payment);
 
-                await LogQueue(paymentCommand, _applicationName, _currentQueue);
+                await LogQueueAsync(paymentCommand, _applicationName, _currentQueue);
 
                 SendToEmailQueue(paymentCommand.PaymentId, EEmailTemplate.PaymentSuccess);
 
@@ -47,7 +47,7 @@ namespace RabbitMQ.Domain.Payments.Handlers
             }
             catch (Exception ex)
             {
-                await ControlMaximumAttempts(paymentCommand, _applicationName, _currentQueue, EEmailTemplate.SupportPaymentMaximumAttempts, ex);
+                await ControlMaximumAttemptsAsync(paymentCommand, _applicationName, _currentQueue, EEmailTemplate.SupportPaymentMaximumAttempts, ex);
             }
 
             Console.WriteLine("Handle finished.\n");
