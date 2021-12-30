@@ -23,7 +23,7 @@ namespace RabbitMQ.PublisherReversals
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
         private static readonly IElmahRepository _elmahRepository;
-        private static readonly IRabbitMQService _rabbitMQBus;
+        private static readonly IRabbitMQService _rabbitMQService;
         private static readonly IPaymentRepository _paymentRepository;
 
         static Program()
@@ -35,7 +35,7 @@ namespace RabbitMQ.PublisherReversals
             _workerBase = new WorkerBase(EApplication.PublisherReversals);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
-            _rabbitMQBus = _workerBase.GetService<IRabbitMQService>();
+            _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
             _paymentRepository = _workerBase.GetService<IPaymentRepository>();
         }
 
@@ -62,7 +62,7 @@ namespace RabbitMQ.PublisherReversals
                     return;
                 }
 
-                _rabbitMQBus.Publish(reversalCommand, _queueName);
+                _rabbitMQService.Publish(reversalCommand, _queueName);
 
                 var queueLog = new QueueLog(reversalCommand.PaymentId, _applicationName, _queueName, reversalCommandJson);
                 await _queueLogRepository.LogAsync(queueLog);

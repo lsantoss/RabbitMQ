@@ -14,7 +14,7 @@ namespace RabbitMQ.ConsumerPayments
         private static readonly string _queueName;
 
         private static readonly IWorkerBase _workerBase;
-        private static readonly IRabbitMQService _rabbitMQBus;
+        private static readonly IRabbitMQService _rabbitMQService;
         private static readonly IPaymentHandler _handler;
 
         static Program()
@@ -23,7 +23,7 @@ namespace RabbitMQ.ConsumerPayments
             _queueName = QueueName.Payments;
 
             _workerBase = new WorkerBase(EApplication.ConsumerPayments);
-            _rabbitMQBus = _workerBase.GetService<IRabbitMQService>();
+            _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
             _handler = _workerBase.GetService<IPaymentHandler>();
         }
 
@@ -31,7 +31,7 @@ namespace RabbitMQ.ConsumerPayments
         {
             Console.WriteLine($"Starting Worker {_applicationName}\n");
 
-            _rabbitMQBus.Consume<PaymentCommand>(_handler, _queueName);
+            _rabbitMQService.Consume<PaymentCommand>(_handler, _queueName);
         }
     }
 }

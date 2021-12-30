@@ -18,7 +18,7 @@ namespace RabbitMQ.Domain.Common.Handlers
     {
         private static readonly string _emailQueue = QueueName.EmailNotifier;
 
-        private readonly IRabbitMQService _rabbitMQBus;
+        private readonly IRabbitMQService _rabbitMQService;
         private readonly IQueueLogRepository _queueLogRepository;
         private readonly IElmahRepository _elmahRepository;
 
@@ -26,7 +26,7 @@ namespace RabbitMQ.Domain.Common.Handlers
                            IQueueLogRepository queueLogRepository,
                            IElmahRepository elmahRepository)
         {
-            _rabbitMQBus = rabbitMQBus;
+            _rabbitMQService = rabbitMQBus;
             _queueLogRepository = queueLogRepository;
             _elmahRepository = elmahRepository;
         }
@@ -34,7 +34,7 @@ namespace RabbitMQ.Domain.Common.Handlers
         protected void SendToEmailQueue(Guid paymentId, EEmailTemplate emailTemplate, List<QueueLogQueryResult> queueLogs = null)
         {
             var emailCommand = new EmailCommand(paymentId, emailTemplate, queueLogs);
-            _rabbitMQBus.Publish(emailCommand, _emailQueue);
+            _rabbitMQService.Publish(emailCommand, _emailQueue);
         }
 
         protected async Task LogQueueAsync(Command command, string applicationName, string currentQueue, string error = null)
@@ -54,7 +54,7 @@ namespace RabbitMQ.Domain.Common.Handlers
             if (command.NumberAttempts < 3)
             {
                 command.AddNumberAttempt();
-                _rabbitMQBus.PublishDelayed(command, currentQueue);
+                _rabbitMQService.PublishDelayed(command, currentQueue);
 
                 Console.WriteLine("An error occurred. Message has been registered again in the queue.");
             }

@@ -22,7 +22,7 @@ namespace RabbitMQ.PublisherPayments
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
         private static readonly IElmahRepository _elmahRepository;
-        private static readonly IRabbitMQService _rabbitMQBus;
+        private static readonly IRabbitMQService _rabbitMQService;
 
         static Program()
         {
@@ -33,7 +33,7 @@ namespace RabbitMQ.PublisherPayments
             _workerBase = new WorkerBase(EApplication.PublisherPayments);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
-            _rabbitMQBus = _workerBase.GetService<IRabbitMQService>();
+            _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
         }
 
         static async Task Main(string[] args)
@@ -50,7 +50,7 @@ namespace RabbitMQ.PublisherPayments
 
                 var paymentCommand = JsonConvert.DeserializeObject<PaymentCommand>(paymentCommandJson);
 
-                _rabbitMQBus.Publish(paymentCommand, _queueName);
+                _rabbitMQService.Publish(paymentCommand, _queueName);
 
                 var queueLog = new QueueLog(paymentCommand.PaymentId, _applicationName, _queueName, paymentCommandJson);
                 await _queueLogRepository.LogAsync(queueLog);
