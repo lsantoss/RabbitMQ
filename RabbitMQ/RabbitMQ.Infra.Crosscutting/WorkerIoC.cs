@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Domain.Common.Handlers;
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
+using RabbitMQ.Domain.Core.Emails.Interfaces.Services;
+using RabbitMQ.Domain.Core.Emails.Services;
 using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
@@ -56,11 +58,12 @@ namespace RabbitMQ.Infra.Crosscutting
 
             #endregion Handlers
 
-            #region RabbitMQ
+            #region Services
 
             services.AddScoped<IRabbitMQService, RabbitMQService>();
+            services.AddScoped<IEmailService, EmailService>();
 
-            #endregion RabbitMQ
+            #endregion Services
 
             return services;
         }
