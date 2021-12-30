@@ -62,7 +62,7 @@ namespace RabbitMQ.PublisherEmails
 
                 var emailCommand = JsonConvert.DeserializeObject<EmailCommand>(emailCommandJson);
 
-                _rabbitMQService.Publish(emailCommandJson, _queueName);
+                _rabbitMQService.Publish(emailCommand, _queueName);
 
                 var queueLog = new QueueLog(emailCommand.PaymentId, _applicationName, _queueName, emailCommandJson);
                 await _queueLogRepository.LogAsync(queueLog);
