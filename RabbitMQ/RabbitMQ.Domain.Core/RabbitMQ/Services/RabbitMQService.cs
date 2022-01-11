@@ -14,23 +14,36 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 {
     public class RabbitMQService : IRabbitMQService
     {
-        private ConnectionFactory _factory;
-        private static readonly AutoResetEvent waitHandle = new(false);
-
         private readonly RabbitMQSettings _rabbitMQSettings;
         private readonly IElmahRepository _elmahRepository;
+
+        private readonly AutoResetEvent _waitHandle;
+        private readonly ConnectionFactory _factory;
 
         public RabbitMQService(RabbitMQSettings rabbitMQSettings, IElmahRepository elmahRepository)
         {
             _rabbitMQSettings = rabbitMQSettings;
-            _elmahRepository = elmahRepository;
+            _elmahRepository = elmahRepository; 
+            
+            _waitHandle = new(false);
+
+            _factory = new ConnectionFactory()
+            {
+                HostName = _rabbitMQSettings.HostName,
+                VirtualHost = _rabbitMQSettings.VirtualHost,
+                Port = _rabbitMQSettings.Port,
+                UserName = _rabbitMQSettings.UserName,
+                Password = _rabbitMQSettings.Password,
+                Uri = new Uri(_rabbitMQSettings.URL),
+                AutomaticRecoveryEnabled = _rabbitMQSettings.AutomaticRecoveryEnabled
+            };
         }
 
         public void Publish<T>(T message, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
             try
             {
-                using var connection = Factory.CreateConnection();
+                using var connection = _factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
                 channel.ConfirmSelect();
@@ -58,7 +71,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using var connection = Factory.CreateConnection();
+                using var connection = _factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
                 channel.ConfirmSelect();
@@ -88,7 +101,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using var connection = Factory.CreateConnection();
+                using var connection = _factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
                 channel.ConfirmSelect();
@@ -126,7 +139,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using var connection = Factory.CreateConnection();
+                using var connection = _factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
                 channel.ConfirmSelect();
@@ -164,7 +177,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 
         public void Consume(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using var connection = Factory.CreateConnection();
+            using var connection = _factory.CreateConnection();
             using var channel = connection.CreateModel();
 
             _ = channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
@@ -202,15 +215,15 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
                 if (_elmahRepository != null)
                     _ = _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
-                _ = waitHandle.Set();
+                _ = _waitHandle.Set();
             };
 
-            _ = waitHandle.WaitOne();
+            _ = _waitHandle.WaitOne();
         }
 
         public void Consume<T>(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using var connection = Factory.CreateConnection();
+            using var connection = _factory.CreateConnection();
             using var channel = connection.CreateModel();
 
             _ = channel.QueueDeclare(queueName, true, false, false, null);
@@ -247,32 +260,10 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
                 if (_elmahRepository != null)
                     _ = _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
 
-                _ = waitHandle.Set();
+                _ = _waitHandle.Set();
             };
 
-            _ = waitHandle.WaitOne();
-        }
-
-        private ConnectionFactory Factory
-        {
-            get
-            {
-                if (_factory == null)
-                {
-                    _factory = new ConnectionFactory()
-                    {
-                        HostName = _rabbitMQSettings.HostName,
-                        VirtualHost = _rabbitMQSettings.VirtualHost,
-                        Port = _rabbitMQSettings.Port,
-                        UserName = _rabbitMQSettings.UserName,
-                        Password = _rabbitMQSettings.Password,
-                        Uri = new Uri(_rabbitMQSettings.URL),
-                        AutomaticRecoveryEnabled = false
-                    };
-                }
-
-                return _factory;
-            }
+            _ = _waitHandle.WaitOne();
         }
     }
 }

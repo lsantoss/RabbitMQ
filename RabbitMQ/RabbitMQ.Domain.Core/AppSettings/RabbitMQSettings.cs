@@ -10,5 +10,6 @@
         public uint PrefetchSize { get; set; }
         public ushort PrefetchCount { get; set; }
         public string URL { get; set; }
+        public bool AutomaticRecoveryEnabled { get; set; }
     }
 }
