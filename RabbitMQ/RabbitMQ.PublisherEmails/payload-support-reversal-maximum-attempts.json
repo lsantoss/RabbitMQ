@@ -5,70 +5,70 @@
   "EmailTemplate": 4,
   "QueueLogs": [
     {
-      "Id": 162,
+      "Id": 185,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.PublisherPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
-      "Date": "2021-12-25T12:08:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Date": "2022-01-11T10:46:00",
       "Success": true,
       "NumberAttempts": 1,
       "Error": null
     },
     {
-      "Id": 163,
+      "Id": 186,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
-      "Date": "2021-12-25T12:08:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Date": "2022-01-11T10:47:00",
       "Success": true,
       "NumberAttempts": 1,
       "Error": null
     },
     {
-      "Id": 164,
+      "Id": 187,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.PublisherReversals",
       "Queue": "RabbitMQ.Reversals",
       "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
-      "Date": "2021-12-25T12:09:00",
+      "Date": "2022-01-11T10:47:00",
       "Success": true,
       "NumberAttempts": 1,
       "Error": null
     },
     {
-      "Id": 165,
+      "Id": 188,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerReversals",
       "Queue": "RabbitMQ.Reversals",
       "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":1}",
-      "Date": "2021-12-25T12:09:00",
+      "Date": "2022-01-11T10:48:00",
       "Success": false,
       "NumberAttempts": 1,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     },
     {
-      "Id": 166,
+      "Id": 189,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerReversals",
       "Queue": "RabbitMQ.Reversals",
       "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":2}",
-      "Date": "2021-12-25T12:10:00",
+      "Date": "2022-01-11T10:48:00",
       "Success": false,
       "NumberAttempts": 2,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     },
     {
-      "Id": 167,
+      "Id": 190,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerReversals",
       "Queue": "RabbitMQ.Reversals",
       "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"NumberAttempts\":3}",
-      "Date": "2021-12-25T12:10:00",
+      "Date": "2022-01-11T10:48:00",
       "Success": false,
       "NumberAttempts": 3,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     }
   ]
 }

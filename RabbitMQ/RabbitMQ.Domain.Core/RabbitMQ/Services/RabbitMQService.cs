@@ -188,7 +188,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 
                             var message = JsonConvert.DeserializeObject(body, eventType);
 
-                            ((dynamic)handler).Handle((dynamic)message).GetAwaiter().GetResult();
+                            ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
 
                             channel.BasicAck(e.DeliveryTag, false);
                         }
@@ -237,7 +237,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
                         {
                             var message = JsonConvert.DeserializeObject(body, typeof(T));
 
-                            ((dynamic)handler).Handle((dynamic)message).GetAwaiter().GetResult();
+                            ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
 
                             channel.BasicAck(e.DeliveryTag, false);
                         }

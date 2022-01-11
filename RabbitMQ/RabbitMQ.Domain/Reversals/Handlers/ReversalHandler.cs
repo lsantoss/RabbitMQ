@@ -46,7 +46,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentNotFoundForReversal);
 
-                    Console.WriteLine("An error has occurred. This payment is not registered in our database. An email will be sent to support.");
+                    Console.WriteLine("This payment is not registered in our database. An email will be sent to support.");
                 }                
                 else if (paymentQueryResult.Reversed)
                 {
@@ -56,7 +56,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentAlreadyReversed, queueLogs);
 
-                    Console.WriteLine("An error has occurred. This payment has already been reversed. An email will be sent to support.");
+                    Console.WriteLine("This payment has already been reversed. An email will be sent to support.");
                 }
                 else
                 {
@@ -65,8 +65,9 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                     await _paymentRepository.UpdateAsync(payment);
 
                     await LogQueueAsync(reversalCommand, _applicationName, _currentQueue);
-
-                    SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.ReversalSuccess);
+                    
+                    if (payment.NotifyByEmail)
+                        SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.ReversalSuccess);
 
                     Console.WriteLine("Reversal registered successfully.");
                 }                

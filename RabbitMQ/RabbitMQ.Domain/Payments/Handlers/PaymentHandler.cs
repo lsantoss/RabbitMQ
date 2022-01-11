@@ -41,7 +41,8 @@ namespace RabbitMQ.Domain.Payments.Handlers
 
                 await LogQueueAsync(paymentCommand, _applicationName, _currentQueue);
 
-                SendToEmailQueue(paymentCommand.PaymentId, EEmailTemplate.PaymentSuccess);
+                if(payment.NotifyByEmail)
+                    SendToEmailQueue(paymentCommand.PaymentId, EEmailTemplate.PaymentSuccess);
 
                 Console.WriteLine("Payment registered successfully.");
             }

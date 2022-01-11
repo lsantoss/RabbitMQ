@@ -54,6 +54,7 @@ namespace RabbitMQ.Domain.Common.Handlers
             if (command.NumberAttempts < 3)
             {
                 command.AddNumberAttempt();
+
                 _rabbitMQService.PublishDelayed(command, currentQueue);
 
                 Console.WriteLine("An error occurred. Message has been registered again in the queue.");
@@ -77,6 +78,7 @@ namespace RabbitMQ.Domain.Common.Handlers
             if (command.NumberAttempts < 3)
             {
                 command.AddNumberAttempt();
+
                 _rabbitMQService.PublishDelayed(command, currentQueue);
 
                 Console.WriteLine("An error occurred. Message has been registered again in the queue.");

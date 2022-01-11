@@ -5,48 +5,48 @@
   "EmailTemplate": 3,
   "QueueLogs": [
     {
-      "Id": 71,
+      "Id": 191,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.PublisherPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
-      "Date": "2021-12-18T10:12:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Date": "2022-01-11T10:51:00",
       "Success": true,
       "NumberAttempts": 1,
       "Error": null
     },
     {
-      "Id": 72,
+      "Id": 192,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":1}",
-      "Date": "2021-12-18T10:12:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Date": "2022-01-11T10:51:00",
       "Success": false,
       "NumberAttempts": 1,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     },
     {
-      "Id": 73,
+      "Id": 193,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":2}",
-      "Date": "2021-12-18T10:12:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":2}",
+      "Date": "2022-01-11T10:52:00",
       "Success": false,
       "NumberAttempts": 2,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     },
     {
-      "Id": 74,
+      "Id": 194,
       "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"Id\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"Email\":\"l_santos@hotmail.com.br\",\"NumberAttempts\":3}",
-      "Date": "2021-12-18T10:12:00",
+      "Message": "{\"PaymentId\":\"af37b7f0-55e1-427d-be4d-097e05fc17d7\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":3}",
+      "Date": "2022-01-11T10:52:00",
       "Success": false,
       "NumberAttempts": 3,
-      "Error": "Nome de objeto 'Payments' inválido."
+      "Error": "Nome de objeto 'Payment' inválido."
     }
   ]
 }

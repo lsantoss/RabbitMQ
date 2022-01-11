@@ -28,7 +28,11 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("BarCode", payment.BarCode, DbType.String);
             _parameters.Add("Value", payment.Value, DbType.Decimal);
             _parameters.Add("Date", payment.Date, DbType.DateTime);
-            _parameters.Add("Email", payment.Email, DbType.String);
+            _parameters.Add("ClientName", payment.ClientName, DbType.String);
+            _parameters.Add("ClientEmail", payment.ClientEmail, DbType.String);
+            _parameters.Add("ClientCellphone", payment.ClientCellphone, DbType.String);
+            _parameters.Add("NotifyByEmail", payment.NotifyByEmail, DbType.Boolean);
+            _parameters.Add("NotifyByCellphone", payment.NotifyByCellphone, DbType.Boolean);
             _parameters.Add("Reversed", payment.Reversed, DbType.Boolean);
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);
@@ -45,7 +49,11 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("BarCode", payment.BarCode, DbType.String);
             _parameters.Add("Value", payment.Value, DbType.Decimal);
             _parameters.Add("Date", payment.Date, DbType.DateTime);
-            _parameters.Add("Email", payment.Email, DbType.String);
+            _parameters.Add("ClientName", payment.ClientName, DbType.String);
+            _parameters.Add("ClientEmail", payment.ClientEmail, DbType.String);
+            _parameters.Add("ClientCellphone", payment.ClientCellphone, DbType.String);
+            _parameters.Add("NotifyByEmail", payment.NotifyByEmail, DbType.Boolean);
+            _parameters.Add("NotifyByCellphone", payment.NotifyByCellphone, DbType.Boolean);
             _parameters.Add("Reversed", payment.Reversed, DbType.Boolean);
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);
@@ -62,7 +70,7 @@ namespace RabbitMQ.Infra.Data.Repositories
 
             using (var connection = new SqlConnection(_settings.ConnectionString))
             {
-                return (await connection.QueryAsync<PaymentQueryResult>(PaymentQueries.Get, _parameters)).FirstOrDefault();
+                return await connection.QueryFirstOrDefaultAsync<PaymentQueryResult>(PaymentQueries.Get, _parameters);
             }
         }
     }
