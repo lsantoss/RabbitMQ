@@ -67,5 +67,24 @@ namespace RabbitMQ.Domain.Common.Handlers
                 Console.WriteLine("An error occurred. Message exceeded the limit of three processing attempts. An email will be sent to support.");
             }
         }
+
+        protected async Task ControlMaximumAttemptsAsync(NotificationCommand command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
+        {
+            await _elmahRepository.LogAsync(exception);
+
+            await LogQueueAsync(command, applicationName, currentQueue, exception.Message);
+
+            if (command.NumberAttempts < 3)
+            {
+                command.AddNumberAttempt();
+                _rabbitMQService.PublishDelayed(command, currentQueue);
+
+                Console.WriteLine("An error occurred. Message has been registered again in the queue.");
+            }
+            else
+            {
+                Console.WriteLine("An error occurred. Message exceeded the limit of three processing attempts. Notification sending failed.");
+            }
+        }
     }
 }

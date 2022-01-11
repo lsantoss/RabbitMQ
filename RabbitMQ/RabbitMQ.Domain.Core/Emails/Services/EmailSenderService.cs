@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace RabbitMQ.Domain.Core.Emails.Services
 {
-    public class EmailService : IEmailService
+    public class EmailSenderService : IEmailSenderService
     {
         private readonly SmtpClient _smtpClient;
 
-        public EmailService(SmtpSettings smtpSettings)
+        public EmailSenderService(SmtpSettings smtpSettings)
         {
             _smtpClient = new SmtpClient
             {

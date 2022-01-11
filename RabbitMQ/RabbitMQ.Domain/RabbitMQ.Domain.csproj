@@ -8,4 +8,9 @@
     <ProjectReference Include="..\RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Emails\Resources\Images\" />
+    <Folder Include="Emails\Resources\Templates\" />
+  </ItemGroup>
+
 </Project>

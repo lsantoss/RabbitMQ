@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace RabbitMQ.Domain.Emails.Commands.Inputs
 {
-    public class EmailCommand : Command
+    public class EmailCommand : NotificationCommand
     {        
         public string EmailSupport { get; set; }
         public override byte NumberAttempts { get; set; }

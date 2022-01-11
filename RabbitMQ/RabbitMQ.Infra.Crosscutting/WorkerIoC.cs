@@ -9,6 +9,8 @@ using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Core.RabbitMQ.Services;
+using RabbitMQ.Domain.Emails.Handlers;
+using RabbitMQ.Domain.Emails.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
@@ -54,14 +56,17 @@ namespace RabbitMQ.Infra.Crosscutting
                 services.AddScoped<IPaymentHandler, PaymentHandler>();
 
             if (application == EApplication.ConsumerReversals)
-                services.AddScoped<IReversalHandler, ReversalHandler>();            
+                services.AddScoped<IReversalHandler, ReversalHandler>();
+
+            if (application == EApplication.EmailNotifier)
+                services.AddScoped<IEmailHandler, EmailHandler>();
 
             #endregion Handlers
 
             #region Services
 
             services.AddScoped<IRabbitMQService, RabbitMQService>();
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailSenderService, EmailSenderService>();
 
             #endregion Services
 
