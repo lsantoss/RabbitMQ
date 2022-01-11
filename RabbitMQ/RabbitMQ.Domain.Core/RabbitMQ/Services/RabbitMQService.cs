@@ -23,8 +23,8 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         public RabbitMQService(RabbitMQSettings rabbitMQSettings, IElmahRepository elmahRepository)
         {
             _rabbitMQSettings = rabbitMQSettings;
-            _elmahRepository = elmahRepository; 
-            
+            _elmahRepository = elmahRepository;
+
             _waitHandle = new(false);
 
             _factory = new ConnectionFactory()
