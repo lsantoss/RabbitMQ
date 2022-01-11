@@ -26,14 +26,17 @@ namespace RabbitMQ.Infra.Crosscutting
         {
             #region AppSettings
 
-            configuration.GetSection("Settings").Bind(new Settings());
-            _ = services.AddSingleton(new Settings());
+            var settings = new Settings();
+            configuration.GetSection("Settings").Bind(settings);
+            _ = services.AddSingleton(settings);
 
-            configuration.GetSection("RabbitMQSettings").Bind(new RabbitMQSettings());
-            _ = services.AddSingleton(new RabbitMQSettings());
+            var rabbitMQSettings = new RabbitMQSettings();
+            configuration.GetSection("RabbitMQSettings").Bind(rabbitMQSettings);
+            _ = services.AddSingleton(rabbitMQSettings);
 
-            configuration.GetSection("SmtpSettings").Bind(new SmtpSettings());
-            _ = services.AddSingleton(new SmtpSettings());
+            var smtpSettings = new SmtpSettings();
+            configuration.GetSection("SmtpSettings").Bind(smtpSettings);
+            _ = services.AddSingleton(smtpSettings);
 
             #endregion AppSettings
 
