@@ -14,8 +14,8 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 {
     public class ReversalHandler : BaseHandler, IReversalHandler
     {
-        private readonly string _applicationName;
-        private readonly string _currentQueue;
+        private readonly string _applicationName = ApplicationName.ConsumerReversals;
+        private readonly string _currentQueue = QueueName.Reversals;
 
         private readonly IQueueLogRepository _queueLogRepository;
         private readonly IPaymentRepository _paymentRepository;
@@ -25,9 +25,6 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                                IElmahRepository elmahRepository,
                                IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
-            _applicationName = ApplicationName.ConsumerReversals;
-            _currentQueue = QueueName.Reversals;
-
             _queueLogRepository = queueLogRepository;
             _paymentRepository = paymentRepository;
         }

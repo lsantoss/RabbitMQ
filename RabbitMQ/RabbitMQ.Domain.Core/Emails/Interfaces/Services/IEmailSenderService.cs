@@ -6,7 +6,12 @@ namespace RabbitMQ.Domain.Core.Emails.Interfaces.Services
 {
     public interface IEmailSenderService
     {
-        Task SendEmailAsync(string content, string subject, string from, List<string> recipients, List<string> ccRecipients = null, 
-                            List<Attachment> attachments = null, MailPriority priority = MailPriority.Normal);
+        Task SendEmailAsync(string content,
+                            string subject,
+                            string from,
+                            List<string> recipients,
+                            List<string> ccRecipients = null,
+                            List<Attachment> attachments = null,
+                            MailPriority priority = MailPriority.Normal);
     }
 }

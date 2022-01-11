@@ -26,47 +26,50 @@ namespace RabbitMQ.Infra.Crosscutting
         {
             #region AppSettings
 
-            var settings = new Settings();
-            configuration.GetSection("Settings").Bind(settings);
-            services.AddSingleton(settings);
+            configuration.GetSection("Settings").Bind(new Settings());
+            _ = services.AddSingleton(new Settings());
 
-            var rabbitMQSettings = new RabbitMQSettings();
-            configuration.GetSection("RabbitMQSettings").Bind(rabbitMQSettings);
-            services.AddSingleton(rabbitMQSettings);
+            configuration.GetSection("RabbitMQSettings").Bind(new RabbitMQSettings());
+            _ = services.AddSingleton(new RabbitMQSettings());
 
-            var smtpSettings = new SmtpSettings();
-            configuration.GetSection("SmtpSettings").Bind(smtpSettings);
-            services.AddSingleton(smtpSettings);
+            configuration.GetSection("SmtpSettings").Bind(new SmtpSettings());
+            _ = services.AddSingleton(new SmtpSettings());
 
             #endregion AppSettings
 
             #region Repositories
 
-            services.AddScoped<IElmahRepository, ElmahRepository>();
-            services.AddScoped<IQueueLogRepository, QueueLogRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            _ = services.AddScoped<IElmahRepository, ElmahRepository>();
+            _ = services.AddScoped<IQueueLogRepository, QueueLogRepository>();
+            _ = services.AddScoped<IPaymentRepository, PaymentRepository>();
 
             #endregion Repositories
 
             #region Handlers
 
-            services.AddScoped<BaseHandler, BaseHandler>();
+            _ = services.AddScoped<BaseHandler, BaseHandler>();
 
-            if (application == EApplication.ConsumerPayments)
-                services.AddScoped<IPaymentHandler, PaymentHandler>();
+            switch (application)
+            {
+                case EApplication.ConsumerPayments:
+                    _ = services.AddScoped<IPaymentHandler, PaymentHandler>();
+                    break;
 
-            if (application == EApplication.ConsumerReversals)
-                services.AddScoped<IReversalHandler, ReversalHandler>();
+                case EApplication.ConsumerReversals:
+                    _ = services.AddScoped<IReversalHandler, ReversalHandler>();
+                    break;
 
-            if (application == EApplication.EmailNotifier)
-                services.AddScoped<IEmailHandler, EmailHandler>();
+                case EApplication.EmailNotifier:
+                    _ = services.AddScoped<IEmailHandler, EmailHandler>();
+                    break;
+            }
 
             #endregion Handlers
 
             #region Services
 
-            services.AddScoped<IRabbitMQService, RabbitMQService>();
-            services.AddScoped<IEmailSenderService, EmailSenderService>();
+            _ = services.AddScoped<IRabbitMQService, RabbitMQService>();
+            _ = services.AddScoped<IEmailSenderService, EmailSenderService>();
 
             #endregion Services
 

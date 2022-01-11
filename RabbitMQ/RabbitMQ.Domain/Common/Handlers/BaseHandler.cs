@@ -42,12 +42,12 @@ namespace RabbitMQ.Domain.Common.Handlers
             var success = error == null;
             var message = JsonConvert.SerializeObject(command);
             var queueLog = new QueueLog(command.PaymentId, applicationName, currentQueue, message, success, command.NumberAttempts, error);
-            await _queueLogRepository.LogAsync(queueLog);
+            _ = await _queueLogRepository.LogAsync(queueLog);
         }
 
         protected async Task ControlMaximumAttemptsAsync(Command command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
         {
-            await _elmahRepository.LogAsync(exception);
+            _ = await _elmahRepository.LogAsync(exception);
 
             await LogQueueAsync(command, applicationName, currentQueue, exception.Message);
 
@@ -71,7 +71,7 @@ namespace RabbitMQ.Domain.Common.Handlers
 
         protected async Task ControlMaximumAttemptsAsync(NotificationCommand command, string applicationName, string currentQueue, EEmailTemplate emailTemplate, Exception exception)
         {
-            await _elmahRepository.LogAsync(exception);
+            _ = await _elmahRepository.LogAsync(exception);
 
             await LogQueueAsync(command, applicationName, currentQueue, exception.Message);
 

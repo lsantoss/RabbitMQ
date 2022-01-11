@@ -15,7 +15,7 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
     public class RabbitMQService : IRabbitMQService
     {
         private ConnectionFactory _factory;
-        private static AutoResetEvent waitHandle = new AutoResetEvent(false);
+        private static readonly AutoResetEvent waitHandle = new(false);
 
         private readonly RabbitMQSettings _rabbitMQSettings;
         private readonly IElmahRepository _elmahRepository;
@@ -30,24 +30,23 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using (var connection = Factory.CreateConnection())
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ConfirmSelect();
+                using var connection = Factory.CreateConnection();
+                using var channel = connection.CreateModel();
 
-                    channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
+                channel.ConfirmSelect();
 
-                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                _ = channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
 
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
-                    properties.Headers = new Dictionary<string, object>();
-                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
+                properties.Headers = new Dictionary<string, object>();
+                properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    channel.BasicPublish(string.Empty, queueName, properties, body);
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
-                }
+                channel.BasicPublish(string.Empty, queueName, properties, body);
+
+                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
             }
             catch (Exception ex)
             {
@@ -59,26 +58,25 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using (var connection = Factory.CreateConnection())
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ConfirmSelect();
+                using var connection = Factory.CreateConnection();
+                using var channel = connection.CreateModel();
 
-                    channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
+                channel.ConfirmSelect();
 
-                    message = message.RemoveJsonFormatting();
+                _ = channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
 
-                    var body = Encoding.UTF8.GetBytes(message);
+                message = message.RemoveJsonFormatting();
 
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
-                    properties.Headers = new Dictionary<string, object>();
-                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
+                properties.Headers = new Dictionary<string, object>();
+                properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    channel.BasicPublish(string.Empty, queueName, properties, body);
+                var body = Encoding.UTF8.GetBytes(message);
 
-                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
-                }
+                channel.BasicPublish(string.Empty, queueName, properties, body);
+
+                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
             }
             catch (Exception ex)
             {
@@ -90,33 +88,33 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using (var connection = Factory.CreateConnection())
-                using (var channel = connection.CreateModel())
+                using var connection = Factory.CreateConnection();
+                using var channel = connection.CreateModel();
+
+                channel.ConfirmSelect();
+
+                var queueNameDelayed = $"{queueName}_DELAYED";
+
+                var arguments = new Dictionary<string, object>
                 {
-                    channel.ConfirmSelect();
+                    { "x-dead-letter-exchange", "" },
+                    { "x-dead-letter-routing-key", queueName },
+                    { "x-message-ttl", delayTime },
+                    { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
+                };
 
-                    var queueNameDelayed = $"{queueName}_DELAYED";
-                    var arguments = new Dictionary<string, object>
-                    {
-                        { "x-dead-letter-exchange", "" },
-                        { "x-dead-letter-routing-key", queueName },
-                        { "x-message-ttl", delayTime },
-                        { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
-                    };
+                _ = channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
 
-                    channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
+                properties.Headers = new Dictionary<string, object>();
+                properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
-                    properties.Headers = new Dictionary<string, object>();
-                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+                channel.BasicPublish("", queueNameDelayed, properties, body);
 
-                    channel.BasicPublish("", queueNameDelayed, properties, body);
-
-                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
-                }
+                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
             }
             catch (Exception ex)
             {
@@ -128,35 +126,35 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
         {
             try
             {
-                using (var connection = Factory.CreateConnection())
-                using (var channel = connection.CreateModel())
+                using var connection = Factory.CreateConnection();
+                using var channel = connection.CreateModel();
+
+                channel.ConfirmSelect();
+
+                var queueNameDelayed = $"{queueName}_DELAYED";
+
+                var arguments = new Dictionary<string, object>
                 {
-                    channel.ConfirmSelect();
+                    { "x-dead-letter-exchange", "" },
+                    { "x-dead-letter-routing-key", queueName },
+                    { "x-message-ttl", delayTime },
+                    { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
+                };
 
-                    var queueNameDelayed = $"{queueName}_DELAYED";
-                    var arguments = new Dictionary<string, object>
-                    {
-                        { "x-dead-letter-exchange", "" },
-                        { "x-dead-letter-routing-key", queueName },
-                        { "x-message-ttl", delayTime },
-                        { "type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName) }
-                    };
+                _ = channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
 
-                    channel.QueueDeclare(queueNameDelayed, durable, exclusive, autoDelete, arguments);
+                message = message.RemoveJsonFormatting();
 
-                    message = message.RemoveJsonFormatting();
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
+                properties.Headers = new Dictionary<string, object>();
+                properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
 
-                    var body = Encoding.UTF8.GetBytes(message);
+                var body = Encoding.UTF8.GetBytes(message);
 
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
-                    properties.Headers = new Dictionary<string, object>();
-                    properties.Headers.Add("type-queue", Encoding.UTF8.GetBytes(message.GetType().AssemblyQualifiedName));
+                channel.BasicPublish("", queueNameDelayed, properties, body);
 
-                    channel.BasicPublish("", queueNameDelayed, properties, body);
-
-                    channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
-                }
+                channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));
             }
             catch (Exception ex)
             {
@@ -166,102 +164,93 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 
         public void Consume(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using (var connection = Factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            using var connection = Factory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            _ = channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (sender, e) =>
             {
-                channel.QueueDeclare(queueName, durable, exclusive, autoDelete, null);
-
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (sender, e) =>
+                try
                 {
-                    try
+                    var header = e.BasicProperties.Headers["type-queue"];
+
+                    if (header != null)
                     {
+                        var eventType = Type.GetType(Encoding.UTF8.GetString(header as byte[]));
                         var body = Encoding.UTF8.GetString(e.Body.ToArray());
+                        var message = JsonConvert.DeserializeObject(body, eventType);
 
-                        var basicProperties = e.BasicProperties;
+                        ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
 
-                        var header = basicProperties.Headers["type-queue"];
-
-                        if (header != null)
-                        {
-                            var eventType = Type.GetType(Encoding.UTF8.GetString(header as byte[]));
-
-                            var message = JsonConvert.DeserializeObject(body, eventType);
-
-                            ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
-
-                            channel.BasicAck(e.DeliveryTag, false);
-                        }
+                        channel.BasicAck(e.DeliveryTag, false);
                     }
-                    catch (Exception ex)
-                    {
-                        channel.BasicNack(e.DeliveryTag, false, false);
-                        throw new Exception("Failed to consume RabbitMQ queue:", ex);
-                    }
-                };
-
-                channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
-                channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
-
-                Console.CancelKeyPress += (o, e) =>
+                }
+                catch (Exception ex)
                 {
-                    if (_elmahRepository != null)
-                        _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+                    channel.BasicNack(e.DeliveryTag, false, false);
+                    throw new Exception("Failed to consume RabbitMQ queue:", ex);
+                }
+            };
 
-                    waitHandle.Set();
-                };
+            channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
+            _ = channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
 
-                waitHandle.WaitOne();
-            }
+            Console.CancelKeyPress += (o, e) =>
+            {
+                if (_elmahRepository != null)
+                    _ = _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+
+                _ = waitHandle.Set();
+            };
+
+            _ = waitHandle.WaitOne();
         }
 
         public void Consume<T>(object handler, string queueName, bool durable = true, bool exclusive = false, bool autoDelete = false)
         {
-            using (var connection = Factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queueName, true, false, false, null);
+            using var connection = Factory.CreateConnection();
+            using var channel = connection.CreateModel();
 
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (sender, e) =>
+            _ = channel.QueueDeclare(queueName, true, false, false, null);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (sender, e) =>
+            {
+                try
                 {
-                    try
+                    var header = e.BasicProperties.Headers["type-queue"];
+
+                    if (header != null)
                     {
                         var body = Encoding.UTF8.GetString(e.Body.ToArray());
+                        var message = JsonConvert.DeserializeObject(body, typeof(T));
 
-                        var basicProperties = e.BasicProperties;
+                        ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
 
-                        var header = basicProperties.Headers["type-queue"];
-
-                        if (header != null)
-                        {
-                            var message = JsonConvert.DeserializeObject(body, typeof(T));
-
-                            ((dynamic)handler).HandleAsync((dynamic)message).GetAwaiter().GetResult();
-
-                            channel.BasicAck(e.DeliveryTag, false);
-                        }
+                        channel.BasicAck(e.DeliveryTag, false);
                     }
-                    catch (Exception ex)
-                    {
-                        channel.BasicNack(e.DeliveryTag, false, false);
-                        throw new Exception("Failed to consume RabbitMQ queue:", ex);
-                    }
-                };
-
-                channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
-                channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
-
-                Console.CancelKeyPress += (o, e) =>
+                }
+                catch (Exception ex)
                 {
-                    if (_elmahRepository != null)
-                        _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+                    channel.BasicNack(e.DeliveryTag, false, false);
+                    throw new Exception("Failed to consume RabbitMQ queue:", ex);
+                }
+            };
 
-                    waitHandle.Set();
-                };
+            channel.BasicQos(_rabbitMQSettings.PrefetchSize, _rabbitMQSettings.PrefetchCount, false);
+            _ = channel.BasicConsume(queueName, false, Environment.MachineName, consumer);
 
-                waitHandle.WaitOne();
-            }
+            Console.CancelKeyPress += (o, e) =>
+            {
+                if (_elmahRepository != null)
+                    _ = _elmahRepository.LogAsync(new Exception("Closing RabbitMQ queue consumption (ctrl+C)"));
+
+                _ = waitHandle.Set();
+            };
+
+            _ = waitHandle.WaitOne();
         }
 
         private ConnectionFactory Factory

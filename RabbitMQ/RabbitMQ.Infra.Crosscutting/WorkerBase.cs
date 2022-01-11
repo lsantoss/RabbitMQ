@@ -16,9 +16,9 @@ namespace RabbitMQ.Infra.Crosscutting
 
             _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, false).AddEnvironmentVariables().Build();
 
-            _services.AddSingleton(_configuration);
+            _ = _services.AddSingleton(_configuration);
 
-            WorkerIoC.AddWorkerServices(_services, _configuration, application);
+            _ = WorkerIoC.AddWorkerServices(_services, _configuration, application);
 
             _serviceProvider = _services.BuildServiceProvider();
         }

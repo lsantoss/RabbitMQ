@@ -10,8 +10,8 @@ namespace RabbitMQ.ConsumerPayments
 {
     class Program
     {
-        private static readonly string _applicationName;
-        private static readonly string _queueName;
+        private static readonly string _applicationName = ApplicationName.ConsumerPayments;
+        private static readonly string _queueName = QueueName.Payments;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IRabbitMQService _rabbitMQService;
@@ -19,9 +19,6 @@ namespace RabbitMQ.ConsumerPayments
 
         static Program()
         {
-            _applicationName = ApplicationName.ConsumerPayments;
-            _queueName = QueueName.Payments;
-
             _workerBase = new WorkerBase(EApplication.ConsumerPayments);
             _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
             _handler = _workerBase.GetService<IPaymentHandler>();

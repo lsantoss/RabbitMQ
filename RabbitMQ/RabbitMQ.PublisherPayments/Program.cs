@@ -15,9 +15,9 @@ namespace RabbitMQ.PublisherPayments
 {
     class Program
     {
-        private static readonly string _applicationName;
-        private static readonly string _queueName;
-        private static readonly string _basePath;
+        private static readonly string _applicationName = ApplicationName.PublisherPayments;
+        private static readonly string _queueName = QueueName.Payments;
+        private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -26,10 +26,6 @@ namespace RabbitMQ.PublisherPayments
 
         static Program()
         {
-            _applicationName = ApplicationName.PublisherPayments;
-            _queueName = QueueName.Payments;
-            _basePath = AppDomain.CurrentDomain.BaseDirectory;
-
             _workerBase = new WorkerBase(EApplication.PublisherPayments);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
@@ -42,9 +38,7 @@ namespace RabbitMQ.PublisherPayments
             {
                 Console.WriteLine($"Starting Worker {_applicationName} \n");
 
-                var filePath = $@"{_basePath}\payload.json";
-
-                var paymentCommandJson = FileReaderHelper.Read(filePath);
+                var paymentCommandJson = FileReaderHelper.Read($@"{_basePath}\payload.json");
 
                 Console.WriteLine(paymentCommandJson);
 
@@ -53,14 +47,14 @@ namespace RabbitMQ.PublisherPayments
                 _rabbitMQService.Publish(paymentCommand, _queueName);
 
                 var queueLog = new QueueLog(paymentCommand.PaymentId, _applicationName, _queueName, paymentCommandJson);
-                await _queueLogRepository.LogAsync(queueLog);
+                _ = await _queueLogRepository.LogAsync(queueLog);
 
                 Console.Write("\nMessage send with success!");
                 Console.ReadKey();
             }
             catch (Exception ex)
             {
-                await _elmahRepository.LogAsync(ex);
+                _ = await _elmahRepository.LogAsync(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }

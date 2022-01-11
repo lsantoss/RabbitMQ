@@ -16,9 +16,9 @@ namespace RabbitMQ.PublisherEmails
 {
     class Program
     {
-        private static readonly string _applicationName;
-        private static readonly string _queueName;
-        private static readonly string _basePath;
+        private static readonly string _applicationName = ApplicationName.PublisherEmails;
+        private static readonly string _queueName = QueueName.EmailNotifier;
+        private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -27,10 +27,6 @@ namespace RabbitMQ.PublisherEmails
 
         static Program()
         {
-            _applicationName = ApplicationName.PublisherEmails;
-            _queueName = QueueName.EmailNotifier;
-            _basePath = AppDomain.CurrentDomain.BaseDirectory;
-
             _workerBase = new WorkerBase(EApplication.PublisherEmails);
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
@@ -50,7 +46,7 @@ namespace RabbitMQ.PublisherEmails
 
                 var emailCommandJson = ReadPayload(emailTemplate);
 
-                if(emailCommandJson == null)
+                if (emailCommandJson == null)
                 {
                     Console.Write("\nAn error has occurred. This template is not defined.");
                     Console.ReadKey();
@@ -65,14 +61,14 @@ namespace RabbitMQ.PublisherEmails
                 _rabbitMQService.Publish(emailCommand, _queueName);
 
                 var queueLog = new QueueLog(emailCommand.PaymentId, _applicationName, _queueName, emailCommandJson);
-                await _queueLogRepository.LogAsync(queueLog);
+                _ = await _queueLogRepository.LogAsync(queueLog);
 
                 Console.Write("\nMessage send with success!");
                 Console.ReadKey();
             }
             catch (Exception ex)
             {
-                await _elmahRepository.LogAsync(ex);
+                _ = await _elmahRepository.LogAsync(ex);
                 Console.Write($"\nError sending message! {ex.Message}");
                 Console.ReadKey();
             }
@@ -93,29 +89,16 @@ namespace RabbitMQ.PublisherEmails
 
         private static string ReadPayload(EEmailTemplate emailTemplate)
         {
-            switch (emailTemplate)
+            return emailTemplate switch
             {
-                case EEmailTemplate.PaymentSuccess:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-payment-success.json");
-
-                case EEmailTemplate.ReversalSuccess:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-reversal-success.json");
-
-                case EEmailTemplate.SupportPaymentMaximumAttempts:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json");
-
-                case EEmailTemplate.SupportReversalMaximumAttempts:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json");
-
-                case EEmailTemplate.SupportPaymentNotFoundForReversal:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json");
-
-                case EEmailTemplate.SupportPaymentAlreadyReversed:
-                    return FileReaderHelper.Read($@"{_basePath}\payload-payment-already-reversed.json");
-
-                default:
-                    return null;
-            }
+                EEmailTemplate.PaymentSuccess => FileReaderHelper.Read($@"{_basePath}\payload-payment-success.json"),
+                EEmailTemplate.ReversalSuccess => FileReaderHelper.Read($@"{_basePath}\payload-reversal-success.json"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileReaderHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileReaderHelper.Read($@"{_basePath}\payload-payment-already-reversed.json"),
+                _ => null,
+            };
         }
     }
 }

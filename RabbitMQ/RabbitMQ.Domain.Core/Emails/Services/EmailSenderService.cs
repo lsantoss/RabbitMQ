@@ -24,22 +24,29 @@ namespace RabbitMQ.Domain.Core.Emails.Services
             };
         }
 
-        public async Task SendEmailAsync(string content, string subject, string from, List<string> recipients, List<string> ccRecipients = null, 
-                                         List<Attachment> attachments = null, MailPriority priority = MailPriority.Normal)
+        public async Task SendEmailAsync(string content,
+                                         string subject,
+                                         string from,
+                                         List<string> recipients,
+                                         List<string> ccRecipients = null,
+                                         List<Attachment> attachments = null,
+                                         MailPriority priority = MailPriority.Normal)
         {
-            var message = new MailMessage();
-            message.Body = content;
-            message.Subject = subject;
-            message.From = new MailAddress(from);
+            var message = new MailMessage
+            {
+                Body = content,
+                Subject = subject,
+                From = new MailAddress(from),
 
-            message.Priority = priority;
-            message.IsBodyHtml = true;
-            message.BodyEncoding = Encoding.UTF8;
-            message.SubjectEncoding = Encoding.UTF8;
-            message.HeadersEncoding = Encoding.UTF8;
+                Priority = priority,
+                IsBodyHtml = true,
+                BodyEncoding = Encoding.UTF8,
+                SubjectEncoding = Encoding.UTF8,
+                HeadersEncoding = Encoding.UTF8
+            };
 
             if (recipients != null && recipients.Count > 0)
-                foreach(var recipient in recipients)
+                foreach (var recipient in recipients)
                     message.To.Add(new MailAddress(recipient));
 
             if (ccRecipients != null && ccRecipients.Count > 0)

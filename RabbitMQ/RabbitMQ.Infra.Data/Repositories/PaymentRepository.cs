@@ -15,7 +15,7 @@ namespace RabbitMQ.Infra.Data.Repositories
     public class PaymentRepository : IPaymentRepository
     {
         private readonly Settings _settings;
-        private readonly DynamicParameters _parameters = new DynamicParameters();
+        private readonly DynamicParameters _parameters = new();
 
         public PaymentRepository(Settings settings)
         {
@@ -37,10 +37,9 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);
 
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                await connection.ExecuteAsync(PaymentQueries.Save, _parameters);
-            }
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            await connection.ExecuteAsync(PaymentQueries.Save, _parameters);
         }
 
         public async Task UpdateAsync(Payment payment)
@@ -58,20 +57,18 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);
 
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                await connection.ExecuteAsync(PaymentQueries.Update, _parameters);
-            }
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            await connection.ExecuteAsync(PaymentQueries.Update, _parameters);
         }
 
         public async Task<PaymentQueryResult> GetAsync(Guid id)
         {
             _parameters.Add("Id", id, DbType.Guid);
 
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                return await connection.QueryFirstOrDefaultAsync<PaymentQueryResult>(PaymentQueries.Get, _parameters);
-            }
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            return await connection.QueryFirstOrDefaultAsync<PaymentQueryResult>(PaymentQueries.Get, _parameters);
         }
     }
 }

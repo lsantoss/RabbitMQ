@@ -18,7 +18,7 @@ namespace RabbitMQ.Domain.Payments.Queries.Results
         public DateTime CreationDate { get; set; }
         public DateTime? ChangeDate { get; set; }
 
-        public Payment MapToPayment() => new(Id, BarCode, Value, Date, ClientName, ClientEmail, ClientCellphone, 
+        public Payment MapToPayment() => new(Id, BarCode, Value, Date, ClientName, ClientEmail, ClientCellphone,
                                              NotifyByEmail, NotifyByCellphone, Reversed, CreationDate, ChangeDate);
     }
 }

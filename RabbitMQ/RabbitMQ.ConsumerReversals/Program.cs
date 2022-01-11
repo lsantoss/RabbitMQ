@@ -10,8 +10,8 @@ namespace RabbitMQ.ConsumerReversals
 {
     class Program
     {
-        private static readonly string _applicationName;
-        private static readonly string _queueName;
+        private static readonly string _applicationName = ApplicationName.ConsumerReversals;
+        private static readonly string _queueName = QueueName.Reversals;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IRabbitMQService _rabbitMQService;
@@ -19,9 +19,6 @@ namespace RabbitMQ.ConsumerReversals
 
         static Program()
         {
-            _applicationName = ApplicationName.ConsumerReversals;
-            _queueName = QueueName.Reversals;
-
             _workerBase = new WorkerBase(EApplication.ConsumerReversals);
             _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
             _handler = _workerBase.GetService<IReversalHandler>();

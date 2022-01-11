@@ -15,9 +15,9 @@ namespace RabbitMQ.Domain.Emails.Handlers
 {
     public class EmailHandler : BaseHandler, IEmailHandler
     {
-        private readonly string _applicationName;
-        private readonly string _currentQueue;
-        private readonly string _basePath;
+        private readonly string _applicationName = ApplicationName.EmailNotifier;
+        private readonly string _currentQueue = QueueName.EmailNotifier;
+        private readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
         private readonly IEmailSenderService _emailSenderService;
 
@@ -26,10 +26,6 @@ namespace RabbitMQ.Domain.Emails.Handlers
                             IElmahRepository elmahRepository,
                             IEmailSenderService emailSenderService) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
-            _applicationName = ApplicationName.EmailNotifier;
-            _currentQueue = QueueName.EmailNotifier;
-            _basePath = AppDomain.CurrentDomain.BaseDirectory;
-
             _emailSenderService = emailSenderService;
         }
 
@@ -59,43 +55,20 @@ namespace RabbitMQ.Domain.Emails.Handlers
 
         private string GetTemplate(EEmailTemplate emailTemplate)
         {
-            string html;
-
-            switch (emailTemplate)
+            string html = emailTemplate switch
             {
-                case EEmailTemplate.PaymentSuccess:
-                    html = FileReaderHelper.Read($@"{_basePath}\Emails\Resources\HTMLs\payment-success.html");
-                    break;
-
-                case EEmailTemplate.ReversalSuccess:
-                    html = FileReaderHelper.Read($@"{_basePath}");
-                    break;
-
-                case EEmailTemplate.SupportPaymentMaximumAttempts:
-                    html = FileReaderHelper.Read($@"{_basePath}");
-                    break;
-
-                case EEmailTemplate.SupportReversalMaximumAttempts:
-                    html = FileReaderHelper.Read($@"{_basePath}");
-                    break;
-
-                case EEmailTemplate.SupportPaymentNotFoundForReversal:
-                    html = FileReaderHelper.Read($@"{_basePath}");
-                    break;
-
-                case EEmailTemplate.SupportPaymentAlreadyReversed:
-                    html = FileReaderHelper.Read($@"{_basePath}");
-                    break;
-
-                default:
-                    html = null;
-                    break;
-            }
+                EEmailTemplate.PaymentSuccess => FileReaderHelper.Read($@"{_basePath}\Emails\Resources\HTMLs\payment-success.html"),
+                EEmailTemplate.ReversalSuccess => FileReaderHelper.Read($@"{_basePath}"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileReaderHelper.Read($@"{_basePath}"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileReaderHelper.Read($@"{_basePath}"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileReaderHelper.Read($@"{_basePath}"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileReaderHelper.Read($@"{_basePath}"),
+                _ => null,
+            };
 
             if (!string.IsNullOrWhiteSpace(html))
             {
                 var css = FileReaderHelper.Read($@"{_basePath}\Emails\Resources\CSSs\style.css");
-
                 html = html.Replace("{#style.css#}", $"<style>{css}</style>");
             }
 

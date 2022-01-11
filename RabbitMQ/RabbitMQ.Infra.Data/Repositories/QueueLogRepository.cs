@@ -16,7 +16,7 @@ namespace RabbitMQ.Infra.Data.Repositories
     public class QueueLogRepository : IQueueLogRepository
     {
         private readonly Settings _settings;
-        private readonly DynamicParameters _parameters = new DynamicParameters();
+        private readonly DynamicParameters _parameters = new();
 
         public QueueLogRepository(Settings settings)
         {
@@ -34,20 +34,20 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("NumberAttempts", queueLog.NumberAttempts, DbType.Int16);
             _parameters.Add("Error", queueLog.Error, DbType.String);
 
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                return await connection.ExecuteScalarAsync<ulong>(QueueLogQueries.Log, _parameters);
-            }
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            return await connection.ExecuteScalarAsync<ulong>(QueueLogQueries.Log, _parameters);
         }
 
         public async Task<List<QueueLogQueryResult>> ListAsync(Guid paymentId)
         {
             _parameters.Add("PaymentId", paymentId, DbType.Guid);
 
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                return (await connection.QueryAsync<QueueLogQueryResult>(QueueLogQueries.List, _parameters)).ToList();
-            }
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            var result = await connection.QueryAsync<QueueLogQueryResult>(QueueLogQueries.List, _parameters);
+
+            return result.ToList();
         }
     }
 }

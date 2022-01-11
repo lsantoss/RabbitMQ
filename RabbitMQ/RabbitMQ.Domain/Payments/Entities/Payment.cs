@@ -17,8 +17,15 @@ namespace RabbitMQ.Domain.Payments.Entities
         public DateTime CreationDate { get; private set; }
         public DateTime? ChangeDate { get; private set; }
 
-        public Payment(Guid id, string barCode, decimal value, DateTime date, string clientName, string clientEmail, string clientCellphone, 
-                       bool notifyByEmail, bool notifyByCellphone)
+        public Payment(Guid id,
+                       string barCode,
+                       decimal value,
+                       DateTime date,
+                       string clientName,
+                       string clientEmail,
+                       string clientCellphone,
+                       bool notifyByEmail,
+                       bool notifyByCellphone)
         {
             SetId(id);
             SetBarCode(barCode);
@@ -34,8 +41,18 @@ namespace RabbitMQ.Domain.Payments.Entities
             SetChangeDate(null);
         }
 
-        public Payment(Guid id, string barCode, decimal value, DateTime date, string clientName, string clientEmail, string clientCellphone, 
-                       bool notifyByEmail, bool notifyByCellphone, bool reversed, DateTime creationDate, DateTime? changeDate)
+        public Payment(Guid id,
+                       string barCode,
+                       decimal value,
+                       DateTime date,
+                       string clientName,
+                       string clientEmail,
+                       string clientCellphone,
+                       bool notifyByEmail,
+                       bool notifyByCellphone,
+                       bool reversed,
+                       DateTime creationDate,
+                       DateTime? changeDate)
         {
             SetId(id);
             SetBarCode(barCode);

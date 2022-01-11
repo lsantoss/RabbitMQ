@@ -8,7 +8,7 @@ namespace RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories
 {
     public interface IQueueLogRepository
     {
-        Task<ulong> LogAsync(QueueLog queueLog); 
+        Task<ulong> LogAsync(QueueLog queueLog);
         Task<List<QueueLogQueryResult>> ListAsync(Guid paymentId);
     }
 }
