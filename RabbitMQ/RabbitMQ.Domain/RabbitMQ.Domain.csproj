@@ -5,12 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Emails\Resources\HTMLs\payment-success.css" />
+    <None Remove="Emails\Resources\HTMLs\payment-success.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Emails\Resources\CSSs\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emails\Resources\HTMLs\payment-success.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Emails\Resources\Images\" />
-    <Folder Include="Emails\Resources\Templates\" />
   </ItemGroup>
 
 </Project>
