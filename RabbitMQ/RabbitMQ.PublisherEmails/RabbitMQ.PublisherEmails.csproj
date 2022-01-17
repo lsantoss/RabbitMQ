@@ -9,7 +9,7 @@
     <None Remove="appsettings.json" />
     <None Remove="payload-payment-already-reversed.json" />
     <None Remove="payload-payment-success.json" />
-    <None Remove="payload-reversal-success.json.json" />
+    <None Remove="payload-reversal-success.json" />
     <None Remove="payload-support-payment-maximum-attempts.json" />
     <None Remove="payload-support-payment-not-found-for-reversal.json" />
     <None Remove="payload-support-reversal-maximum-attempts.json" />
@@ -25,7 +25,7 @@
     <Content Include="payload-payment-success.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="payload-reversal-success.json.json">
+    <Content Include="payload-reversal-success.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="payload-support-payment-maximum-attempts.json">

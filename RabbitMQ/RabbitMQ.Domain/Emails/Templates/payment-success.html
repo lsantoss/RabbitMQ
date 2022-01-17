@@ -46,7 +46,7 @@
             font-size: 17px;
         }
 
-        div.client-name {
+        div.client-first-name {
             padding: 50px 0px 0px 50px;
             color: #4b24a1;
             font-size: 30px;
@@ -130,17 +130,23 @@
             </div>
 
             <div class="content">
-                <div class="client-name">
-                    Olá, Lucas Santos
+                <div class="client-first-name">
+                    Olá, {#client-first-name#}
                 </div>
                 <div class="action">
-                    Seu pagamento de R$ 187,43 foi confirmado.
+                    Seu pagamento de {#value#} foi confirmado.
+                </div>
+                <div class="content-subtitle">
+                    Identificador do pagamento
+                </div>
+                <div class="content-subtitle-values">
+                    {#id#}
                 </div>
                 <div class="content-subtitle">
                     Valor
                 </div>
                 <div class="content-subtitle-values">
-                    R$ 187,43
+                    {#value#}
                 </div>
                 <div class="content-subtitle">
                     Favorecido
@@ -152,25 +158,22 @@
                     Código de Barras
                 </div>
                 <div class="content-subtitle-values">
-                    826200000007 <br />
-                    224009700800 <br />
-                    026145481520 <br />
-                    02112008
+                    {#barcode#}
                 </div>
                 <div class="content-subtitle">
                     Data do pagamento
                 </div>
                 <div class="content-subtitle-values">
-                    11 JAN às 18:10
+                    {#date#}
                 </div>
                 <div class="content-subtitle">
                     Pagador
                 </div>
                 <div class="content-subtitle-values">
-                    Lucas Santos Faria
+                    {#payer#}
                 </div>
                 <div class="payment-schedules">
-                    Para conhecer a grade horária para pagamento de boletos através da sua conta da LS Code, 
+                    Para conhecer a grade horária para pagamento de boletos através da sua conta da LS Code,
                     acesse nossa página de "Dúvidas frequentes" dentro da opção "Me ajuda" do seu app.
                 </div>
             </div>
@@ -208,7 +211,7 @@
                 </div>                
 
                 <div class="footer-unscribe">
-                    Caso não queira mais receber nossos emails, <a class="footer-unscribe" href="http://www.google.com.br">descadastre-se.</a>
+                    Caso não queira mais receber nossos emails, <a class="footer-unscribe" href="#">descadastre-se.</a>
                 </div>
             </div>
         </div>

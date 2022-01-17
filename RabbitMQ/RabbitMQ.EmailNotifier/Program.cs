@@ -28,9 +28,7 @@ namespace RabbitMQ.EmailNotifier
         {
             Console.WriteLine($"Starting Worker {_applicationName}\n");
 
-            _handler.HandleAsync(null).GetAwaiter().GetResult();
-
-            //_rabbitMQService.Consume<EmailCommand>(_handler, _queueName);
+            _rabbitMQService.Consume<EmailCommand>(_handler, _queueName);
         }
     }
 }
