@@ -2,18 +2,13 @@
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
 using RabbitMQ.Domain.Core.Emails.Interfaces.Services;
-using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
-using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Emails.Helpers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
-using RabbitMQ.Domain.Payments.Entities;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.Domain.Emails.Handlers
@@ -22,7 +17,6 @@ namespace RabbitMQ.Domain.Emails.Handlers
     {
         private readonly string _applicationName = ApplicationName.EmailNotifier;
         private readonly string _currentQueue = QueueName.EmailNotifier;
-        private readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
 
         private readonly IEmailSenderService _emailSenderService;
         private readonly IPaymentRepository _paymentRepository;
@@ -45,18 +39,19 @@ namespace RabbitMQ.Domain.Emails.Handlers
             {
                 var paymentQueryResult = await _paymentRepository.GetAsync(emailCommand.PaymentId);
 
-                var emailContent = EmailHelper.GenerateEmailContent(emailCommand.EmailTemplate, paymentQueryResult);
+                var templateHtml = EmailHelper.GenerateTemplate(emailCommand.EmailTemplate);
 
-                await _emailSenderService.SendEmailAsync(
-                    emailContent,
-                    "Pagamento realizado", 
-                    new List<(string, string)>() { (paymentQueryResult.ClientEmail, paymentQueryResult.ClientName) } );
+                var emailContent = EmailHelper.ChangeKeysForValues(emailCommand.EmailTemplate, templateHtml, paymentQueryResult, emailCommand.QueueLogs);
 
-                //Notification
+                var subject = EmailHelper.GenerateSubject(emailCommand.EmailTemplate);
 
-                //Send Email Notification
+                var recipient = EmailHelper.GenerateRecipient(emailCommand.EmailTemplate, paymentQueryResult);
 
-                //await LogQueueAsync(emailCommand, _applicationName, _currentQueue);
+                var attachments = EmailHelper.GenerateAttachments();
+
+                await _emailSenderService.SendEmailAsync(emailContent, subject, recipient, attachments);
+
+                await LogQueueAsync(emailCommand, _applicationName, _currentQueue);
 
                 Console.WriteLine("Email send successfully.");
             }

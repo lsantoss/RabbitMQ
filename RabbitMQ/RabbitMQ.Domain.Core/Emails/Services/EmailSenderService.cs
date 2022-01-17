@@ -10,12 +10,16 @@ namespace RabbitMQ.Domain.Core.Emails.Services
 {
     public class EmailSenderService : IEmailSenderService
     {
+        private readonly string _fromDisplayName;
         private readonly string _fromAdress;
+
         private readonly SmtpClient _smtpClient;
 
         public EmailSenderService(SmtpSettings smtpSettings)
         {
+            _fromDisplayName = smtpSettings.UserDisplayName;
             _fromAdress = smtpSettings.UserName;
+
             _smtpClient = new SmtpClient
             {
                 Host = smtpSettings.Host,
@@ -28,14 +32,14 @@ namespace RabbitMQ.Domain.Core.Emails.Services
 
         public async Task SendEmailAsync(string content,
                                          string subject,
-                                         List<(string address, string displayName)> recipients,
+                                         (string address, string displayName) recipient,
                                          List<Attachment> attachments = null)
         {
             var message = new MailMessage
             {
                 Body = content,
                 Subject = subject,
-                From = new MailAddress(_fromAdress, "LS Code", Encoding.UTF8),
+                From = new MailAddress(_fromAdress, _fromDisplayName, Encoding.UTF8),
 
                 IsBodyHtml = true,
                 Priority = MailPriority.Normal,
@@ -45,9 +49,7 @@ namespace RabbitMQ.Domain.Core.Emails.Services
                 HeadersEncoding = Encoding.UTF8
             };
 
-            if (recipients != null && recipients.Count > 0)
-                foreach (var (address, displayName) in recipients)
-                    message.To.Add(new MailAddress(address, displayName, Encoding.UTF8));
+            message.To.Add(new MailAddress(recipient.address, recipient.displayName, Encoding.UTF8));
 
             if (attachments != null && attachments.Count > 0)
                 foreach (var attachment in attachments)

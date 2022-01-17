@@ -8,7 +8,7 @@ namespace RabbitMQ.Domain.Core.Emails.Interfaces.Services
     {
         Task SendEmailAsync(string content,
                             string subject,
-                            List<(string address, string displayName)> recipients,
+                            (string address, string displayName) recipient,
                             List<Attachment> attachments = null);
     }
 }
