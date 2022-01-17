@@ -1,12 +1,217 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    {#style.css#}
+    <title>Pagamento Realizado</title>
+
+    <style>
+        body {
+            font-family: Verdana, serif;
+        }
+
+        div.main {
+            background-color: #E5E5E5;
+        }
+
+        div.container {
+            margin: 0px auto;
+            max-width: 600px;
+        }
+
+        div.header {
+            width: 100%;
+            background-color: #4b24a1;
+        }
+
+        div.brand {
+            width: 100%;
+            height: auto;
+            padding: 20px 20px 20px 50px;
+            color: #FFFFFF;
+            font-size: 80px;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        div.title {
+            width: 100%;
+            height: auto;
+            padding: 20px 20px 40px 50px;
+            color: #FFFFFF;
+            font-size: 35px;
+        }
+
+        div.content {
+            width: 100%;
+            height: auto;
+            background-color: #FFFFFF;
+            color: #000000;
+            font-size: 17px;
+        }
+
+        div.client-name {
+            padding: 50px 0px 0px 50px;
+            color: #4b24a1;
+            font-size: 30px;
+        }
+
+        div.action {
+            padding: 30px 0px 0px 50px;
+        }
+
+        div.content-subtitle {
+            padding: 30px 0px 0px 100px;
+            font-weight: bolder;
+        }
+
+        div.content-subtitle-values {
+            padding: 15px 0px 0px 100px;
+        }
+
+        div.payment-schedules {
+            padding: 30px 50px 50px 50px;
+            text-align: justify;
+        }
+
+        div.footer {
+            width: 100%;
+            height: auto;
+            background-color: #181818;
+            color: #FFFFFF;
+            font-size: 15px;
+        }
+
+        div.footer-title {
+            padding: 30px 50px 20px 50px;
+            font-size: 35px;
+        }
+
+        div.footer-text {
+            padding: 30px 50px 0px 50px;
+            text-align: justify;
+        }
+
+        div.footer-social-networks {
+            padding: 30px 50px 0px 50px;
+            display: inline-flex;
+        }
+
+        a.footer-social-networks {
+            padding: 10px 20px 10px 0px;
+            display: inline-flex;
+        }
+
+        img.footer-social-networks {
+            width: 30px;
+            height: 30px;
+            border-radius: 3px;
+            display: block;
+        }
+
+        div.footer-unscribe {
+            padding: 30px 50px 40px 50px;
+            font-size: 10px;
+        }
+
+        a.footer-unscribe {
+            color: #FFFFFF;
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-    <div>Olá mundo</div>
+    <div class="main">
+        <div class="container">
+            <div class="header">
+                <div class="brand">
+                    LS
+                </div>
+                <div class="title">
+                    Pagamento Realizado
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="client-name">
+                    Olá, Lucas Santos
+                </div>
+                <div class="action">
+                    Seu pagamento de R$ 187,43 foi confirmado.
+                </div>
+                <div class="content-subtitle">
+                    Valor
+                </div>
+                <div class="content-subtitle-values">
+                    R$ 187,43
+                </div>
+                <div class="content-subtitle">
+                    Favorecido
+                </div>
+                <div class="content-subtitle-values">
+                    LS Code
+                </div>
+                <div class="content-subtitle">
+                    Código de Barras
+                </div>
+                <div class="content-subtitle-values">
+                    826200000007 <br />
+                    224009700800 <br />
+                    026145481520 <br />
+                    02112008
+                </div>
+                <div class="content-subtitle">
+                    Data do pagamento
+                </div>
+                <div class="content-subtitle-values">
+                    11 JAN às 18:10
+                </div>
+                <div class="content-subtitle">
+                    Pagador
+                </div>
+                <div class="content-subtitle-values">
+                    Lucas Santos Faria
+                </div>
+                <div class="payment-schedules">
+                    Para conhecer a grade horária para pagamento de boletos através da sua conta da LS Code, 
+                    acesse nossa página de "Dúvidas frequentes" dentro da opção "Me ajuda" do seu app.
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-title">
+                    Abraços,
+                </div>
+                <div class="footer-text">
+                    Tem alguma dúvida? Entre em contato conosco pelo chat do app ou ligue 0800 555 2222.
+                </div>
+                <div class="footer-text">
+                    <strong>Central do Investidor:</strong> Caso não tenha encontrado respostas para sua dúvida através da nossa FAQ,
+                    você pode conversar com um de nossos especialistas, das 09h às 18h,
+                    de segunda a sexta-feira, através do telefone (011) 3555-4444.
+                </div>
+                <div class="footer-text">
+                    <strong>Ouvidoria:</strong> Se você não se satisfez com a solução do nosso time de atendimento,
+                    ligue para 0800 888 2222 em dias úteis, das 9h às 18h, horário de São Paulo.
+                </div>
+
+                <div class="footer-social-networks">
+                    <a class="footer-social-networks" href="http://www.facebook.com/" target="_blank">
+                        <img class="footer-social-networks" src="https://s3.amazonaws.com/ss-usa/companies/MzawMDExMzS2AAA/uploads/Nubank/facebook_60.png" data-imagetype="External">
+                    </a>
+                    <a class="footer-social-networks" href="https://twitter.com/" target="_blank">
+                        <img class="footer-social-networks" src="https://s3.amazonaws.com/ss-usa/companies/MzawMDExMzS2AAA/uploads/Nubank/twitter_60.png" data-imagetype="External">
+                    </a>
+                    <a class="footer-social-networks" href="http://www.instagram.com/" target="_blank">
+                        <img class="footer-social-networks" src="https://s3.amazonaws.com/ss-usa/companies/MzawMDExMzS2AAA/uploads/Nubank/instagram_60.png" data-imagetype="External">
+                    </a>
+                    <a class="footer-social-networks" href="https://www.youtube.com/" target="_blank">
+                        <img class="footer-social-networks" src="https://s3.amazonaws.com/ss-usa/companies/MzawMDExMzS2AAA/uploads/Nubank/youtube_60.png" data-imagetype="External">
+                    </a>
+                </div>                
+
+                <div class="footer-unscribe">
+                    Caso não queira mais receber nossos emails, <a class="footer-unscribe" href="http://www.google.com.br">descadastre-se.</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
