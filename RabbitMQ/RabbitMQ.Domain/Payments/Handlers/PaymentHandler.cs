@@ -14,8 +14,8 @@ namespace RabbitMQ.Domain.Payments.Handlers
 {
     public class PaymentHandler : BaseHandler, IPaymentHandler
     {
-        private readonly string _applicationName = ApplicationName.ConsumerPayments;
         private readonly string _currentQueue = QueueName.Payments;
+        private readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private readonly IPaymentRepository _paymentRepository;
 

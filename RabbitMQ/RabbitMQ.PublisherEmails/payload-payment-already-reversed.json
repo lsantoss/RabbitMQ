@@ -1,6 +1,6 @@
 {
   "NumberAttempts": 1,
-  "PaymentId": "af37b7f0-55e1-427d-be4d-097e05fc17d7",
+  "PaymentId": "5669a1be-b02d-4867-84bb-97cb8446ccdb",
   "EmailTemplate": 6,
   "QueueLogs": [
     {
@@ -67,7 +67,7 @@
       "Date": "2022-01-11T10:37:00",
       "Success": false,
       "NumberAttempts": 1,
-      "Error": "Pagamento j· foi estornado anteriormente"
+      "Error": "Pagamento j√° foi estornado anteriormente"
     }
   ]
 }

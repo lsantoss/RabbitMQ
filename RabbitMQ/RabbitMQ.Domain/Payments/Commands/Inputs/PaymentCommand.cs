@@ -6,7 +6,7 @@ namespace RabbitMQ.Domain.Payments.Commands.Inputs
 {
     public class PaymentCommand : Command
     {
-        public override Guid PaymentId { get; set; }
+        public override Guid PaymentId { get; set; } = Guid.NewGuid();
         public string BarCode { get; set; }
         public decimal Value { get; set; }
         public DateTime Date { get; set; }

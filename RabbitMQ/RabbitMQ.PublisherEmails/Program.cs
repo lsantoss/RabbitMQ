@@ -16,9 +16,9 @@ namespace RabbitMQ.PublisherEmails
 {
     class Program
     {
-        private static readonly string _applicationName = ApplicationName.PublisherEmails;
         private static readonly string _queueName = QueueName.EmailNotifier;
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -91,12 +91,12 @@ namespace RabbitMQ.PublisherEmails
         {
             return emailTemplate switch
             {
-                EEmailTemplate.PaymentSuccess => FileReaderHelper.Read($@"{_basePath}\payload-payment-success.json"),
-                EEmailTemplate.ReversalSuccess => FileReaderHelper.Read($@"{_basePath}\payload-reversal-success.json"),
-                EEmailTemplate.SupportPaymentMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json"),
-                EEmailTemplate.SupportReversalMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json"),
-                EEmailTemplate.SupportPaymentNotFoundForReversal => FileReaderHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileReaderHelper.Read($@"{_basePath}\payload-payment-already-reversed.json"),
+                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_basePath}\payload-payment-success.json"),
+                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_basePath}\payload-reversal-success.json"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\payload-payment-already-reversed.json"),
                 _ => null,
             };
         }

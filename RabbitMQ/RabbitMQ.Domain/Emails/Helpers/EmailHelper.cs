@@ -20,12 +20,12 @@ namespace RabbitMQ.Domain.Emails.Helpers
         {
             return emailTemplate switch
             {
-                EEmailTemplate.PaymentSuccess => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\payment-success.html"),
-                EEmailTemplate.ReversalSuccess => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\reversal-success.html"),
-                EEmailTemplate.SupportPaymentMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\payment-maximum-attempts.html"),
-                EEmailTemplate.SupportReversalMaximumAttempts => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\reversal-maximum-attempts.html"),
-                EEmailTemplate.SupportPaymentNotFoundForReversal => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\payment-not-found-for-reversal.html"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileReaderHelper.Read($@"{_basePath}\Emails\Templates\payment-already-reversed.html"),
+                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-success.html"),
+                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\reversal-success.html"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-maximum-attempts.html"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_basePath}\Emails\Templates\reversal-maximum-attempts.html"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-not-found-for-reversal.html"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-already-reversed.html"),
                 _ => null,
             };
         }

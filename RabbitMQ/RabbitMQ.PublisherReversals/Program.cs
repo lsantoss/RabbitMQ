@@ -16,9 +16,9 @@ namespace RabbitMQ.PublisherReversals
 {
     class Program
     {
-        private static readonly string _applicationName = ApplicationName.PublisherReversals;
         private static readonly string _queueName = QueueName.Reversals;
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IQueueLogRepository _queueLogRepository;
@@ -41,7 +41,7 @@ namespace RabbitMQ.PublisherReversals
             {
                 Console.WriteLine($"Starting Worker {_applicationName} \n");
 
-                var reversalCommandJson = FileReaderHelper.Read($@"{_basePath}\payload.json");
+                var reversalCommandJson = FileHelper.Read($@"{_basePath}\payload.json");
 
                 Console.WriteLine(reversalCommandJson);
 

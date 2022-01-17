@@ -10,8 +10,8 @@ namespace RabbitMQ.EmailNotifier
 {
     class Program
     {
-        private static readonly string _applicationName = ApplicationName.EmailNotifier;
         private static readonly string _queueName = QueueName.EmailNotifier;
+        private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private static readonly IWorkerBase _workerBase;
         private static readonly IRabbitMQService _rabbitMQService;
