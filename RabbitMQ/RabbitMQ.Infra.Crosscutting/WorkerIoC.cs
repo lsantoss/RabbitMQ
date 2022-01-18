@@ -16,6 +16,7 @@ using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using RabbitMQ.Domain.Reversals.Handlers;
 using RabbitMQ.Domain.Reversals.Interfaces.Handlers;
+using RabbitMQ.Domain.Reversals.Interfaces.Repositories;
 using RabbitMQ.Infra.Data.Repositories;
 
 namespace RabbitMQ.Infra.Crosscutting
@@ -45,6 +46,7 @@ namespace RabbitMQ.Infra.Crosscutting
             _ = services.AddScoped<IElmahRepository, ElmahRepository>();
             _ = services.AddScoped<IQueueLogRepository, QueueLogRepository>();
             _ = services.AddScoped<IPaymentRepository, PaymentRepository>();
+            _ = services.AddScoped<IReversalRepository, ReversalRepository>();
 
             #endregion Repositories
 
