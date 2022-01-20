@@ -9,12 +9,12 @@ namespace RabbitMQ.Domain.Reversals.Entities
         public DateTime Date { get; private set; }
         public DateTime CreationDate { get; private set; }
 
-        public Reversal(Guid id, Guid paymentId, DateTime date, DateTime creationDate)
+        public Reversal(Guid paymentId, DateTime date)
         {
-            SetId(id);
+            SetId(Guid.NewGuid());
             SetPaymentId(paymentId);
             SetDate(date);
-            SetCreationDate(creationDate);
+            SetCreationDate(DateTime.Now);
         }
 
         public void SetId(Guid id) => Id = id;

@@ -6,7 +6,9 @@ using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using RabbitMQ.Domain.Reversals.Commands.Inputs;
+using RabbitMQ.Domain.Reversals.Entities;
 using RabbitMQ.Domain.Reversals.Interfaces.Handlers;
+using RabbitMQ.Domain.Reversals.Interfaces.Repositories;
 using System;
 using System.Threading.Tasks;
 
@@ -19,14 +21,17 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
         private readonly IQueueLogRepository _queueLogRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IReversalRepository _reversalRepository;
 
         public ReversalHandler(IRabbitMQService rabbitMQBus,
                                IQueueLogRepository queueLogRepository,
                                IElmahRepository elmahRepository,
-                               IPaymentRepository paymentRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)
+                               IPaymentRepository paymentRepository,
+                               IReversalRepository reversalRepository) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
             _queueLogRepository = queueLogRepository;
             _paymentRepository = paymentRepository;
+            _reversalRepository = reversalRepository;
         }
 
         public async Task HandleAsync(ReversalCommand reversalCommand)
@@ -39,7 +44,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 
                 if (paymentQueryResult == null)
                 {
-                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Pagamento não encontrado na base de dados");
+                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Payment not found in the database");
 
                     SendToEmailQueue(reversalCommand.PaymentId, EEmailTemplate.SupportPaymentNotFoundForReversal);
 
@@ -47,7 +52,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                 }                
                 else if (paymentQueryResult.Reversed)
                 {
-                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Pagamento já foi estornado anteriormente");
+                    await LogQueueAsync(reversalCommand, _applicationName, _currentQueue, "Payment has already been reversed");
 
                     var queueLogs = await _queueLogRepository.ListAsync(reversalCommand.PaymentId);
 
@@ -60,6 +65,9 @@ namespace RabbitMQ.Domain.Reversals.Handlers
                     var payment = paymentQueryResult.MapToPayment();
                     payment.Reverse();
                     await _paymentRepository.UpdateAsync(payment);
+
+                    var reversal = new Reversal(reversalCommand.PaymentId, reversalCommand.Date);
+                    await _reversalRepository.SaveAsync(reversal);
 
                     await LogQueueAsync(reversalCommand, _applicationName, _currentQueue);
                     

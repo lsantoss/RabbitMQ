@@ -1,6 +1,6 @@
 {
   "NumberAttempts": 1,
-  "PaymentId": "5669a1be-b02d-4867-84bb-97cb8446ccdb",
+  "PaymentId": "c391d6bc-82c7-452b-8846-d458c0c7dc5f",
   "EmailTemplate": 3,
   "QueueLogs": [
     {
@@ -23,7 +23,7 @@
       "Date": "2022-01-11T10:51:00",
       "Success": false,
       "NumberAttempts": 1,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payment' invÃÂÃÂ¡lido."
     },
     {
       "Id": 193,
@@ -34,7 +34,7 @@
       "Date": "2022-01-11T10:52:00",
       "Success": false,
       "NumberAttempts": 2,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payment' invÃÂÃÂ¡lido."
     },
     {
       "Id": 194,
@@ -45,7 +45,7 @@
       "Date": "2022-01-11T10:52:00",
       "Success": false,
       "NumberAttempts": 3,
-      "Error": "Nome de objeto 'Payment' inválido."
+      "Error": "Nome de objeto 'Payment' invÃÂÃÂ¡lido."
     }
   ]
 }
