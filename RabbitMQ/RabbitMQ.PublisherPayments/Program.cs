@@ -71,9 +71,9 @@ namespace RabbitMQ.PublisherPayments
             var listPaths = new List<string>()
             {
                 $@"{basePathPublishReversal}\payload.json",
-                $@"{basePathPublisherEmails}\payload-payment-already-reversed.json",
                 $@"{basePathPublisherEmails}\payload-payment-success.json",
                 $@"{basePathPublisherEmails}\payload-reversal-success.json",
+                $@"{basePathPublisherEmails}\payload-support-payment-already-reversed.json",
                 $@"{basePathPublisherEmails}\payload-support-payment-maximum-attempts.json",
                 $@"{basePathPublisherEmails}\payload-support-payment-not-found-for-reversal.json",
                 $@"{basePathPublisherEmails}\payload-support-reversal-maximum-attempts.json"

@@ -96,7 +96,7 @@ namespace RabbitMQ.PublisherEmails
                 EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_basePath}\payload-support-payment-maximum-attempts.json"),
                 EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_basePath}\payload-support-reversal-maximum-attempts.json"),
                 EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_basePath}\payload-support-payment-not-found-for-reversal.json"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\payload-payment-already-reversed.json"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\payload-support-payment-already-reversed.json"),
                 _ => null,
             };
         }
