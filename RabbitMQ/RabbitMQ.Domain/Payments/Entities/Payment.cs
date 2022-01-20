@@ -12,7 +12,7 @@ namespace RabbitMQ.Domain.Payments.Entities
         public string ClientEmail { get; private set; }
         public string ClientCellphone { get; private set; }
         public bool NotifyByEmail { get; private set; }
-        public bool NotifyByCellphone { get; private set; }
+        public bool NotifyBySMS { get; private set; }
         public bool Reversed { get; private set; }
         public DateTime CreationDate { get; private set; }
         public DateTime? ChangeDate { get; private set; }
@@ -25,7 +25,7 @@ namespace RabbitMQ.Domain.Payments.Entities
                        string clientEmail,
                        string clientCellphone,
                        bool notifyByEmail,
-                       bool notifyByCellphone)
+                       bool notifyBySMS)
         {
             SetId(id);
             SetBarCode(barCode);
@@ -35,7 +35,7 @@ namespace RabbitMQ.Domain.Payments.Entities
             SetClientEmail(clientEmail);
             SetClientCellphone(clientCellphone);
             SetNotifyByEmail(notifyByEmail);
-            SetNotifyByCellphone(notifyByCellphone);
+            SetNotifyBySMS(notifyBySMS);
             SetReversed(false);
             SetCreationDate(DateTime.Now);
             SetChangeDate(null);
@@ -49,7 +49,7 @@ namespace RabbitMQ.Domain.Payments.Entities
                        string clientEmail,
                        string clientCellphone,
                        bool notifyByEmail,
-                       bool notifyByCellphone,
+                       bool notifyBySMS,
                        bool reversed,
                        DateTime creationDate,
                        DateTime? changeDate)
@@ -62,7 +62,7 @@ namespace RabbitMQ.Domain.Payments.Entities
             SetClientEmail(clientEmail);
             SetClientCellphone(clientCellphone);
             SetNotifyByEmail(notifyByEmail);
-            SetNotifyByCellphone(notifyByCellphone);
+            SetNotifyBySMS(notifyBySMS);
             SetReversed(reversed);
             SetCreationDate(creationDate);
             SetChangeDate(changeDate);
@@ -82,7 +82,7 @@ namespace RabbitMQ.Domain.Payments.Entities
         public void SetClientEmail(string clientEmail) => ClientEmail = clientEmail;
         public void SetClientCellphone(string clientCellphone) => ClientCellphone = clientCellphone;
         public void SetNotifyByEmail(bool notifyByEmail) => NotifyByEmail = notifyByEmail;
-        public void SetNotifyByCellphone(bool notifyByCellphone) => NotifyByCellphone = notifyByCellphone;
+        public void SetNotifyBySMS(bool notifyBySMS) => NotifyBySMS = notifyBySMS;
         public void SetReversed(bool reversed) => Reversed = reversed;
         public void SetCreationDate(DateTime creationDate) => CreationDate = creationDate;
         public void SetChangeDate(DateTime? changeDate) => ChangeDate = changeDate;

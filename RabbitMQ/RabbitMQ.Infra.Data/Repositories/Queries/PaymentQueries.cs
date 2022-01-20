@@ -11,7 +11,7 @@
                                                 ClientEmail, 
                                                 ClientCellphone, 
                                                 NotifyByEmail, 
-                                                NotifyByCellphone, 
+                                                NotifyBySMS, 
                                                 Reversed,
                                                 CreationDate,
                                                 ChangeDate)
@@ -24,7 +24,7 @@
                                                 @ClientEmail, 
                                                 @ClientCellphone, 
                                                 @NotifyByEmail, 
-                                                @NotifyByCellphone, 
+                                                @NotifyBySMS, 
                                                 @Reversed,
                                                 @CreationDate,
                                                 @ChangeDate);";
@@ -37,7 +37,7 @@
                                                     ClientEmail = @ClientEmail,
                                                     ClientCellphone = @ClientCellphone,
                                                     NotifyByEmail = @NotifyByEmail,
-                                                    NotifyByCellphone = @NotifyByCellphone,
+                                                    NotifyBySMS = @NotifyBySMS,
                                                     Reversed = @Reversed,
                                                     CreationDate = @CreationDate,
                                                     ChangeDate = @ChangeDate 
@@ -52,7 +52,7 @@
                                                 Payment.ClientEmail AS ClientEmail, 
                                                 Payment.ClientCellphone AS ClientCellphone, 
                                                 Payment.NotifyByEmail AS NotifyByEmail, 
-                                                Payment.NotifyByCellphone AS NotifyByCellphone, 
+                                                Payment.NotifyBySMS AS NotifyBySMS, 
                                                 Payment.Reversed AS Reversed,
                                                 Payment.CreationDate AS CreationDate,
                                                 Payment.ChangeDate AS ChangeDate

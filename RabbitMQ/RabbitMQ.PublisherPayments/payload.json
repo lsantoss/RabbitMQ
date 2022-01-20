@@ -6,6 +6,6 @@
   "ClientEmail": "l_santos@hotmail.com.br",
   "ClientCellphone": "+5532988888888",
   "NotifyByEmail": true,
-  "NotifyByCellphone": false,
+  "NotifyBySMS": false,
   "NumberAttempts": 1
 }

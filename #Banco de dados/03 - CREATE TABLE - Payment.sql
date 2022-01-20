@@ -11,7 +11,7 @@ BEGIN
 		[ClientEmail] [nvarchar](100) NOT NULL,
 		[ClientCellphone] [nvarchar](50) NOT NULL,
 		[NotifyByEmail] [tinyint] NOT NULL,
-		[NotifyByCellphone] [tinyint] NOT NULL,
+		[NotifyBySMS] [tinyint] NOT NULL,
 		[Reversed] [tinyint] NOT NULL,
 		[CreationDate] [smalldatetime] NOT NULL,
 		[ChangeDate] [smalldatetime] NULL,

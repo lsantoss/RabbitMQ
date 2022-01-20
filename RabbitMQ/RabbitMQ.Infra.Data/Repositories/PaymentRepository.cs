@@ -7,7 +7,6 @@ using RabbitMQ.Infra.Data.Repositories.Queries;
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RabbitMQ.Infra.Data.Repositories
@@ -32,7 +31,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("ClientEmail", payment.ClientEmail, DbType.String);
             _parameters.Add("ClientCellphone", payment.ClientCellphone, DbType.String);
             _parameters.Add("NotifyByEmail", payment.NotifyByEmail, DbType.Boolean);
-            _parameters.Add("NotifyByCellphone", payment.NotifyByCellphone, DbType.Boolean);
+            _parameters.Add("NotifyBySMS", payment.NotifyBySMS, DbType.Boolean);
             _parameters.Add("Reversed", payment.Reversed, DbType.Boolean);
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);
@@ -52,7 +51,7 @@ namespace RabbitMQ.Infra.Data.Repositories
             _parameters.Add("ClientEmail", payment.ClientEmail, DbType.String);
             _parameters.Add("ClientCellphone", payment.ClientCellphone, DbType.String);
             _parameters.Add("NotifyByEmail", payment.NotifyByEmail, DbType.Boolean);
-            _parameters.Add("NotifyByCellphone", payment.NotifyByCellphone, DbType.Boolean);
+            _parameters.Add("NotifyBySMS", payment.NotifyBySMS, DbType.Boolean);
             _parameters.Add("Reversed", payment.Reversed, DbType.Boolean);
             _parameters.Add("CreationDate", payment.CreationDate, DbType.DateTime);
             _parameters.Add("ChangeDate", payment.ChangeDate, DbType.DateTime);

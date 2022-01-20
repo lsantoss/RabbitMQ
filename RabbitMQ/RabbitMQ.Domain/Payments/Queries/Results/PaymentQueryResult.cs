@@ -13,12 +13,12 @@ namespace RabbitMQ.Domain.Payments.Queries.Results
         public string ClientEmail { get; set; }
         public string ClientCellphone { get; set; }
         public bool NotifyByEmail { get; set; }
-        public bool NotifyByCellphone { get; set; }
+        public bool NotifyBySMS { get; set; }
         public bool Reversed { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? ChangeDate { get; set; }
 
         public Payment MapToPayment() => new(Id, BarCode, Value, Date, ClientName, ClientEmail, ClientCellphone,
-                                             NotifyByEmail, NotifyByCellphone, Reversed, CreationDate, ChangeDate);
+                                             NotifyByEmail, NotifyBySMS, Reversed, CreationDate, ChangeDate);
     }
 }

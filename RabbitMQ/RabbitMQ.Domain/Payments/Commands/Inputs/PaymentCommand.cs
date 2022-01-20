@@ -14,10 +14,10 @@ namespace RabbitMQ.Domain.Payments.Commands.Inputs
         public string ClientEmail { get; set; }
         public string ClientCellphone { get; set; }
         public bool NotifyByEmail { get; set; }
-        public bool NotifyByCellphone { get; set; }
+        public bool NotifyBySMS { get; set; }
         public override byte NumberAttempts { get; set; }
 
-        public Payment MapToPayment() => new(PaymentId, BarCode, Value, Date, ClientName, ClientEmail, ClientCellphone, NotifyByEmail, NotifyByCellphone);
+        public Payment MapToPayment() => new(PaymentId, BarCode, Value, Date, ClientName, ClientEmail, ClientCellphone, NotifyByEmail, NotifyBySMS);
 
         public override void AddNumberAttempt() => NumberAttempts++;
     }

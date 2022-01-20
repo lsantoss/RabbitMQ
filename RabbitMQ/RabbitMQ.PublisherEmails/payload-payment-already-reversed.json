@@ -1,6 +1,6 @@
 {
   "NumberAttempts": 1,
-  "PaymentId": "c391d6bc-82c7-452b-8846-d458c0c7dc5f",
+  "PaymentId": "6b3299fc-0cae-4b78-8362-e89ca992c811",
   "EmailTemplate": 6,
   "QueueLogs": [
     {
@@ -8,7 +8,7 @@
       "PaymentId": "96c44a6e-f406-47b6-ba70-72c969585461",
       "Worker": "RabbitMQ.PublisherPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Message": "{\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyBySMS\":false,\"NumberAttempts\":1}",
       "Date": "2022-01-19T23:18:00",
       "Success": true,
       "NumberAttempts": 1,
@@ -19,7 +19,7 @@
       "PaymentId": "96c44a6e-f406-47b6-ba70-72c969585461",
       "Worker": "RabbitMQ.ConsumerPayments",
       "Queue": "RabbitMQ.Payments",
-      "Message": "{\"PaymentId\":\"96c44a6e-f406-47b6-ba70-72c969585461\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyByCellphone\":false,\"NumberAttempts\":1}",
+      "Message": "{\"PaymentId\":\"96c44a6e-f406-47b6-ba70-72c969585461\",\"BarCode\":\"82620000000722400970080002614548152002112008\",\"Value\":72.24,\"Date\":\"2021-11-29T12:30:22\",\"ClientName\":\"Lucas Santos\",\"ClientEmail\":\"l_santos@hotmail.com.br\",\"ClientCellphone\":\"+5532988888888\",\"NotifyByEmail\":true,\"NotifyBySMS\":false,\"NumberAttempts\":1}",
       "Date": "2022-01-19T23:18:00",
       "Success": true,
       "NumberAttempts": 1,
