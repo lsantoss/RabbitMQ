@@ -5,9 +5,11 @@ using RabbitMQ.Domain.Core.Emails.Interfaces.Services;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
+using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Emails.Helpers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
+using RabbitMQ.Domain.Payments.Queries.Results;
 using System;
 using System.Threading.Tasks;
 
@@ -39,6 +41,8 @@ namespace RabbitMQ.Domain.Emails.Handlers
             {
                 var paymentQueryResult = await _paymentRepository.GetAsync(emailCommand.PaymentId);
 
+                VerifyPaymentData(paymentQueryResult, emailCommand.EmailTemplate);
+
                 var templateHtml = EmailHelper.GenerateTemplate(emailCommand.EmailTemplate);
 
                 var emailContent = EmailHelper.ChangeKeysForValues(emailCommand.EmailTemplate, templateHtml, paymentQueryResult, emailCommand.QueueLogs);
@@ -61,6 +65,20 @@ namespace RabbitMQ.Domain.Emails.Handlers
             }
 
             Console.WriteLine("Handle finished.\n");
+        }
+
+        private static void VerifyPaymentData(PaymentQueryResult paymentQueryResult, EEmailTemplate emailTemplate)
+        {
+            if (paymentQueryResult == null)
+            {
+                if (emailTemplate != EEmailTemplate.SupportPaymentMaximumAttempts &&
+                    emailTemplate != EEmailTemplate.SupportPaymentNotFoundForReversal)
+                {
+                    Console.WriteLine("An error has occurred. This payment is not registered in our database.");
+                    Console.WriteLine("Handle finished.\n");
+                    return;
+                }
+            }
         }
     }
 }

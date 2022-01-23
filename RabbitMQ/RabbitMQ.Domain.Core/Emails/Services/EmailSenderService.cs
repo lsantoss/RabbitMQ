@@ -10,14 +10,12 @@ namespace RabbitMQ.Domain.Core.Emails.Services
 {
     public class EmailSenderService : IEmailSenderService
     {
-        private readonly string _fromDisplayName;
         private readonly string _fromAdress;
 
         private readonly SmtpClient _smtpClient;
 
         public EmailSenderService(SmtpSettings smtpSettings)
         {
-            _fromDisplayName = smtpSettings.UserDisplayName;
             _fromAdress = smtpSettings.UserName;
 
             _smtpClient = new SmtpClient
@@ -39,7 +37,7 @@ namespace RabbitMQ.Domain.Core.Emails.Services
             {
                 Body = content,
                 Subject = subject,
-                From = new MailAddress(_fromAdress, _fromDisplayName, Encoding.UTF8),
+                From = new MailAddress(_fromAdress, "LS Code", Encoding.UTF8),
 
                 IsBodyHtml = true,
                 Priority = MailPriority.Normal,

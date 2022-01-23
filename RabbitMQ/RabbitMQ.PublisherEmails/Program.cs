@@ -44,7 +44,7 @@ namespace RabbitMQ.PublisherEmails
                 Console.Write("Enter the desired template: ");
                 var emailTemplate = (EEmailTemplate)Convert.ToInt16(Console.ReadLine());
 
-                var emailCommandJson = ReadPayload(emailTemplate);
+                var emailCommandJson = ReadPayloadFile(emailTemplate);
 
                 if (emailCommandJson == null)
                 {
@@ -87,7 +87,7 @@ namespace RabbitMQ.PublisherEmails
             Console.WriteLine();
         }
 
-        private static string ReadPayload(EEmailTemplate emailTemplate)
+        private static string ReadPayloadFile(EEmailTemplate emailTemplate)
         {
             return emailTemplate switch
             {

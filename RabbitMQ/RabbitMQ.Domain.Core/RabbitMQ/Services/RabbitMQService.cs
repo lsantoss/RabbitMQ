@@ -14,11 +14,11 @@ namespace RabbitMQ.Domain.Core.RabbitMQ.Services
 {
     public class RabbitMQService : IRabbitMQService
     {
-        private readonly RabbitMQSettings _rabbitMQSettings;
-        private readonly IElmahRepository _elmahRepository;
-
         private readonly AutoResetEvent _waitHandle;
         private readonly ConnectionFactory _factory;
+
+        private readonly RabbitMQSettings _rabbitMQSettings;
+        private readonly IElmahRepository _elmahRepository;
 
         public RabbitMQService(RabbitMQSettings rabbitMQSettings, IElmahRepository elmahRepository)
         {
