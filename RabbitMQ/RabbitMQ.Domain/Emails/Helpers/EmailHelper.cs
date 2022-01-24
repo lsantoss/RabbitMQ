@@ -76,6 +76,8 @@ namespace RabbitMQ.Domain.Emails.Helpers
             return new List<Attachment>();
         }
 
+
+
         private static string AssignPartialTemplate(string template, EEmailTemplate emailTemplate)
         {
             var css = FileHelper.Read($@"{_cssPath}\style.css");
@@ -127,11 +129,8 @@ namespace RabbitMQ.Domain.Emails.Helpers
             var clientFirstName = payment.ClientName?.Split(" ").First().Trim();
             var value = payment.Value.ToString("C");
             var barcode = PrepareBarcode(payment.BarCode);
-            var paymentDate = payment.Date.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
-            var reversalDate = string.Empty;
-
-            if (payment.ChangeDate != null)
-                reversalDate = payment.ChangeDate.Value.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+            var paymentDate = GetFormattedDate(payment.Date);
+            var reversalDate = GetFormattedDate(payment?.ChangeDate);
 
             if (emailTemplate == EEmailTemplate.PaymentSuccess)
             {
@@ -183,6 +182,8 @@ namespace RabbitMQ.Domain.Emails.Helpers
 
             return template;
         }
+
+        private static string GetFormattedDate(DateTime? date) => date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
 
         private static string PrepareBarcode(string barcode)
         {
