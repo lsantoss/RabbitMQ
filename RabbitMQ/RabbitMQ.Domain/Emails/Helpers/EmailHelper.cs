@@ -13,12 +13,12 @@ namespace RabbitMQ.Domain.Emails.Helpers
     public static class EmailHelper
     {
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
-        private static readonly string _supportDisplayName = EmailContact.SupportDisplayName;
-        private static readonly string _supportEmail = EmailContact.SupportAddress;
+        private static readonly string _supportEmail = EmailContact.LSCodeSupportAddress;
+        private static readonly string _supportDisplayName = EmailContact.LSCodeSupportDisplayName;
 
-        public static string GenerateTemplate(EEmailTemplate emailTemplate)
+        public static string GenerateTemplate(EEmailTemplate emailTemplate, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
         {
-            return emailTemplate switch
+            var template = emailTemplate switch
             {
                 EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-success.html"),
                 EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\reversal-success.html"),
@@ -28,58 +28,14 @@ namespace RabbitMQ.Domain.Emails.Helpers
                 EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-already-reversed.html"),
                 _ => null,
             };
-        }
 
-        public static string ChangeKeysForValues(EEmailTemplate emailTemplate, string templateHtml, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
-        {
-            var dictionary = new Dictionary<string, string>();
-
-            if (payment != null)
+            if (template != null)
             {
-                var id = payment.Id.ToString();
-                var payer = payment.ClientName;
-                var clientFirstName = payment.ClientName?.Split(" ").First().Trim();
-                var value = payment.Value.ToString("C");
-                var date = payment.Date.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
-                var barcode = @$"{payment.BarCode?[..12]}<br>
-                             {payment.BarCode?.Substring(12, 12)}<br>
-                             {payment.BarCode?.Substring(24, 12)}<br>
-                             {payment.BarCode?[36..]}";
-
-                if (emailTemplate == EEmailTemplate.PaymentSuccess)
-                {
-                    dictionary.Add("{#client-first-name#}", clientFirstName);
-                    dictionary.Add("{#id#}", id);
-                    dictionary.Add("{#value#}", value);
-                    dictionary.Add("{#barcode#}", barcode);
-                    dictionary.Add("{#date#}", date);
-                    dictionary.Add("{#payer#}", payer);
-                }
-
-                if (dictionary.ContainsKey("{#client-first-name#}"))
-                    templateHtml = templateHtml.Replace("{#client-first-name#}", dictionary["{#client-first-name#}"]);
-
-                if (dictionary.ContainsKey("{#id#}"))
-                    templateHtml = templateHtml.Replace("{#id#}", dictionary["{#id#}"]);
-
-                if (dictionary.ContainsKey("{#value#}"))
-                    templateHtml = templateHtml.Replace("{#value#}", dictionary["{#value#}"]);
-
-                if (dictionary.ContainsKey("{#barcode#}"))
-                    templateHtml = templateHtml.Replace("{#barcode#}", dictionary["{#barcode#}"]);
-
-                if (dictionary.ContainsKey("{#date#}"))
-                    templateHtml = templateHtml.Replace("{#date#}", dictionary["{#date#}"]);
-
-                if (dictionary.ContainsKey("{#payer#}"))
-                    templateHtml = templateHtml.Replace("{#payer#}", dictionary["{#payer#}"]);
-            }
-            else if (queueLogs != null && queueLogs.Count > 0)
-            {
-
+                template = AssignPartialTemplate(template, emailTemplate);
+                template = AssignVariableValues(template, emailTemplate, payment, queueLogs);
             }
 
-            return templateHtml;
+            return template;
         }
 
         public static string GenerateSubject(EEmailTemplate emailTemplate)
@@ -115,6 +71,101 @@ namespace RabbitMQ.Domain.Emails.Helpers
         public static List<Attachment> GenerateAttachments()
         {
             return new List<Attachment>();
+        }
+
+        private static string AssignPartialTemplate(string template, EEmailTemplate emailTemplate)
+        {
+            var partialTop = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-top.html");
+            template = template.Replace("{#partial-top#}", partialTop);
+
+            switch (emailTemplate)
+            {
+                case EEmailTemplate.PaymentSuccess:
+                case EEmailTemplate.ReversalSuccess:
+                    var partialBottom = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-bottom.html");
+                    return template.Replace("{#partial-bottom#}", partialBottom);
+
+                case EEmailTemplate.SupportPaymentMaximumAttempts:
+                case EEmailTemplate.SupportReversalMaximumAttempts:
+                case EEmailTemplate.SupportPaymentNotFoundForReversal:
+                case EEmailTemplate.SupportPaymentAlreadyReversed:
+                    var partialBottomSupport = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-bottom-support.html");
+                    return template.Replace("{#partial-bottom-support#}", partialBottomSupport);
+
+                default:
+                    return template;
+            }
+        }
+
+        private static string AssignVariableValues(string template, EEmailTemplate emailTemplate, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
+        {
+            if (payment != null)
+            {
+                var dictionary = PrepareKeyDictionary(emailTemplate, payment);
+                template = ChangeKeysForValues(template, dictionary);
+            }
+            else if (queueLogs != null && queueLogs.Count > 0)
+            {
+
+            }
+
+            return template;
+        }
+
+        private static Dictionary<string, string> PrepareKeyDictionary(EEmailTemplate emailTemplate, PaymentQueryResult payment)
+        {
+            Dictionary<string, string> dictionary = new();
+
+            var id = payment.Id.ToString();
+            var payer = payment.ClientName;
+            var clientFirstName = payment.ClientName?.Split(" ").First().Trim();
+            var value = payment.Value.ToString("C");
+            var date = payment.Date.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+            var barcode = PrepareBarcode(payment.BarCode);
+
+            if (emailTemplate == EEmailTemplate.PaymentSuccess)
+            {
+                dictionary.Add("{#title#}", "Payment Made");
+                dictionary.Add("{#client-first-name#}", clientFirstName);
+                dictionary.Add("{#id#}", id);
+                dictionary.Add("{#value#}", value);
+                dictionary.Add("{#barcode#}", barcode);
+                dictionary.Add("{#date#}", date);
+                dictionary.Add("{#payer#}", payer);
+            }
+
+            return dictionary;
+        }
+
+        private static string ChangeKeysForValues(string template, Dictionary<string, string> dictionary)
+        {
+            if (dictionary.ContainsKey("{#client-first-name#}"))
+                template = template.Replace("{#client-first-name#}", dictionary["{#client-first-name#}"]);
+
+            if (dictionary.ContainsKey("{#id#}"))
+                template = template.Replace("{#id#}", dictionary["{#id#}"]);
+
+            if (dictionary.ContainsKey("{#value#}"))
+                template = template.Replace("{#value#}", dictionary["{#value#}"]);
+
+            if (dictionary.ContainsKey("{#barcode#}"))
+                template = template.Replace("{#barcode#}", dictionary["{#barcode#}"]);
+
+            if (dictionary.ContainsKey("{#date#}"))
+                template = template.Replace("{#date#}", dictionary["{#date#}"]);
+
+            if (dictionary.ContainsKey("{#payer#}"))
+                template = template.Replace("{#payer#}", dictionary["{#payer#}"]);
+
+            return template;
+        }
+
+        private static string PrepareBarcode(string barcode)
+        {
+            return @$"{barcode?[..12]}<br>
+                      {barcode?.Substring(12, 12)}<br>
+                      {barcode?.Substring(24, 12)}<br>
+                      {barcode?[36..]}";
         }
     }
 }

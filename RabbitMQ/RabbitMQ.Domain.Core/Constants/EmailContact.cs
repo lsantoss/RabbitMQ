@@ -2,7 +2,8 @@
 {
     public static class EmailContact
     {
-        public static string SupportDisplayName { get; } = "Support LS Code";
-        public static string SupportAddress { get; } = "l.santosfaria7@gmail.com";
+        public static string LSCodeDisplayName { get; } = "LS Code";
+        public static string LSCodeSupportDisplayName { get; } = "Support LS Code";
+        public static string LSCodeSupportAddress { get; } = "l.santosfaria7@gmail.com";
     }
 }
