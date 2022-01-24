@@ -139,6 +139,9 @@ namespace RabbitMQ.Domain.Emails.Helpers
 
         private static string ChangeKeysForValues(string template, Dictionary<string, string> dictionary)
         {
+            if (dictionary.ContainsKey("{#title#}"))
+                template = template.Replace("{#title#}", dictionary["{#title#}"]);
+
             if (dictionary.ContainsKey("{#client-first-name#}"))
                 template = template.Replace("{#client-first-name#}", dictionary["{#client-first-name#}"]);
 
