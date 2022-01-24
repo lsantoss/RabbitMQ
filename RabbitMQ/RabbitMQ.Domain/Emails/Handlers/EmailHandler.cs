@@ -8,6 +8,7 @@ using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Helpers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
+using RabbitMQ.Domain.Reversals.Interfaces.Repositories;
 using System;
 using System.Threading.Tasks;
 
@@ -18,16 +19,19 @@ namespace RabbitMQ.Domain.Emails.Handlers
         private readonly string _currentQueue = QueueName.EmailNotifier;
         private readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
-        private readonly IEmailSenderService _emailSenderService;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IReversalRepository _reversalRepository;
+        private readonly IEmailSenderService _emailSenderService;
 
         public EmailHandler(IRabbitMQService rabbitMQBus,
                             IQueueLogRepository queueLogRepository,
                             IElmahRepository elmahRepository,
                             IPaymentRepository paymentRepository,
+                            IReversalRepository reversalRepository,
                             IEmailSenderService emailSenderService) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
             _paymentRepository = paymentRepository;
+            _reversalRepository = reversalRepository;
             _emailSenderService = emailSenderService;
         }
 
@@ -38,8 +42,10 @@ namespace RabbitMQ.Domain.Emails.Handlers
             try
             {
                 var paymentQueryResult = await _paymentRepository.GetAsync(emailCommand.PaymentId);
+                var reversalQueryResult = await _reversalRepository.GetAsync(emailCommand.PaymentId);
 
-                var emailContent = EmailHelper.GenerateTemplate(emailCommand.EmailTemplate, paymentQueryResult, emailCommand.QueueLogs);
+                var emailContent = EmailHelper.GenerateTemplate(
+                    emailCommand.EmailTemplate, paymentQueryResult, reversalQueryResult, emailCommand.QueueLogs);
 
                 var subject = EmailHelper.GenerateSubject(emailCommand.EmailTemplate);
 

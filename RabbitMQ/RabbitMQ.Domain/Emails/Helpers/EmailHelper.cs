@@ -3,6 +3,7 @@ using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Queries.Results;
+using RabbitMQ.Domain.Reversals.Queries.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
         private static readonly string _htmlPartialPath = $@"{_basePath}\Emails\Templates\Html\Partial";
         private static readonly string _cssPath = $@"{_basePath}\Emails\Templates\Css";
 
-        public static string GenerateTemplate(EEmailTemplate emailTemplate, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
+        public static string GenerateTemplate(EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
         {
             var template = emailTemplate switch
             {
@@ -35,7 +36,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
             if (template != null)
             {
                 template = AssignPartialTemplate(template, emailTemplate);
-                template = AssignVariableValues(template, emailTemplate, payment, queueLogs);
+                template = AssignVariableValues(template, emailTemplate, payment, reversal, queueLogs);
             }
 
             return template;
@@ -105,11 +106,11 @@ namespace RabbitMQ.Domain.Emails.Helpers
             }
         }
 
-        private static string AssignVariableValues(string template, EEmailTemplate emailTemplate, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
+        private static string AssignVariableValues(string template, EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
         {
             if (payment != null)
             {
-                var dictionary = PrepareKeyDictionary(emailTemplate, payment);
+                var dictionary = PrepareKeyDictionary(emailTemplate, payment, reversal);
                 template = ChangeKeysForValues(template, dictionary);
             }
             else if (queueLogs != null && queueLogs.Count > 0)
@@ -120,7 +121,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
             return template;
         }
 
-        private static Dictionary<string, string> PrepareKeyDictionary(EEmailTemplate emailTemplate, PaymentQueryResult payment)
+        private static Dictionary<string, string> PrepareKeyDictionary(EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal)
         {
             Dictionary<string, string> dictionary = new();
 
@@ -130,7 +131,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
             var value = payment.Value.ToString("C");
             var barcode = PrepareBarcode(payment.BarCode);
             var paymentDate = GetFormattedDate(payment.Date);
-            var reversalDate = GetFormattedDate(payment?.ChangeDate);
+            var reversalDate = GetFormattedDate(reversal?.Date);
 
             if (emailTemplate == EEmailTemplate.PaymentSuccess)
             {
@@ -183,7 +184,10 @@ namespace RabbitMQ.Domain.Emails.Helpers
             return template;
         }
 
-        private static string GetFormattedDate(DateTime? date) => date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+        private static string GetFormattedDate(DateTime? date)
+        {
+            return date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+        }
 
         private static string PrepareBarcode(string barcode)
         {

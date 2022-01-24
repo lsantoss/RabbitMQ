@@ -12,5 +12,13 @@
                                                  @PaymentId,
                                                  @Date,
                                                  @CreationDate);";
+
+        public static string Get { get; } = @"SELECT 
+                                                Reversal.Id AS Id, 
+                                                Reversal.PaymentId AS PaymentId,
+                                                Reversal.Date AS Date, 
+                                                Reversal.CreationDate AS CreationDate
+                                              FROM Reversal WITH(NOLOCK)
+                                              WHERE Reversal.PaymentId = @PaymentId";
     }
 }

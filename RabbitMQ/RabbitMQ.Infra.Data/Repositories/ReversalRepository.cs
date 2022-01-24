@@ -2,7 +2,9 @@
 using RabbitMQ.Domain.Core.AppSettings;
 using RabbitMQ.Domain.Reversals.Entities;
 using RabbitMQ.Domain.Reversals.Interfaces.Repositories;
+using RabbitMQ.Domain.Reversals.Queries.Results;
 using RabbitMQ.Infra.Data.Repositories.Queries;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -29,6 +31,15 @@ namespace RabbitMQ.Infra.Data.Repositories
             using var connection = new SqlConnection(_settings.ConnectionString);
 
             await connection.ExecuteAsync(ReversalQueries.Save, _parameters);
+        }
+
+        public async Task<ReversalQueryResult> GetAsync(Guid paymentId)
+        {
+            _parameters.Add("PaymentId", paymentId, DbType.Guid);
+
+            using var connection = new SqlConnection(_settings.ConnectionString);
+
+            return await connection.QueryFirstOrDefaultAsync<ReversalQueryResult>(ReversalQueries.Get, _parameters);
         }
     }
 }
