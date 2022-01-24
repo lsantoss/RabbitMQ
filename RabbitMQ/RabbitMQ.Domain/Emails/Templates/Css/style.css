@@ -1,0 +1,130 @@
+body {
+    font-family: Verdana, serif;
+}
+
+div.main {
+    background-color: #E5E5E5;
+}
+
+div.container {
+    margin: 0px auto;
+    max-width: 600px;
+}
+
+div.header {
+    width: 100%;
+    background-color: #2454a1;
+}
+
+div.brand {
+    width: 100%;
+    height: auto;
+    padding: 20px 20px 20px 50px;
+    color: #FFFFFF;
+    font-size: 80px;
+    font-family: 'Brush Script MT', cursive;
+}
+
+div.title {
+    width: 100%;
+    height: auto;
+    padding: 20px 20px 40px 50px;
+    color: #FFFFFF;
+    font-size: 35px;
+}
+
+div.content-payment-success {
+    width: 100%;
+    height: auto;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-size: 17px;
+}
+
+div.content-payment-success div.client-first-name {
+    padding: 50px 0px 0px 50px;
+    color: #2454a1;
+    font-size: 30px;
+}
+
+div.content-payment-success div.action {
+    padding: 30px 0px 0px 50px;
+}
+
+div.content-payment-success div.subtitle {
+    padding: 30px 0px 0px 100px;
+    font-weight: bolder;
+}
+
+div.content-payment-success div.subtitle-values {
+    padding: 15px 0px 0px 100px;
+}
+
+div.content-payment-success div.payment-schedules {
+    padding: 30px 50px 50px 50px;
+    text-align: justify;
+}
+
+div.footer {
+    width: 100%;
+    height: auto;
+    background-color: #181818;
+    color: #FFFFFF;
+    font-size: 15px;
+}
+
+div.footer-title {
+    padding: 30px 50px 20px 50px;
+    font-size: 35px;
+}
+
+div.footer-text {
+    padding: 30px 50px 0px 50px;
+    text-align: justify;
+}
+
+div.footer-social-networks {
+    padding: 30px 50px 0px 50px;
+    display: inline-flex;
+}
+
+a.footer-social-networks {
+    padding: 10px 20px 10px 0px;
+    display: inline-flex;
+}
+
+img.footer-social-networks {
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    display: block;
+}
+
+div.footer-unscribe {
+    padding: 30px 50px 40px 50px;
+    font-size: 10px;
+}
+
+a.footer-unscribe {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+div.support-footer {
+    width: 100%;
+    height: auto;
+    background-color: #181818;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding-bottom: 40px;
+}
+
+div.support-footer div.footer-title {
+    padding: 30px 50px 20px 50px;
+    font-size: 35px;
+}
+
+div.support-footer div.footer-text {
+    padding: 30px 50px 0px 50px;
+    text-align: justify;
+}

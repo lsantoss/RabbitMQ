@@ -12,20 +12,23 @@ namespace RabbitMQ.Domain.Emails.Helpers
 {
     public static class EmailHelper
     {
-        private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _supportEmail = EmailContact.LSCodeSupportAddress;
         private static readonly string _supportDisplayName = EmailContact.LSCodeSupportDisplayName;
+        private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _htmlMainPath = $@"{_basePath}\Emails\Templates\Html\Main";
+        private static readonly string _htmlPartialPath = $@"{_basePath}\Emails\Templates\Html\Partial";
+        private static readonly string _cssPath = $@"{_basePath}\Emails\Templates\Css";
 
         public static string GenerateTemplate(EEmailTemplate emailTemplate, PaymentQueryResult payment, List<QueueLogQueryResult> queueLogs)
         {
             var template = emailTemplate switch
             {
-                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-success.html"),
-                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_basePath}\Emails\Templates\reversal-success.html"),
-                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-maximum-attempts.html"),
-                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_basePath}\Emails\Templates\reversal-maximum-attempts.html"),
-                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-not-found-for-reversal.html"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_basePath}\Emails\Templates\payment-already-reversed.html"),
+                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_htmlMainPath}\payment-success.html"),
+                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_htmlMainPath}\reversal-success.html"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\payment-maximum-attempts.html"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\reversal-maximum-attempts.html"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_htmlMainPath}\payment-not-found-for-reversal.html"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_htmlMainPath}\payment-already-reversed.html"),
                 _ => null,
             };
 
@@ -75,22 +78,25 @@ namespace RabbitMQ.Domain.Emails.Helpers
 
         private static string AssignPartialTemplate(string template, EEmailTemplate emailTemplate)
         {
-            var partialTop = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-top.html");
-            template = template.Replace("{#partial-top#}", partialTop);
+            var css = FileHelper.Read($@"{_cssPath}\style.css");
+            template = template.Replace("{#css-style#}", css);
+
+            var partialHeader = FileHelper.Read($@"{_htmlPartialPath}\header.html");
+            template = template.Replace("{#partial-header#}", partialHeader);
 
             switch (emailTemplate)
             {
                 case EEmailTemplate.PaymentSuccess:
                 case EEmailTemplate.ReversalSuccess:
-                    var partialBottom = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-bottom.html");
-                    return template.Replace("{#partial-bottom#}", partialBottom);
+                    var partialFooter = FileHelper.Read($@"{_htmlPartialPath}\footer.html");
+                    return template.Replace("{#partial-footer#}", partialFooter);
 
                 case EEmailTemplate.SupportPaymentMaximumAttempts:
                 case EEmailTemplate.SupportReversalMaximumAttempts:
                 case EEmailTemplate.SupportPaymentNotFoundForReversal:
                 case EEmailTemplate.SupportPaymentAlreadyReversed:
-                    var partialBottomSupport = FileHelper.Read($@"{_basePath}\Emails\Templates\partial-bottom-support.html");
-                    return template.Replace("{#partial-bottom-support#}", partialBottomSupport);
+                    var partialFooterSupport = FileHelper.Read($@"{_htmlPartialPath}\footer-support.html");
+                    return template.Replace("{#partial-footer-support#}", partialFooterSupport);
 
                 default:
                     return template;

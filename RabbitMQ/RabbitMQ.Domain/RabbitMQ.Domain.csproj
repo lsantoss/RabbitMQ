@@ -5,9 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Emails\Templates\partial-bottom-support.html" />
-    <None Remove="Emails\Templates\partial-bottom.html" />
-    <None Remove="Emails\Templates\partial-top.html" />
+    <None Remove="Emails\Templates\Css\style.css" />
+    <None Remove="Emails\Templates\Html\Partial\footer-support.html" />
+    <None Remove="Emails\Templates\partial-bottom - Cópia.html" />
+    <None Remove="Emails\Templates\partial-top - Cópia.html" />
     <None Remove="Emails\Templates\payment-already-reversed.html" />
     <None Remove="Emails\Templates\reversal-success.html" />
     <None Remove="Emails\Templates\support-payment-maximum-attempts.html" />
@@ -16,19 +17,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Emails\Templates\partial-bottom-support.html">
+    <Content Include="Emails\Templates\Css\style.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\partial-bottom.html">
+    <Content Include="Emails\Templates\Html\Partial\footer.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\partial-top.html">
+    <Content Include="Emails\Templates\Html\Partial\footer-support.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emails\Templates\Html\Partial\header.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Emails\Templates\payment-already-reversed.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\payment-success.html">
+    <Content Include="Emails\Templates\Html\Main\payment-success.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Emails\Templates\reversal-success.html">
