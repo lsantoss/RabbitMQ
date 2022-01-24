@@ -35,7 +35,7 @@
     <Content Include="Emails\Templates\Html\Main\payment-success.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\reversal-success.html">
+    <Content Include="Emails\Templates\Html\Main\reversal-success.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Emails\Templates\support-payment-maximum-attempts.html">
@@ -51,6 +51,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Emails\Templates\teste.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

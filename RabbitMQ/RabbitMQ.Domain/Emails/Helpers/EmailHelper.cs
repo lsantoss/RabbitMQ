@@ -123,11 +123,15 @@ namespace RabbitMQ.Domain.Emails.Helpers
             Dictionary<string, string> dictionary = new();
 
             var id = payment.Id.ToString();
-            var payer = payment.ClientName;
+            var clientName = payment.ClientName;
             var clientFirstName = payment.ClientName?.Split(" ").First().Trim();
             var value = payment.Value.ToString("C");
-            var date = payment.Date.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
             var barcode = PrepareBarcode(payment.BarCode);
+            var paymentDate = payment.Date.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+            var reversalDate = string.Empty;
+
+            if (payment.ChangeDate != null)
+                reversalDate = payment.ChangeDate.Value.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
 
             if (emailTemplate == EEmailTemplate.PaymentSuccess)
             {
@@ -136,8 +140,16 @@ namespace RabbitMQ.Domain.Emails.Helpers
                 dictionary.Add("{#id#}", id);
                 dictionary.Add("{#value#}", value);
                 dictionary.Add("{#barcode#}", barcode);
-                dictionary.Add("{#date#}", date);
-                dictionary.Add("{#payer#}", payer);
+                dictionary.Add("{#payment-date#}", paymentDate);
+                dictionary.Add("{#client-name#}", clientName);
+            }
+            else if (emailTemplate == EEmailTemplate.ReversalSuccess)
+            {
+                dictionary.Add("{#title#}", "Reversal Made");
+                dictionary.Add("{#client-first-name#}", clientFirstName);
+                dictionary.Add("{#id#}", id);
+                dictionary.Add("{#value#}", value);
+                dictionary.Add("{#reversal-date#}", reversalDate);
             }
 
             return dictionary;
@@ -160,11 +172,14 @@ namespace RabbitMQ.Domain.Emails.Helpers
             if (dictionary.ContainsKey("{#barcode#}"))
                 template = template.Replace("{#barcode#}", dictionary["{#barcode#}"]);
 
-            if (dictionary.ContainsKey("{#date#}"))
-                template = template.Replace("{#date#}", dictionary["{#date#}"]);
+            if (dictionary.ContainsKey("{#payment-date#}"))
+                template = template.Replace("{#payment-date#}", dictionary["{#payment-date#}"]);
 
-            if (dictionary.ContainsKey("{#payer#}"))
-                template = template.Replace("{#payer#}", dictionary["{#payer#}"]);
+            if (dictionary.ContainsKey("{#client-name#}"))
+                template = template.Replace("{#client-name#}", dictionary["{#client-name#}"]);
+
+            if (dictionary.ContainsKey("{#reversal-date#}"))
+                template = template.Replace("{#reversal-date#}", dictionary["{#reversal-date#}"]);
 
             return template;
         }
