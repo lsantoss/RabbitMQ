@@ -25,10 +25,10 @@ namespace RabbitMQ.Domain.Emails.Helpers
             {
                 EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_htmlMainPath}\payment-success.html"),
                 EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_htmlMainPath}\reversal-success.html"),
-                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\payment-maximum-attempts.html"),
-                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\reversal-maximum-attempts.html"),
-                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_htmlMainPath}\payment-not-found-for-reversal.html"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_htmlMainPath}\payment-already-reversed.html"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-payment-maximum-attempts.html"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-reversal-maximum-attempts.html"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_htmlMainPath}\support-payment-not-found-for-reversal.html"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_htmlMainPath}\support-payment-already-reversed.html"),
                 _ => null,
             };
 
