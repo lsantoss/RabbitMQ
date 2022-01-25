@@ -16,7 +16,7 @@
                     Hi, we detected a problem
                 </div>
                 <div class="action">
-                    We have detected a chargeback attempt on a payment that does not exist in our database.
+                    We have detected that one of our payments has reached the maximum number of possible processing attempts.
                 </div>
                 <div class="subtitle">
                     Payment identifier
@@ -24,8 +24,12 @@
                 <div class="subtitle-values">
                     {#paymentId#}
                 </div>
-                <br />
-                <br />
+                <div class="subtitle">
+                    Queue Log Information
+                </div>
+                <div class="queue-log">
+                    {#queue-log-information#}
+                </div>
             </div>
 
             {#partial-footer-support#}

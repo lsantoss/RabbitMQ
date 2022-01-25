@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Text;
 
 namespace RabbitMQ.Domain.Emails.Helpers
 {
@@ -121,7 +122,8 @@ namespace RabbitMQ.Domain.Emails.Helpers
             var value = string.Empty;
             var barcode = string.Empty;
             var paymentDate = string.Empty;
-            var reversalDate = string.Empty;
+            var reversalDate = string.Empty; 
+            var queueLogInformation = string.Empty;
 
             if (payment != null)
             {
@@ -133,21 +135,17 @@ namespace RabbitMQ.Domain.Emails.Helpers
             }
 
             if (reversal != null)
-            {
                 reversalDate = GetFormattedDate(reversal.Date);
-            }
 
             if (queueLogs != null && queueLogs.Count > 0)
-            {
-
-            }
+                queueLogInformation = GetFormattedQueueLogInformation(queueLogs);
 
             switch (emailCommand.EmailTemplate)
             {
                 case EEmailTemplate.PaymentSuccess:
                     template = template.Replace("{#title#}", "Payment Made");
-                    template = template.Replace("{#client-first-name#}", clientFirstName);
                     template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#client-first-name#}", clientFirstName);
                     template = template.Replace("{#value#}", value);
                     template = template.Replace("{#barcode#}", barcode);
                     template = template.Replace("{#payment-date#}", paymentDate);
@@ -156,13 +154,16 @@ namespace RabbitMQ.Domain.Emails.Helpers
 
                 case EEmailTemplate.ReversalSuccess:
                     template = template.Replace("{#title#}", "Reversal Made");
-                    template = template.Replace("{#client-first-name#}", clientFirstName);
                     template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#client-first-name#}", clientFirstName);
                     template = template.Replace("{#value#}", value);
                     template = template.Replace("{#reversal-date#}", reversalDate);
                     break;
 
                 case EEmailTemplate.SupportPaymentMaximumAttempts:
+                    template = template.Replace("{#title#}", "Payment Reached Maximum Attempts");
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
                     break;
 
                 case EEmailTemplate.SupportReversalMaximumAttempts:
@@ -178,29 +179,45 @@ namespace RabbitMQ.Domain.Emails.Helpers
             }
 
             return template;
+        }        
+
+        private static string GetFormattedQueueLogInformation(List<QueueLogQueryResult> queueLogs)
+        {
+            var stringBuilder = new StringBuilder();
+            var indice = 0;
+
+            foreach (var item in queueLogs)
+            {
+                stringBuilder.AppendLine($"Id: {item.Id} <br />");
+                stringBuilder.AppendLine($"Worker: {item.Worker} <br />");
+                stringBuilder.AppendLine($"Queue: {item.Queue} <br />");
+                stringBuilder.AppendLine($"Date: {GetFormattedDate(item.Date)} <br />");
+                stringBuilder.AppendLine($"Success: {GetFormattedSuccess(item.Success)} <br />");
+                stringBuilder.AppendLine($"NumberAttempts: {item.NumberAttempts} <br />");
+
+                if (!item.Success)
+                    stringBuilder.AppendLine($"Error: {item.Error} <br />");
+
+                indice++;
+                if (indice < queueLogs.Count)
+                    stringBuilder.AppendLine($"<hr class='queue-log' />");
+
+            }
+
+            return stringBuilder.ToString();
         }
 
-        private static string GetFormattedMonetaryValue(decimal value)
-        {
-            return value.ToString("C");
-        }
+        private static string GetFormattedSuccess(bool value) => value ? "Yes" : "No";
 
-        private static string GetClientFirstName(string clientName)
-        {
-            return clientName?.Split(" ").First().Trim();
-        }
+        private static string GetFormattedMonetaryValue(decimal value) => value.ToString("C");
 
-        private static string GetFormattedDate(DateTime? date)
-        {
-            return date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
-        }
+        private static string GetClientFirstName(string clientName) => clientName?.Split(" ").First().Trim();
 
-        private static string GetFormattedBarcode(string barcode)
-        {
-            return @$"{barcode?[..12]}<br>
-                      {barcode?.Substring(12, 12)}<br>
-                      {barcode?.Substring(24, 12)}<br>
-                      {barcode?[36..]}";
-        }
+        private static string GetFormattedDate(DateTime? date) => date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
+
+        private static string GetFormattedBarcode(string barcode) => @$"{barcode?[..12]}<br>
+                                                                        {barcode?.Substring(12, 12)}<br>
+                                                                        {barcode?.Substring(24, 12)}<br>
+                                                                        {barcode?[36..]}";
     }
 }

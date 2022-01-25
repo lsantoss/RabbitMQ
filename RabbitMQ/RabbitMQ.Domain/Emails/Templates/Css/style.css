@@ -33,6 +33,14 @@ div.title {
     font-size: 35px;
 }
 
+div.long-title {
+    width: 100%;
+    height: auto;
+    padding: 20px 20px 40px 50px;
+    color: #FFFFFF;
+    font-size: 26px;
+}
+
 div.content {
     width: 100%;
     height: auto;
@@ -60,7 +68,19 @@ div.subtitle-values {
     padding: 15px 0px 0px 100px;
 }
 
-div.payment-schedules {
+div.queue-log {
+    padding: 15px 0px 40px 100px;
+}
+
+hr.queue-log {
+    margin-right: 30px;
+    background-color: #000000;
+    border-color: #000000;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+div.information {
     padding: 30px 50px 50px 50px;
     text-align: justify;
 }
@@ -84,7 +104,7 @@ div.support-footer {
 
 div.footer-title {
     padding: 30px 50px 20px 50px;
-    font-size: 35px;
+    font-size: 30px;
 }
 
 div.footer-text {

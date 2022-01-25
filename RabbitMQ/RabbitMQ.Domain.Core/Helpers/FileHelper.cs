@@ -24,7 +24,7 @@ namespace RabbitMQ.Domain.Core.Helpers
         public static void SaveObjectToJson(string filePath, object obj)
         {
             var json = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            using var streamWriter = new StreamWriter(filePath);
+            using var streamWriter = new StreamWriter(filePath, false, _encoding);
             streamWriter.WriteLine(json);
         }
     }

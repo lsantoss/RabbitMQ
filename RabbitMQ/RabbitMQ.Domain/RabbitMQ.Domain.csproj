@@ -38,7 +38,7 @@
     <Content Include="Emails\Templates\Html\Main\reversal-success.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\support-payment-maximum-attempts.html">
+    <Content Include="Emails\Templates\Html\Main\support-payment-maximum-attempts.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Emails\Templates\Html\Main\support-payment-not-found-for-reversal.html">
