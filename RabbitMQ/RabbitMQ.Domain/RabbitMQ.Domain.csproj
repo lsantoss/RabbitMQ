@@ -29,7 +29,7 @@
     <Content Include="Emails\Templates\Html\Partial\header.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\support-payment-already-reversed.html">
+    <Content Include="Emails\Templates\Html\Main\support-payment-already-reversed.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Emails\Templates\Html\Main\payment-success.html">
@@ -44,19 +44,13 @@
     <Content Include="Emails\Templates\Html\Main\support-payment-not-found-for-reversal.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\support-reversal-maximum-attempts.html">
+    <Content Include="Emails\Templates\Html\Main\support-reversal-maximum-attempts.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Emails\Templates\teste.html">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

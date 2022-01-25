@@ -122,6 +122,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
             var value = string.Empty;
             var barcode = string.Empty;
             var paymentDate = string.Empty;
+            var reversalId = string.Empty;
             var reversalDate = string.Empty; 
             var queueLogInformation = string.Empty;
 
@@ -135,7 +136,10 @@ namespace RabbitMQ.Domain.Emails.Helpers
             }
 
             if (reversal != null)
+            {
+                reversalId = reversal.Id.ToString();
                 reversalDate = GetFormattedDate(reversal.Date);
+            }
 
             if (queueLogs != null && queueLogs.Count > 0)
                 queueLogInformation = GetFormattedQueueLogInformation(queueLogs);
@@ -167,6 +171,9 @@ namespace RabbitMQ.Domain.Emails.Helpers
                     break;
 
                 case EEmailTemplate.SupportReversalMaximumAttempts:
+                    template = template.Replace("{#title#}", "Reversal Reached Maximum Attempts");
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
                     break;
 
                 case EEmailTemplate.SupportPaymentNotFoundForReversal:
@@ -175,6 +182,10 @@ namespace RabbitMQ.Domain.Emails.Helpers
                     break;
 
                 case EEmailTemplate.SupportPaymentAlreadyReversed:
+                    template = template.Replace("{#title#}", "Payment Already Reversed");
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#reversalId#}", reversalId);
+                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
                     break;
             }
 
