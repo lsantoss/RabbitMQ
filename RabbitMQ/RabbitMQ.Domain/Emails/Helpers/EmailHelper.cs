@@ -132,9 +132,14 @@ namespace RabbitMQ.Domain.Emails.Helpers
                 paymentDate = GetFormattedDate(payment.Date);
             }
 
-            if (reversalDate != null)
+            if (reversal != null)
             {
-                reversalDate = GetFormattedDate(reversal?.Date);
+                reversalDate = GetFormattedDate(reversal.Date);
+            }
+
+            if (queueLogs != null && queueLogs.Count > 0)
+            {
+
             }
 
             switch (emailCommand.EmailTemplate)
