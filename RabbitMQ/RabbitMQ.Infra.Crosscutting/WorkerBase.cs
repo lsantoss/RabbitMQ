@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Domain.Core.Enums;
 
 namespace RabbitMQ.Infra.Crosscutting
 {
@@ -10,7 +9,7 @@ namespace RabbitMQ.Infra.Crosscutting
         private readonly IConfiguration _configuration;
         private readonly ServiceProvider _serviceProvider;
 
-        public WorkerBase(EApplication application)
+        public WorkerBase()
         {
             _services = new ServiceCollection();
 
@@ -18,7 +17,7 @@ namespace RabbitMQ.Infra.Crosscutting
 
             _ = _services.AddSingleton(_configuration);
 
-            _ = WorkerIoC.AddWorkerServices(_services, _configuration, application);
+            _ = WorkerIoC.AddWorkerServices(_services, _configuration);
 
             _serviceProvider = _services.BuildServiceProvider();
         }

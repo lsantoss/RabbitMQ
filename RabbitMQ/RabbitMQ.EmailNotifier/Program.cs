@@ -1,5 +1,4 @@
 ﻿using RabbitMQ.Domain.Core.Constants;
-using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
@@ -19,7 +18,7 @@ namespace RabbitMQ.EmailNotifier
 
         static Program()
         {
-            _workerBase = new WorkerBase(EApplication.EmailNotifier);
+            _workerBase = new WorkerBase();
             _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
             _handler = _workerBase.GetService<IEmailHandler>();
         }

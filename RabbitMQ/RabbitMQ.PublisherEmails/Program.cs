@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Elmah.Interfaces.Repository;
-using RabbitMQ.Domain.Core.Enums;
 using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs.Entities;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
@@ -27,7 +26,7 @@ namespace RabbitMQ.PublisherEmails
 
         static Program()
         {
-            _workerBase = new WorkerBase(EApplication.PublisherEmails);
+            _workerBase = new WorkerBase();
             _queueLogRepository = _workerBase.GetService<IQueueLogRepository>();
             _elmahRepository = _workerBase.GetService<IElmahRepository>();
             _rabbitMQService = _workerBase.GetService<IRabbitMQService>();
