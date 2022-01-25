@@ -147,50 +147,45 @@ namespace RabbitMQ.Domain.Emails.Helpers
             switch (emailCommand.EmailTemplate)
             {
                 case EEmailTemplate.PaymentSuccess:
-                    template = template.Replace("{#title#}", "Payment Made");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    template = template.Replace("{#client-first-name#}", clientFirstName);
-                    template = template.Replace("{#value#}", value);
-                    template = template.Replace("{#barcode#}", barcode);
-                    template = template.Replace("{#payment-date#}", paymentDate);
-                    template = template.Replace("{#client-name#}", clientName);
-                    break;
+                    return template.Replace("{#title#}", "Payment Made")
+                                   .Replace("{#paymentId#}", paymentId)
+                                   .Replace("{#client-first-name#}", clientFirstName)
+                                   .Replace("{#value#}", value)
+                                   .Replace("{#barcode#}", barcode)
+                                   .Replace("{#payment-date#}", paymentDate)
+                                   .Replace("{#client-name#}", clientName);
 
                 case EEmailTemplate.ReversalSuccess:
-                    template = template.Replace("{#title#}", "Reversal Made");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    template = template.Replace("{#client-first-name#}", clientFirstName);
-                    template = template.Replace("{#value#}", value);
-                    template = template.Replace("{#reversal-date#}", reversalDate);
-                    break;
+                    return template.Replace("{#title#}", "Reversal Made")
+                                   .Replace("{#paymentId#}", paymentId)
+                                   .Replace("{#client-first-name#}", clientFirstName)
+                                   .Replace("{#value#}", value)
+                                   .Replace("{#reversal-date#}", reversalDate);
 
                 case EEmailTemplate.SupportPaymentMaximumAttempts:
-                    template = template.Replace("{#title#}", "Payment Reached Maximum Attempts");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
-                    break;
+                    return template.Replace("{#title#}", "Payment Reached Maximum Attempts")
+                                   .Replace("{#paymentId#}", paymentId)
+                                   .Replace("{#queue-log-information#}", queueLogInformation);
 
                 case EEmailTemplate.SupportReversalMaximumAttempts:
-                    template = template.Replace("{#title#}", "Reversal Reached Maximum Attempts");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
-                    break;
+                    return template.Replace("{#title#}", "Reversal Reached Maximum Attempts")
+                                   .Replace("{#paymentId#}", paymentId)
+                                   .Replace("{#queue-log-information#}", queueLogInformation);
 
                 case EEmailTemplate.SupportPaymentNotFoundForReversal:
-                    template = template.Replace("{#title#}", "Payment Not Found For Reversal");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    break;
+                    return template.Replace("{#title#}", "Payment Not Found For Reversal")
+                                   .Replace("{#paymentId#}", paymentId);
 
                 case EEmailTemplate.SupportPaymentAlreadyReversed:
-                    template = template.Replace("{#title#}", "Payment Already Reversed");
-                    template = template.Replace("{#paymentId#}", paymentId);
-                    template = template.Replace("{#reversalId#}", reversalId);
-                    template = template.Replace("{#queue-log-information#}", queueLogInformation);
-                    break;
-            }
+                    return template.Replace("{#title#}", "Payment Already Reversed")
+                                   .Replace("{#paymentId#}", paymentId)
+                                   .Replace("{#reversalId#}", reversalId)
+                                   .Replace("{#queue-log-information#}", queueLogInformation);
 
-            return template;
-        }        
+                default:
+                    return template;
+            }
+        }
 
         private static string GetFormattedQueueLogInformation(List<QueueLogQueryResult> queueLogs)
         {
@@ -199,6 +194,8 @@ namespace RabbitMQ.Domain.Emails.Helpers
 
             foreach (var item in queueLogs)
             {
+                indice++;
+
                 stringBuilder.AppendLine($"Id: {item.Id} <br />");
                 stringBuilder.AppendLine($"Worker: {item.Worker} <br />");
                 stringBuilder.AppendLine($"Queue: {item.Queue} <br />");
@@ -206,13 +203,11 @@ namespace RabbitMQ.Domain.Emails.Helpers
                 stringBuilder.AppendLine($"Success: {GetFormattedSuccess(item.Success)} <br />");
                 stringBuilder.AppendLine($"NumberAttempts: {item.NumberAttempts} <br />");
 
-                if (!item.Success)
+                if (!item.Success) 
                     stringBuilder.AppendLine($"Error: {item.Error} <br />");
 
-                indice++;
-                if (indice < queueLogs.Count)
+                if (indice < queueLogs.Count) 
                     stringBuilder.AppendLine($"<hr class='queue-log' />");
-
             }
 
             return stringBuilder.ToString();
