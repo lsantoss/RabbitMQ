@@ -45,7 +45,7 @@ namespace RabbitMQ.Domain.Emails.Handlers
                 var reversalQueryResult = await _reversalRepository.GetAsync(emailCommand.PaymentId);
 
                 var emailContent = EmailHelper.GenerateTemplate(
-                    emailCommand.EmailTemplate, paymentQueryResult, reversalQueryResult, emailCommand.QueueLogs);
+                    emailCommand, paymentQueryResult, reversalQueryResult, emailCommand.QueueLogs);
 
                 var subject = EmailHelper.GenerateSubject(emailCommand.EmailTemplate);
 

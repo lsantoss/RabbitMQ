@@ -1,6 +1,7 @@
 ﻿using RabbitMQ.Domain.Core.Constants;
 using RabbitMQ.Domain.Core.Helpers;
 using RabbitMQ.Domain.Core.QueueLogs.Queries.Results;
+using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Payments.Queries.Results;
 using RabbitMQ.Domain.Reversals.Queries.Results;
@@ -20,28 +21,6 @@ namespace RabbitMQ.Domain.Emails.Helpers
         private static readonly string _htmlPartialPath = $@"{_basePath}\Emails\Templates\Html\Partial";
         private static readonly string _cssPath = $@"{_basePath}\Emails\Templates\Css";
 
-        public static string GenerateTemplate(EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
-        {
-            var template = emailTemplate switch
-            {
-                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_htmlMainPath}\payment-success.html"),
-                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_htmlMainPath}\reversal-success.html"),
-                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-payment-maximum-attempts.html"),
-                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-reversal-maximum-attempts.html"),
-                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_htmlMainPath}\support-payment-not-found-for-reversal.html"),
-                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_htmlMainPath}\support-payment-already-reversed.html"),
-                _ => null,
-            };
-
-            if (template != null)
-            {
-                template = AssignPartialTemplate(template, emailTemplate);
-                template = AssignVariableValues(template, emailTemplate, payment, reversal, queueLogs);
-            }
-
-            return template;
-        }
-
         public static string GenerateSubject(EEmailTemplate emailTemplate)
         {
             return emailTemplate switch
@@ -60,12 +39,12 @@ namespace RabbitMQ.Domain.Emails.Helpers
         {
             return emailTemplate switch
             {
-                EEmailTemplate.PaymentSuccess or 
+                EEmailTemplate.PaymentSuccess or
                 EEmailTemplate.ReversalSuccess => (payment.ClientEmail, payment.ClientName),
 
-                EEmailTemplate.SupportPaymentMaximumAttempts or 
-                EEmailTemplate.SupportReversalMaximumAttempts or 
-                EEmailTemplate.SupportPaymentNotFoundForReversal or 
+                EEmailTemplate.SupportPaymentMaximumAttempts or
+                EEmailTemplate.SupportReversalMaximumAttempts or
+                EEmailTemplate.SupportPaymentNotFoundForReversal or
                 EEmailTemplate.SupportPaymentAlreadyReversed => (_supportEmail, _supportDisplayName),
 
                 _ => (null, null),
@@ -77,17 +56,45 @@ namespace RabbitMQ.Domain.Emails.Helpers
             return new List<Attachment>();
         }
 
+        public static string GenerateTemplate(EmailCommand emailCommand, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
+        {
+            var template = emailCommand.EmailTemplate switch
+            {
+                EEmailTemplate.PaymentSuccess => FileHelper.Read($@"{_htmlMainPath}\payment-success.html"),
+                EEmailTemplate.ReversalSuccess => FileHelper.Read($@"{_htmlMainPath}\reversal-success.html"),
+                EEmailTemplate.SupportPaymentMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-payment-maximum-attempts.html"),
+                EEmailTemplate.SupportReversalMaximumAttempts => FileHelper.Read($@"{_htmlMainPath}\support-reversal-maximum-attempts.html"),
+                EEmailTemplate.SupportPaymentNotFoundForReversal => FileHelper.Read($@"{_htmlMainPath}\support-payment-not-found-for-reversal.html"),
+                EEmailTemplate.SupportPaymentAlreadyReversed => FileHelper.Read($@"{_htmlMainPath}\support-payment-already-reversed.html"),
+                _ => null,
+            };
 
+            if (template != null)
+            {
+                template = AssignStyleCss(template);
+                template = AssignPartialHeader(template);
+                template = AssignPartialFooter(template, emailCommand);
+                template = AssignVariableValues(template, emailCommand, payment, reversal, queueLogs);
+            }
 
-        private static string AssignPartialTemplate(string template, EEmailTemplate emailTemplate)
+            return template;
+        }
+
+        private static string AssignStyleCss(string template)
         {
             var css = FileHelper.Read($@"{_cssPath}\style.css");
-            template = template.Replace("{#css-style#}", css);
+            return template.Replace("{#css-style#}", $"<style>{css}</style>");
+        }
 
+        private static string AssignPartialHeader(string template)
+        {
             var partialHeader = FileHelper.Read($@"{_htmlPartialPath}\header.html");
-            template = template.Replace("{#partial-header#}", partialHeader);
+            return template.Replace("{#partial-header#}", partialHeader);
+        }
 
-            switch (emailTemplate)
+        private static string AssignPartialFooter(string template, EmailCommand emailCommand)
+        {
+            switch (emailCommand.EmailTemplate)
             {
                 case EEmailTemplate.PaymentSuccess:
                 case EEmailTemplate.ReversalSuccess:
@@ -106,82 +113,76 @@ namespace RabbitMQ.Domain.Emails.Helpers
             }
         }
 
-        private static string AssignVariableValues(string template, EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
+        private static string AssignVariableValues(string template, EmailCommand emailCommand, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
         {
+            var paymentId = emailCommand.PaymentId.ToString();
+            var clientName = string.Empty;
+            var clientFirstName = string.Empty;
+            var value = string.Empty;
+            var barcode = string.Empty;
+            var paymentDate = string.Empty;
+            var reversalDate = string.Empty;
+
             if (payment != null)
             {
-                var dictionary = PrepareKeyDictionary(emailTemplate, payment, reversal);
-                template = ChangeKeysForValues(template, dictionary);
+                clientName = payment.ClientName;
+                clientFirstName = GetClientFirstName(payment.ClientName);
+                value = GetFormattedMonetaryValue(payment.Value);
+                barcode = GetFormattedBarcode(payment.BarCode);
+                paymentDate = GetFormattedDate(payment.Date);
             }
-            else if (queueLogs != null && queueLogs.Count > 0)
-            {
 
+            if (reversalDate != null)
+            {
+                reversalDate = GetFormattedDate(reversal?.Date);
+            }
+
+            switch (emailCommand.EmailTemplate)
+            {
+                case EEmailTemplate.PaymentSuccess:
+                    template = template.Replace("{#title#}", "Payment Made");
+                    template = template.Replace("{#client-first-name#}", clientFirstName);
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#value#}", value);
+                    template = template.Replace("{#barcode#}", barcode);
+                    template = template.Replace("{#payment-date#}", paymentDate);
+                    template = template.Replace("{#client-name#}", clientName);
+                    break;
+
+                case EEmailTemplate.ReversalSuccess:
+                    template = template.Replace("{#title#}", "Reversal Made");
+                    template = template.Replace("{#client-first-name#}", clientFirstName);
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    template = template.Replace("{#value#}", value);
+                    template = template.Replace("{#reversal-date#}", reversalDate);
+                    break;
+
+                case EEmailTemplate.SupportPaymentMaximumAttempts:
+                    break;
+
+                case EEmailTemplate.SupportReversalMaximumAttempts:
+                    break;
+
+                case EEmailTemplate.SupportPaymentNotFoundForReversal:
+                    template = template.Replace("{#title#}", "Payment Not Found For Reversal");
+                    template = template.Replace("{#paymentId#}", paymentId);
+                    break;
+
+                case EEmailTemplate.SupportPaymentAlreadyReversed:
+                    break;
             }
 
             return template;
         }
 
-        private static Dictionary<string, string> PrepareKeyDictionary(EEmailTemplate emailTemplate, PaymentQueryResult payment, ReversalQueryResult reversal)
+        private static string GetFormattedMonetaryValue(decimal value)
         {
-            Dictionary<string, string> dictionary = new();
-
-            var id = payment.Id.ToString();
-            var clientName = payment.ClientName;
-            var clientFirstName = payment.ClientName?.Split(" ").First().Trim();
-            var value = payment.Value.ToString("C");
-            var barcode = PrepareBarcode(payment.BarCode);
-            var paymentDate = GetFormattedDate(payment.Date);
-            var reversalDate = GetFormattedDate(reversal?.Date);
-
-            if (emailTemplate == EEmailTemplate.PaymentSuccess)
-            {
-                dictionary.Add("{#title#}", "Payment Made");
-                dictionary.Add("{#client-first-name#}", clientFirstName);
-                dictionary.Add("{#id#}", id);
-                dictionary.Add("{#value#}", value);
-                dictionary.Add("{#barcode#}", barcode);
-                dictionary.Add("{#payment-date#}", paymentDate);
-                dictionary.Add("{#client-name#}", clientName);
-            }
-            else if (emailTemplate == EEmailTemplate.ReversalSuccess)
-            {
-                dictionary.Add("{#title#}", "Reversal Made");
-                dictionary.Add("{#client-first-name#}", clientFirstName);
-                dictionary.Add("{#id#}", id);
-                dictionary.Add("{#value#}", value);
-                dictionary.Add("{#reversal-date#}", reversalDate);
-            }
-
-            return dictionary;
+            return value.ToString("C");
         }
 
-        private static string ChangeKeysForValues(string template, Dictionary<string, string> dictionary)
+        private static string GetClientFirstName(string clientName)
         {
-            if (dictionary.ContainsKey("{#title#}"))
-                template = template.Replace("{#title#}", dictionary["{#title#}"]);
-
-            if (dictionary.ContainsKey("{#client-first-name#}"))
-                template = template.Replace("{#client-first-name#}", dictionary["{#client-first-name#}"]);
-
-            if (dictionary.ContainsKey("{#id#}"))
-                template = template.Replace("{#id#}", dictionary["{#id#}"]);
-
-            if (dictionary.ContainsKey("{#value#}"))
-                template = template.Replace("{#value#}", dictionary["{#value#}"]);
-
-            if (dictionary.ContainsKey("{#barcode#}"))
-                template = template.Replace("{#barcode#}", dictionary["{#barcode#}"]);
-
-            if (dictionary.ContainsKey("{#payment-date#}"))
-                template = template.Replace("{#payment-date#}", dictionary["{#payment-date#}"]);
-
-            if (dictionary.ContainsKey("{#client-name#}"))
-                template = template.Replace("{#client-name#}", dictionary["{#client-name#}"]);
-
-            if (dictionary.ContainsKey("{#reversal-date#}"))
-                template = template.Replace("{#reversal-date#}", dictionary["{#reversal-date#}"]);
-
-            return template;
+            return clientName?.Split(" ").First().Trim();
         }
 
         private static string GetFormattedDate(DateTime? date)
@@ -189,7 +190,7 @@ namespace RabbitMQ.Domain.Emails.Helpers
             return date?.ToString("dd \\de MMMM \\de yyyy à\\s HH:mm");
         }
 
-        private static string PrepareBarcode(string barcode)
+        private static string GetFormattedBarcode(string barcode)
         {
             return @$"{barcode?[..12]}<br>
                       {barcode?.Substring(12, 12)}<br>

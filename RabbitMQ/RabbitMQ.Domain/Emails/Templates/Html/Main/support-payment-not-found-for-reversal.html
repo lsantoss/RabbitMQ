@@ -1,0 +1,36 @@
+﻿<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{#title#}</title>
+
+    {#css-style#}
+</head>
+
+<body>
+    <div class="main">
+        <div class="container">
+
+            {#partial-header#}
+
+            <div class="content">
+                <div class="greetings">
+                    Hello, we detected a problem
+                </div>
+                <div class="action">
+                    We have detected a chargeback attempt on a payment that does not exist in our database
+                </div>
+                <div class="subtitle">
+                    Payment identifier
+                </div>
+                <div class="subtitle-values">
+                    {#paymentId#}
+                </div>
+                <br />
+                <br />
+            </div>
+
+            {#partial-footer-support#}
+
+        </div>
+    </div>
+</body>
+</html>
