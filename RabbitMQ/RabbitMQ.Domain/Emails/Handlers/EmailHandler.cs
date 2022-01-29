@@ -53,11 +53,11 @@ namespace RabbitMQ.Domain.Emails.Handlers
                 var emailContent = EmailHelper.GenerateTemplate(
                     emailCommand, paymentQueryResult, reversalQueryResult, emailCommand.QueueLogs);
 
-                var subject = EmailHelper.GenerateSubject(emailCommand.EmailTemplate);
+                var subject = EmailHelper.GenerateSubject(emailCommand);
 
-                var recipient = EmailHelper.GenerateRecipient(emailCommand.EmailTemplate, paymentQueryResult);
+                var recipient = EmailHelper.GenerateRecipient(emailCommand, paymentQueryResult);
 
-                var attachments = EmailHelper.GenerateAttachments();
+                var attachments = EmailHelper.GenerateAttachments(emailCommand);
 
                 await _emailSenderService.SendEmailAsync(emailContent, subject, recipient, attachments);
 

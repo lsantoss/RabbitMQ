@@ -22,9 +22,9 @@ namespace RabbitMQ.Domain.Emails.Helpers
         private static readonly string _htmlPartialPath = $@"{_basePath}\Emails\Templates\Html\Partial";
         private static readonly string _cssPath = $@"{_basePath}\Emails\Templates\Css";
 
-        public static string GenerateSubject(EEmailTemplate emailTemplate)
+        public static string GenerateSubject(EmailCommand emailCommand)
         {
-            return emailTemplate switch
+            return emailCommand.EmailTemplate switch
             {
                 EEmailTemplate.PaymentSuccess => "Payment made",
                 EEmailTemplate.ReversalSuccess => "Reversal made",
@@ -36,9 +36,9 @@ namespace RabbitMQ.Domain.Emails.Helpers
             };
         }
 
-        public static (string address, string diplayName) GenerateRecipient(EEmailTemplate emailTemplate, PaymentQueryResult payment)
+        public static (string address, string diplayName) GenerateRecipient(EmailCommand emailCommand, PaymentQueryResult payment)
         {
-            return emailTemplate switch
+            return emailCommand.EmailTemplate switch
             {
                 EEmailTemplate.PaymentSuccess or
                 EEmailTemplate.ReversalSuccess => (payment.ClientEmail, payment.ClientName),
@@ -52,9 +52,17 @@ namespace RabbitMQ.Domain.Emails.Helpers
             };
         }
 
-        public static List<Attachment> GenerateAttachments()
+        public static List<Attachment> GenerateAttachments(EmailCommand emailCommand)
         {
-            return new List<Attachment>();
+            var attachments = new List<Attachment>();
+
+            if (emailCommand.EmailTemplate != EEmailTemplate.PaymentSuccess && 
+                emailCommand.EmailTemplate != EEmailTemplate.ReversalSuccess)
+            {
+                return attachments;
+            }
+
+            return attachments;
         }
 
         public static string GenerateTemplate(EmailCommand emailCommand, PaymentQueryResult payment, ReversalQueryResult reversal, List<QueueLogQueryResult> queueLogs)
