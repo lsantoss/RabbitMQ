@@ -5,8 +5,10 @@ using RabbitMQ.Domain.Core.Emails.Interfaces.Services;
 using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
+using RabbitMQ.Domain.Emails.Entities;
 using RabbitMQ.Domain.Emails.Helpers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
+using RabbitMQ.Domain.Emails.Interfaces.Repositories;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
 using RabbitMQ.Domain.Reversals.Interfaces.Repositories;
 using System;
@@ -19,6 +21,7 @@ namespace RabbitMQ.Domain.Emails.Handlers
         private readonly string _currentQueue = QueueName.EmailNotifier;
         private readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
+        private readonly IEmailRepository _emailRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IReversalRepository _reversalRepository;
         private readonly IEmailSenderService _emailSenderService;
@@ -26,10 +29,12 @@ namespace RabbitMQ.Domain.Emails.Handlers
         public EmailHandler(IRabbitMQService rabbitMQBus,
                             IQueueLogRepository queueLogRepository,
                             IElmahRepository elmahRepository,
+                            IEmailRepository emailRepository,
                             IPaymentRepository paymentRepository,
                             IReversalRepository reversalRepository,
                             IEmailSenderService emailSenderService) : base(rabbitMQBus, queueLogRepository, elmahRepository)
         {
+            _emailRepository = emailRepository;
             _paymentRepository = paymentRepository;
             _reversalRepository = reversalRepository;
             _emailSenderService = emailSenderService;
@@ -55,12 +60,21 @@ namespace RabbitMQ.Domain.Emails.Handlers
 
                 await _emailSenderService.SendEmailAsync(emailContent, subject, recipient, attachments);
 
+                var email = new Email(emailCommand.PaymentId);
+                await _emailRepository.SaveAsync(email);
+
                 await LogQueueAsync(emailCommand, _applicationName, _currentQueue);
 
                 Console.WriteLine("Email send successfully.");
             }
             catch (Exception ex)
             {
+                if (emailCommand.NumberAttempts >= 3)
+                {
+                    var email = new Email(emailCommand.PaymentId, false);
+                    await _emailRepository.SaveAsync(email);
+                }
+
                 await ControlMaximumAttemptsAsync(emailCommand, _applicationName, _currentQueue, emailCommand.EmailTemplate, ex);
             }
 

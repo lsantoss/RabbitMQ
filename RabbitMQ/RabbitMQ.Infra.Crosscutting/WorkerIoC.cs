@@ -10,6 +10,7 @@ using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Core.RabbitMQ.Services;
 using RabbitMQ.Domain.Emails.Handlers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
+using RabbitMQ.Domain.Emails.Interfaces.Repositories;
 using RabbitMQ.Domain.Payments.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Handlers;
 using RabbitMQ.Domain.Payments.Interfaces.Repositories;
@@ -46,6 +47,7 @@ namespace RabbitMQ.Infra.Crosscutting
             _ = services.AddScoped<IQueueLogRepository, QueueLogRepository>();
             _ = services.AddScoped<IPaymentRepository, PaymentRepository>();
             _ = services.AddScoped<IReversalRepository, ReversalRepository>();
+            _ = services.AddScoped<IEmailRepository, EmailRepository>();            
 
             #endregion Repositories
 
