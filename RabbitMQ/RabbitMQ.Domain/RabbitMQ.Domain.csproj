@@ -26,9 +26,6 @@
     <Content Include="Emails\Templates\Html\Partial\footer-support.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Emails\Templates\Html\Partial\header.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Emails\Templates\Html\Main\support-payment-already-reversed.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

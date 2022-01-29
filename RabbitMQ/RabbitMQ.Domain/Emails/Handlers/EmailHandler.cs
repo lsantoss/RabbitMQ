@@ -6,6 +6,7 @@ using RabbitMQ.Domain.Core.QueueLogs.Interfaces.Repositories;
 using RabbitMQ.Domain.Core.RabbitMQ.Interfaces.Services;
 using RabbitMQ.Domain.Emails.Commands.Inputs;
 using RabbitMQ.Domain.Emails.Entities;
+using RabbitMQ.Domain.Emails.Enums;
 using RabbitMQ.Domain.Emails.Helpers;
 using RabbitMQ.Domain.Emails.Interfaces.Handlers;
 using RabbitMQ.Domain.Emails.Interfaces.Repositories;
@@ -60,8 +61,12 @@ namespace RabbitMQ.Domain.Emails.Handlers
 
                 await _emailSenderService.SendEmailAsync(emailContent, subject, recipient, attachments);
 
-                var email = new Email(emailCommand.PaymentId);
-                await _emailRepository.SaveAsync(email);
+                if (emailCommand.EmailTemplate != EEmailTemplate.SupportPaymentNotFoundForReversal &&
+                    emailCommand.EmailTemplate != EEmailTemplate.SupportPaymentMaximumAttempts)
+                {
+                    var email = new Email(emailCommand.PaymentId);
+                    await _emailRepository.SaveAsync(email);
+                }
 
                 await LogQueueAsync(emailCommand, _applicationName, _currentQueue);
 
@@ -69,7 +74,9 @@ namespace RabbitMQ.Domain.Emails.Handlers
             }
             catch (Exception ex)
             {
-                if (emailCommand.NumberAttempts >= 3)
+                if (emailCommand.NumberAttempts >= 3 &&
+                    emailCommand.EmailTemplate != EEmailTemplate.SupportPaymentNotFoundForReversal &&
+                    emailCommand.EmailTemplate != EEmailTemplate.SupportPaymentMaximumAttempts)
                 {
                     var email = new Email(emailCommand.PaymentId, false);
                     await _emailRepository.SaveAsync(email);

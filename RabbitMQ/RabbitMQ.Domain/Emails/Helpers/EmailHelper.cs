@@ -73,7 +73,6 @@ namespace RabbitMQ.Domain.Emails.Helpers
             if (template != null)
             {
                 template = AssignStyleCss(template);
-                template = AssignPartialHeader(template);
                 template = AssignPartialFooter(template, emailCommand);
                 template = AssignVariableValues(template, emailCommand, payment, reversal, queueLogs);
             }
@@ -85,12 +84,6 @@ namespace RabbitMQ.Domain.Emails.Helpers
         {
             var css = FileHelper.Read($@"{_cssPath}\style.css");
             return template.Replace("{#css-style#}", $"<style>{css}</style>");
-        }
-
-        private static string AssignPartialHeader(string template)
-        {
-            var partialHeader = FileHelper.Read($@"{_htmlPartialPath}\header.html");
-            return template.Replace("{#partial-header#}", partialHeader);
         }
 
         private static string AssignPartialFooter(string template, EmailCommand emailCommand)
