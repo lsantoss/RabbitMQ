@@ -5,7 +5,7 @@ using RabbitMQ.Domain.Emails.Interfaces.Handlers;
 using RabbitMQ.Infra.Crosscutting;
 using System;
 
-namespace RabbitMQ.EmailNotifier
+namespace RabbitMQ.ConsumerEmails
 {
     class Program
     {
