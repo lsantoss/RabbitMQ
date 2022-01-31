@@ -9,6 +9,11 @@
     <PackageReference Include="ElmahCore.Sql" Version="2.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="21.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Libs\" />
   </ItemGroup>
 
 </Project>

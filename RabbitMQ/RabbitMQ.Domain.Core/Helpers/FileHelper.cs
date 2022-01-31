@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SelectPdf;
+using System;
 using System.IO;
 using System.Text;
 
@@ -26,6 +28,15 @@ namespace RabbitMQ.Domain.Core.Helpers
             var json = JsonConvert.SerializeObject(obj, Formatting.Indented);
             using var streamWriter = new StreamWriter(filePath, false, _encoding);
             streamWriter.WriteLine(json);
+        }
+
+        public static byte[] ConvertHtmlToPdf(string html)
+        {
+            GlobalProperties.HtmlEngineFullPath = @$"{AppDomain.CurrentDomain.BaseDirectory}\Select.Html.dep";
+            var conversion = new HtmlToPdf().ConvertHtmlString(html);
+            var pdfBytes = conversion.Save();
+            conversion.Close();
+            return pdfBytes;
         }
     }
 }

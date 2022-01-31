@@ -57,7 +57,7 @@ namespace RabbitMQ.Domain.Emails.Handlers
 
                 var recipient = EmailHelper.GenerateRecipient(emailCommand, paymentQueryResult);
 
-                var attachments = EmailHelper.GenerateAttachments(emailCommand);
+                var attachments = EmailHelper.GenerateAttachments(emailContent, emailCommand);
 
                 await _emailSenderService.SendEmailAsync(emailContent, subject, recipient, attachments);
 

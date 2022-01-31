@@ -7,8 +7,10 @@ using RabbitMQ.Domain.Payments.Queries.Results;
 using RabbitMQ.Domain.Reversals.Queries.Results;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 
 namespace RabbitMQ.Domain.Emails.Helpers
@@ -52,13 +54,16 @@ namespace RabbitMQ.Domain.Emails.Helpers
             };
         }
 
-        public static List<Attachment> GenerateAttachments(EmailCommand emailCommand)
+        public static List<Attachment> GenerateAttachments(string template, EmailCommand emailCommand)
         {
             var attachments = new List<Attachment>();
 
-            if (emailCommand.EmailTemplate != EEmailTemplate.PaymentSuccess && 
-                emailCommand.EmailTemplate != EEmailTemplate.ReversalSuccess)
+            if (emailCommand.EmailTemplate == EEmailTemplate.PaymentSuccess || 
+                emailCommand.EmailTemplate == EEmailTemplate.ReversalSuccess)
             {
+                var pdfBytes = FileHelper.ConvertHtmlToPdf(template);
+                var stream = new MemoryStream(pdfBytes);
+                attachments.Add(new Attachment(stream, "receipt.pdf", MediaTypeNames.Application.Pdf));
                 return attachments;
             }
 
