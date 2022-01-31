@@ -13,8 +13,9 @@ namespace RabbitMQ.Infra.Data.Repositories
 {
     public class ReversalRepository : IReversalRepository
     {
-        private readonly Settings _settings;
         private readonly DynamicParameters _parameters = new();
+
+        private readonly Settings _settings;
 
         public ReversalRepository(Settings settings)
         {

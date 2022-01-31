@@ -9,6 +9,8 @@ namespace RabbitMQ.Domain.Core.Helpers
     public static class FileHelper
     {
         private static readonly Encoding _encoding = Encoding.GetEncoding("ISO-8859-1");
+        private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _selectPdfHtmlEngineFullPath = @$"{_basePath}\Select.Html.dep";
 
         public static string Read(string filePath)
         {
@@ -32,7 +34,7 @@ namespace RabbitMQ.Domain.Core.Helpers
 
         public static byte[] ConvertHtmlToPdf(string html)
         {
-            GlobalProperties.HtmlEngineFullPath = @$"{AppDomain.CurrentDomain.BaseDirectory}\Select.Html.dep";
+            GlobalProperties.HtmlEngineFullPath = _selectPdfHtmlEngineFullPath;
             var conversion = new HtmlToPdf().ConvertHtmlString(html);
             var pdfBytes = conversion.Save();
             conversion.Close();

@@ -15,8 +15,9 @@ namespace RabbitMQ.Infra.Data.Repositories
 {
     public class QueueLogRepository : IQueueLogRepository
     {
-        private readonly Settings _settings;
         private readonly DynamicParameters _parameters = new();
+
+        private readonly Settings _settings;
 
         public QueueLogRepository(Settings settings)
         {
