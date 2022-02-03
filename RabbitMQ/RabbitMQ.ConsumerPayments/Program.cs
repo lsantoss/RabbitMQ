@@ -9,7 +9,7 @@ namespace RabbitMQ.ConsumerPayments
 {
     class Program
     {
-        private static readonly string _queueName = QueueName.Payments;
+        private static readonly string _queueName = QueueName.Payment;
         private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private static readonly IWorkerBase _workerBase;

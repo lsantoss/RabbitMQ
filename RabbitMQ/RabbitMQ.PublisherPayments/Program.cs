@@ -15,7 +15,7 @@ namespace RabbitMQ.PublisherPayments
 {
     class Program
     {
-        private static readonly string _queueName = QueueName.Payments;
+        private static readonly string _queueName = QueueName.Payment;
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 

@@ -15,7 +15,7 @@ namespace RabbitMQ.PublisherEmails
 {
     class Program
     {
-        private static readonly string _queueName = QueueName.EmailNotifier;
+        private static readonly string _queueName = QueueName.Email;
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 

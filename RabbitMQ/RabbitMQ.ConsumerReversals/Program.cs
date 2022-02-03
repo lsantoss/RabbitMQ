@@ -9,7 +9,7 @@ namespace RabbitMQ.ConsumerReversals
 {
     class Program
     {
-        private static readonly string _queueName = QueueName.Reversals;
+        private static readonly string _queueName = QueueName.Reversal;
         private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private static readonly IWorkerBase _workerBase;

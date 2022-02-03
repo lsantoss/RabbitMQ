@@ -12,8 +12,4 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="21.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Libs\" />
-  </ItemGroup>
-
 </Project>

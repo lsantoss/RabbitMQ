@@ -5,18 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Emails\Templates\Css\style.css" />
-    <None Remove="Emails\Templates\Html\Partial\footer-support.html" />
-    <None Remove="Emails\Templates\partial-bottom - Cópia.html" />
-    <None Remove="Emails\Templates\partial-top - Cópia.html" />
-    <None Remove="Emails\Templates\reversal-success.html" />
-    <None Remove="Emails\Templates\support-payment-already-reversed.html" />
-    <None Remove="Emails\Templates\support-payment-maximum-attempts.html" />
-    <None Remove="Emails\Templates\support-payment-not-found-for-reversal.html" />
-    <None Remove="Emails\Templates\support-reversal-maximum-attempts.html" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Emails\Templates\Css\style.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

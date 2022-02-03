@@ -2,8 +2,8 @@
 {
     public static class QueueName
     {
-        public static string Payments { get; } = "RabbitMQ.Payments";
-        public static string Reversals { get; } = "RabbitMQ.Reversals";
-        public static string EmailNotifier { get; } = "RabbitMQ.Email";
+        public static string Payment { get; } = "RabbitMQ.Payment";
+        public static string Reversal { get; } = "RabbitMQ.Reversal";
+        public static string Email { get; } = "RabbitMQ.Email";
     }
 }

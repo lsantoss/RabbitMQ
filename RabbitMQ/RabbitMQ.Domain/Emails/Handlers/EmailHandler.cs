@@ -19,7 +19,7 @@ namespace RabbitMQ.Domain.Emails.Handlers
 {
     public class EmailHandler : BaseHandler, IEmailHandler
     {
-        private readonly string _currentQueue = QueueName.EmailNotifier;
+        private readonly string _currentQueue = QueueName.Email;
         private readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private readonly IEmailRepository _emailRepository;

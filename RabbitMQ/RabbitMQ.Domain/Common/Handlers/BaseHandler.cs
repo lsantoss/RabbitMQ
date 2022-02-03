@@ -16,7 +16,7 @@ namespace RabbitMQ.Domain.Common.Handlers
 {
     public class BaseHandler
     {
-        private static readonly string _emailQueue = QueueName.EmailNotifier;
+        private static readonly string _emailQueue = QueueName.Email;
 
         private readonly IRabbitMQService _rabbitMQService;
         private readonly IQueueLogRepository _queueLogRepository;

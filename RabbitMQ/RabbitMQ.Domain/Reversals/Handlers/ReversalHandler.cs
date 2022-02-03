@@ -16,7 +16,7 @@ namespace RabbitMQ.Domain.Reversals.Handlers
 {
     public class ReversalHandler : BaseHandler, IReversalHandler
     {
-        private readonly string _currentQueue = QueueName.Reversals;
+        private readonly string _currentQueue = QueueName.Reversal;
         private readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
         private readonly IQueueLogRepository _queueLogRepository;

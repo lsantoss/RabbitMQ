@@ -15,7 +15,7 @@ namespace RabbitMQ.PublisherReversals
 {
     class Program
     {
-        private static readonly string _queueName = QueueName.Reversals;
+        private static readonly string _queueName = QueueName.Reversal;
         private static readonly string _basePath = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
 
