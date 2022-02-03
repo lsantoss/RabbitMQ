@@ -115,9 +115,8 @@ namespace RabbitMQ.ConsumerAPI
 
             _ = app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            //_ = app.UseRabbitConsumerPayment();
-            //_ = app.UseRabbitConsumerReversal();
-            //_ = app.UseRabbitConsumerEmail();
+            //_ = app.UseRabbitConsumerPayments();
+            //_ = app.UseRabbitConsumerReversals();
         }
     }
 }

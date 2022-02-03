@@ -12,9 +12,6 @@ namespace RabbitMQ.ConsumerAPI.BackgroundServices
 {
     public class RabbitMQConsumerPayments : BackgroundService
     {
-        private static readonly string _queueName = QueueName.Payment;
-        private static readonly string _applicationName = AppDomain.CurrentDomain.FriendlyName;
-
         private readonly IRabbitMQService _rabbitMQService;
         private readonly IPaymentHandler _paymentHandler;
 
@@ -27,12 +24,12 @@ namespace RabbitMQ.ConsumerAPI.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine($"Starting BackgroundService {GetType().Name} in {_applicationName}\n");
+            Console.WriteLine($"Starting BackgroundService {GetType().Name} in {AppDomain.CurrentDomain.FriendlyName}\n");
 
-            stoppingToken.Register(() => Console.WriteLine($"Stopping BackgroundService {GetType().Name} in { _applicationName}.\n"));
+            stoppingToken.Register(() => Console.WriteLine($"Stopping BackgroundService {GetType().Name} in {AppDomain.CurrentDomain.FriendlyName}.\n"));
 
             while (!stoppingToken.IsCancellationRequested)
-                _rabbitMQService.Consume<PaymentCommand>(_paymentHandler, _queueName);
+                _rabbitMQService.Consume<PaymentCommand>(_paymentHandler, QueueName.Payment);
         }
     }
 }
