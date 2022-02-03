@@ -21,12 +21,19 @@ using RabbitMQ.Infra.Data.Repositories;
 
 namespace RabbitMQ.Infra.Crosscutting
 {
-    public static class WorkerIoC
+    public static class IoC
     {
-        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            #region AppSettings
+            _ = services.AddAppSettings(configuration);
+            _ = services.AddRepositories();
+            _ = services.AddHandlers();
+            _ = services.AddServices();
+            return services;
+        }
 
+        private static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
+        {
             var settings = new Settings();
             configuration.GetSection("Settings").Bind(settings);
             _ = services.AddSingleton(settings);
@@ -39,34 +46,32 @@ namespace RabbitMQ.Infra.Crosscutting
             configuration.GetSection("SmtpSettings").Bind(smtpSettings);
             _ = services.AddSingleton(smtpSettings);
 
-            #endregion AppSettings
+            return services;
+        }
 
-            #region Repositories
-
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
             _ = services.AddScoped<IElmahRepository, ElmahRepository>();
             _ = services.AddScoped<IQueueLogRepository, QueueLogRepository>();
             _ = services.AddScoped<IPaymentRepository, PaymentRepository>();
             _ = services.AddScoped<IReversalRepository, ReversalRepository>();
-            _ = services.AddScoped<IEmailRepository, EmailRepository>();            
+            _ = services.AddScoped<IEmailRepository, EmailRepository>();
+            return services;
+        }
 
-            #endregion Repositories
-
-            #region Handlers
-
+        private static IServiceCollection AddHandlers(this IServiceCollection services)
+        {
             _ = services.AddScoped<BaseHandler, BaseHandler>();
             _ = services.AddScoped<IPaymentHandler, PaymentHandler>();
             _ = services.AddScoped<IReversalHandler, ReversalHandler>();
             _ = services.AddScoped<IEmailHandler, EmailHandler>();
+            return services;
+        }
 
-            #endregion Handlers
-
-            #region Services
-
+        private static IServiceCollection AddServices(this IServiceCollection services)
+        {
             _ = services.AddScoped<IRabbitMQService, RabbitMQService>();
             _ = services.AddScoped<IEmailSenderService, EmailSenderService>();
-
-            #endregion Services
-
             return services;
         }
     }

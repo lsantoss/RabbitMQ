@@ -17,7 +17,7 @@ namespace RabbitMQ.Infra.Crosscutting
 
             _ = _services.AddSingleton(_configuration);
 
-            _ = WorkerIoC.AddWorkerServices(_services, _configuration);
+            _ = IoC.AddDependencies(_services, _configuration);
 
             _serviceProvider = _services.BuildServiceProvider();
         }

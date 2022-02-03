@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RabbitMQ.Domain.Core\RabbitMQ.Domain.Core.csproj" />
-    <ProjectReference Include="..\RabbitMQ.Infra.Data\RabbitMQ.Infra.Data.csproj" />
+    <ProjectReference Include="..\RabbitMQ.Infra.Crosscutting\RabbitMQ.Infra.Crosscutting.csproj" />
   </ItemGroup>
 
 </Project>
