@@ -31,10 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ.PublisherReversals
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ.PublisherEmails", "RabbitMQ.PublisherEmails\RabbitMQ.PublisherEmails.csproj", "{CDAEC215-41F0-49ED-815E-4F174BB3592D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Hangfire", "4 - Hangfire", "{FF6227B1-9862-4409-A5C9-3DEEEFBE05EA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{AC12E16D-0129-471E-910D-459C4FC7FAB0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ.ConsumerEmails", "RabbitMQ.ConsumerEmails\RabbitMQ.ConsumerEmails.csproj", "{6DAD35BC-A9F2-4525-B224-10583375CD6C}"
 EndProject
 Global

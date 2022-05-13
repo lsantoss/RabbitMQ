@@ -17,15 +17,8 @@ namespace RabbitMQ.Infra.Data.Repositories
         }
 
         public async Task<string> LogAsync(Exception exception)
-        {            
-            try
-            {
-                return await _elmahLog.LogAsync(new Error(exception));
-            }
-            catch (Exception ex)
-            {
-                throw new SystemException(ex.Message, ex);
-            }
+        {
+            return await _elmahLog.LogAsync(new Error(exception));
         }
     }
 }
